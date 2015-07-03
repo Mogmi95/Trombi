@@ -1,0 +1,120 @@
+.black_overlay{
+	display: none;
+	position: fixed;
+	top: 0%;
+	left: 0%;
+	width: 100%;
+	height: 100%;
+	background-color: black;
+	z-index:1001;
+	-moz-opacity: 0.8;
+	opacity:.80;
+	filter: alpha(opacity=80);
+}
+
+.white_content {
+	display: none;
+	position: fixed;
+	padding: 16px;
+	width: 25%;
+	left: 75%;
+	top: 25%;
+	margin: 0 0 0 -37.5%;
+	border-radius: 10px;
+	background-color: white;
+	z-index:1002;
+	overflow: auto;
+}
+
+body {
+	font-family: "Verdana", sans-serif;
+	background-color: #8CAFC7;
+	margin: 0px;
+	padding: 0px;
+}
+
+
+
+h1 {
+	color: #FFFFFF;
+	padding-left: 16px;
+	height: 50px;
+	line-height: 50px;
+	padding: 0px;
+	margin: 0px;
+}
+
+h2 {
+	color: #073c61;
+	padding-left: 16px;
+	padding-top: 30px;
+}
+
+.header {
+	background-color: #2E5F81;
+	padding: 2px;
+	height: 50px;
+}
+
+.header img {
+	float: left;
+	height: 50px;
+	margin-left: 8px;
+	margin-right: 8px;
+}
+
+
+.block_department {
+}
+
+.personBox {
+	width: 200px;
+	height: 250px;
+	background-color: #EEEEEE;
+	display: inline-block;
+	text-align: center;
+	box-shadow: 5px 5px 5px #748895;
+	margin: 15px;
+	border-radius: 10px;
+}
+
+.personBoxImage {
+	width: 200px;
+	height: 200px;
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+	display: table-cell;
+	vertical-align: middle;
+}
+
+.personBoxImagePlus {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	vertical-align: middle;
+}
+
+#personImage {
+	width: 200px;
+	height: 200px;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.formEdit {
+	margin-top: 16px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+td {
+	padding: 8px;
+}
+
+a {
+	text-decoration: none;
+	color: #121212
+}
+
+# Overlay
