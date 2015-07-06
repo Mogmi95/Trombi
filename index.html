@@ -194,10 +194,9 @@ document.getElementById('fade').style.display='block'">
 </div>
 </a>
 
-<a href="javascript:void(0)" onclick = "
-document.getElementById('light').style.display='block';
-document.getElementById('fade').style.display='block'">
-<div class="personBox">
+
+
+<div class="personAddBox">
     <div class="personBoxImage">
         <img class="personBoxImagePlus" src="images/plus-circle.png" />
     </div>
@@ -206,7 +205,7 @@ document.getElementById('fade').style.display='block'">
         <p>Ajouter une personne</p>
     </div>
 </div>
-</a>
+
 </div>
 
 
@@ -283,7 +282,9 @@ document.getElementById('fade').style.display='block'">
             personBoxImage.appendTo(personBox);
             personBoxText.appendTo(personBox);
 
+            personBox.hide();
             personBox.appendTo($(this).prev())
+            personBox.fadeIn();
         });
 
     });
