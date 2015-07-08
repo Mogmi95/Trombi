@@ -1,5 +1,5 @@
 .black_overlay{
-	display: none;
+	display: block;
 	position: fixed;
 	top: 0%;
 	left: 0%;
@@ -13,7 +13,7 @@
 }
 
 .white_content {
-	display: none;
+	display: block;
 	position: fixed;
 	padding: 32px;
 	left: 75%;

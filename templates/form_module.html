@@ -1,0 +1,54 @@
+<div id="editForm">
+
+  <div id="light" class="white_content">
+    <img id="personImage" />
+      <form action="editPerson" method="post">
+          {{ form.hidden_tag() }}
+
+      <table class="formEdit">
+          <tr>
+            <td><p class="formTitles">Nom</p></td>
+            <td class="personRow"><p>{{ person.name }}</p></td>
+            <td class="personRowInput">{{ form.name }}</td>
+          </tr>
+          <tr>
+            <td><p class="formTitles">Poste</p></td>
+            <td class="personRow"><p>{{ person.job }}</p></td>
+            <td class="personRowInput">{{ form.job }}</td>
+          </tr>
+          <tr>
+            <td><p class="formTitles">Mail</p></td>
+            <td class="personRow"><p>{{ person.email }}</p></td>
+            <td class="personRowInput">{{ form.email }}</td>
+          </tr>
+          <tr>
+            <td><p class="formTitles">Téléphone</p></td>
+            <td class="personRow"><p>{{ person.phone }}</p></td>
+            <td class="personRowInput">{{ form.phone }}</td>
+          </tr>
+          <tr>
+            <td><p class="formTitles">Skype</p></td>
+            <td class="personRow"><p>{{ person.skype }}</p></td>
+            <td class="personRowInput">{{ form.skype }}</td>
+          </tr>
+      </table>
+
+      <p><input type="submit" value="Valider" /></p>
+    </form>
+
+    <p>Vcard</p>
+
+    <a href="javascript:void(0)" onclick="$(#editForm).remove()">
+      <p>Fermer</p>
+    </a>
+
+  </div>
+  <div id="fade" class="black_overlay"></div>
+
+</div>
+
+<script>
+  $("#fade").click(function() {
+    $("#editForm").remove();
+  });
+</script>

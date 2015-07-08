@@ -3,194 +3,113 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}" media="screen" />
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}" media="screen" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 </head>
 
 <body>
-    <div class="header">
-        <img src="{{ url_for('static', filename='images/cloud.png') }}" />
-        <h1>Trombi</h1>
+  <div class="header">
+    <img src="{{ url_for('static', filename='images/cloud.png') }}" />
+    <h1>Trombi</h1>
+  </div>
+
+  {% for team in teams %}
+  <div class="block_departement" id="{{ team.id }}">
+    <h2>{{ team.name }}</h2>
+
+    {% for person in team.persons %}
+    <div class="personBox" id="{{ person.id }}">
+      <img class="personBoxImage" src="{{ url_for('static', filename='images/test.jpeg') }}" />
+      <div class="personBoxText">
+        <p>{{ person.name }}</p>
+      </div>
     </div>
-
-    {% for team in teams %}
-        <div class="block_departement" id="{{ team.id }}">
-            <h2>{{ team.name }}</h2>
-
-            {% for person in team.persons %}
-            <a href="">
-                <div class="personBox" id="{{ person.id }}">
-                    <img class="personBoxImage" src="{{ url_for('static', filename='images/test.jpeg') }}" />
-                    <div class="personBoxText">
-                        <p>{{ person.id }}</p>
-                    </div>
-                </div>
-            </a>
-            {% endfor %}
-
-            <div class="personAddBox">
-                <div class="personBoxImage">
-                    <img class="personBoxImagePlus" src="{{ url_for('static', filename='images/plus-circle.png') }}" />
-                </div>
-
-                <div class="personBoxText">
-                    <p>Ajouter une personne</p>
-                </div>
-            </div>
-        </div>
     {% endfor %}
 
+    <div class="personAddBox">
+      <div class="personBoxImage">
+        <img class="personBoxImagePlus" src="{{ url_for('static', filename='images/plus-circle.png') }}" />
+      </div>
 
-
-
-
-
-
-
-
-
-
-    <div id="light" class="white_content">
-        <img id="personImage" />
-
-        <form>
-            <table class="formEdit">
-                <tr>
-                    <td>
-                        <p class="formTitles">Nom</p>
-                    </td>
-                    <td class="personRow">
-                        <p id="personName" />
-                    </td>
-                    <td class="personRowInput">
-                        <input type="text" name="personNameInput" />
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <p class="formTitles">Mail</p>
-                    </td>
-                    <td class="personRow">
-                        <p id="personMail" />
-                    </td>
-                    <td class="personRowInput">
-                        <input type="text" name="personMailInput" />
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <p class="formTitles">Telephone</p>
-                    </td>
-                    <td class="personRow">
-                        <p id="personPhone" />
-                    </td>
-                    <td class="personRowInput">
-                        <input type="text" name="personPhoneInput" />
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <p class="formTitles">Skype</p>
-                    </td>
-                    <td class="personRow">
-                        <p id="personSkype" />
-                    </td>
-                    <td class="personRowInput">
-                        <input type="text" name="personSkypeInput" />
-                    </td>
-                </tr>
-
-            </table>
-        </form>
-
-        <p>Vcard</p>
-
-        <script>
-            $(document).ready(function() {
-                $(".personRowInput").hide();
-                $("#validateInfo").hide();
-                $("#fade").hide();
-                $("#light").hide();
-
-
-                $(".personBox").click(function() {
-                    $("#fade").show();
-                    $("#light").show();
-                });
-
-                $("#editInfo").click(function() {
-                    $(".personRow").hide(100);
-                    $(".personRowInput").show(100);
-                    $("#editInfo").hide();
-                    $("#validateInfo").show();
-                });
-
-                $("#validateInfo").click(function() {
-                    $(".personRowInput").hide(100);
-                    $(".personRow").show(100);
-                    $("#validateInfo").hide();
-                    $("#editInfo").show();
-                });
-
-                $(".personAddBox").click(function() {
-                    // We signal to the Python to create a new person in the
-                    // current
-                    var request = new XMLHttpRequest();
-
-                    testFinal = $(this);
-
-                    request.onload = function() {
-                        // We create the new person (empty but with the id)
-                        response = request.responseText;
-
-                        personBox = jQuery('<div/>', {
-                            class: 'personBox',
-                            id: response
-                        });
-                        personBoxImage = jQuery('<img/>', {
-                            class: 'personBoxImage',
-                        });
-                        personBoxText = jQuery('<div/>', {
-                            class: 'personBoxText'
-                        });
-                        personBoxTextP = jQuery('<p/>', {
-                            text: response
-                        });
-
-                        personBoxTextP.appendTo(personBoxText);
-
-                        personBoxImage.appendTo(personBox);
-                        personBoxText.appendTo(personBox);
-
-                        personBox.hide();
-                        personBox.appendTo(testFinal.prev())
-                        personBox.fadeIn();
-                    };
-                    // We point the request at the appropriate command
-                    request.open("GET", "/ajax/createPerson/" + $(this).parent().attr('id'), true);
-                    // and then we send it off
-                    request.send();
-                });
-
-            });
-        </script>
-
-
-        <p id="editInfo">Editer les informations</p>
-        <p id="validateInfo">Valider les modifications</p>
-
-        <a href="javascript:void(0)" onclick="document.getElementById('light').style.display='none';document.getElementById('fade').style.display='none'">
-            <p>Fermer</p>
-        </a>
-
+      <div class="personBoxText">
+        <p>Ajouter une personne</p>
+      </div>
     </div>
-    <a href="javascript:void(0)" onclick="document.getElementById('light').style.display='none';document.getElementById('fade').style.display='none'">
-        <div id="fade" class="black_overlay"></div>
-    </a>
+  </div>
+  {% endfor %}
+
+  <div id="formPlaceHolder"></div>
+
+  <script>
+    $(document).ready(function() {
+      $(".personBox").click(function() {
+        var request = new XMLHttpRequest();
+        request.onload = function() {
+          dom = request.responseText;
+          $("#formPlaceHolder").append(dom);
+
+        }
+        request.open("GET", "/ajax/showEdit/" + $(this).attr('id'), true);
+        request.send();
+      });
+
+      $("#editInfo").click(function() {
+        $(".personRow").hide(100);
+        $(".personRowInput").show(100);
+        $("#editInfo").hide();
+        $("#validateInfo").show();
+      });
+
+      $("#validateInfo").click(function() {
+        $(".personRowInput").hide(100);
+        $(".personRow").show(100);
+        $("#validateInfo").hide();
+        $("#editInfo").show();
+      });
+
+      $(".personAddBox").click(function() {
+        // We signal to the Python to create a new person in the
+        // current
+        var request = new XMLHttpRequest();
+
+        testFinal = $(this);
+
+        request.onload = function() {
+          // We create the new person (empty but with the id)
+          response = request.responseText;
+
+          personBox = jQuery('<div/>', {
+            class: 'personBox',
+            id: response
+          });
+          personBoxImage = jQuery('<img/>', {
+            class: 'personBoxImage',
+          });
+          personBoxText = jQuery('<div/>', {
+            class: 'personBoxText'
+          });
+          personBoxTextP = jQuery('<p/>', {
+            text: response
+          });
+
+          personBoxTextP.appendTo(personBoxText);
+
+          personBoxImage.appendTo(personBox);
+          personBoxText.appendTo(personBox);
+
+          personBox.hide();
+          personBox.appendTo(testFinal.prev())
+          personBox.fadeIn();
+        };
+        // We point the request at the appropriate command
+        request.open("GET", "/ajax/createPerson/" + $(this).parent().attr('id'), true);
+        // and then we send it off
+        request.send();
+      });
+
+    });
+  </script>
 
 </body>
 
