@@ -1,6 +1,7 @@
-import flask
-import flask.ext.sqlalchemy
-from flask import render_template, redirect
+
+import os, flask, flask.ext.sqlalchemy
+
+from flask import render_template, redirect, request, send_from_directory
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy import Table, Column, Integer, ForeignKey
 from flask.ext.wtf import Form
@@ -37,7 +38,7 @@ class Person(db.Model):
     __tablename__ = 'person'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), unique=False)
-    image = db.Column(db.String(120), unique=False)
+    image = db.Column(db.String(120), unique=False, default="test.jpeg")
     email = db.Column(db.String(120), unique=False)
     phone = db.Column(db.String(120), unique=False)
     job = db.Column(db.String(120), unique=False)
@@ -75,6 +76,9 @@ def create_person(id=None):
 
     return str(person.id)
 
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOADS_FOLDER'], filename)
 
 '''
     EDIT
@@ -83,7 +87,6 @@ def create_person(id=None):
 class EditForm(Form):
     person_id = HiddenField("PERSON_ID")
     name = StringField('name', default=None)
-    # image = db.Column(db.String(120), unique=False)
     email = StringField('email', default=None)
     phone = StringField('phone', default=None)
     job = StringField('job', default=None)
@@ -103,8 +106,16 @@ def modify_person():
     if form.validate_on_submit():
         person_id = form.person_id.data
         print("person_id : " + person_id)
+        print("IMAGE : " + str(request.files))
 
         person = Person.query.filter_by(id=person_id).first()
+
+        file = request.files['photo']
+        if file:
+            image_name = str(person_id) + ".png"
+            file.save(os.path.join(app.config['UPLOADS_FOLDER'], image_name))
+            person.image = image_name
+
         person.name = form.name.data
         person.email = form.email.data
         person.phone = form.phone.data
@@ -118,8 +129,8 @@ def modify_person():
 if __name__ == "__main__":
     db.create_all()
 
-    #team = Team('Team test');
-    #db.session.add(team)
-    #db.session.commit()
+    team = Team('Team test');
+    db.session.add(team)
+    db.session.commit()
 
     app.run()
