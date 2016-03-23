@@ -18,14 +18,24 @@ def main():
 @app.route("/all")
 def show_all():
     persons = Person.query.all()
-    teams = Team.query.all()
     return render_template('all.html', persons=persons)
-    pass
 
 @app.route("/person/<login>")
 def show_person(login=None):
     person = Person.query.filter_by(login=login).first()
     return render_template('person.html', person=person)
+
+@app.route("/search/<query>")
+def show_search(query=None):
+    persons = Person.query.filter_by(login=query)
+
+    print(dir(persons))
+
+    if (len(persons.all()) == 1):
+        return render_template('person.html', person=persons.first())
+
+
+    return render_template('all.html', persons=persons)
 
 @app.route("/team/<team>")
 def show_team(team=None):
