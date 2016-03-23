@@ -1,0 +1,8 @@
+<a href="/person/{{ person.login }}">
+    <div class="personBox" id="{{ person.id }}">
+        <img class="personBoxImage" src="{{ url_for('static', filename='images/test.jpeg') }}" />
+        <div class="personBoxText">
+            <p>{{ person.name }}</p>
+        </div>
+    </div>
+</a>

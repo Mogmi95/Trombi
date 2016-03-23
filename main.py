@@ -7,119 +7,109 @@ from flask.ext.wtf import Form
 from wtforms import StringField, BooleanField, HiddenField
 from wtforms.validators import DataRequired
 
-'''
-    INIT
-'''
-
-# Create the Flask application and the Flask-SQLAlchemy object.
-app = flask.Flask(__name__, static_url_path='/static')
-app.config.from_object('config')
-
-db = flask.ext.sqlalchemy.SQLAlchemy(app)
-
-'''
-    TABLES
-'''
-
-class Team(db.Model):
-    __tablename__ = 'team'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(80), unique=False)
-    persons = relationship("Person", backref="parent")
-
-    def __init__(self, name):
-        self.name = name
-
-    def __repr__(self):
-        return 'Team(' + str(self.id) + ')=' + self.name
-
-class Person(db.Model):
-    __tablename__ = 'person'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(80), unique=False)
-    image = db.Column(db.String(120), unique=False)
-    email = db.Column(db.String(120), unique=False)
-    phone = db.Column(db.String(120), unique=False)
-    job = db.Column(db.String(120), unique=False)
-    skype = db.Column(db.String(120), unique=False)
-    team_id = Column(Integer, ForeignKey('team.id'))
-
-    def __init__(self, name):
-        self.name = name
-
-    def __repr__(self):
-        return 'Person(' + str(self.id) + ')=' + self.name
-
-'''
-    MAIN
-'''
+from app import db, app
+from models import Person, Team
 
 @app.route("/")
 def main():
     teams = Team.query.all()
     return render_template('index.html', teams=teams)
 
-@app.route('/ajax/createPerson/<id>')
-def create_person(id=None):
-    print('Creating a person in team : ' + str(id))
+@app.route("/all")
+def show_all():
+    persons = Person.query.all()
+    teams = Team.query.all()
+    return render_template('all.html', persons=persons)
+    pass
 
-    team = Team.query.filter_by(id=id).first()
-    print('Team : ' + str(team))
+@app.route("/person/<login>")
+def show_person(login=None):
+    person = Person.query.filter_by(login=login).first()
+    return render_template('person.html', person=person)
 
-    person = Person('PERSON')
+@app.route("/team/<team>")
+def show_team(team=None):
+    team = Team.query.filter_by(name=team).first()
+    root_manager = team.get_manager()
 
-    team.persons.append(person)
+    print('Manager : ' + str(root_manager))
+
+    tree = build_tree(root_manager, True)
+
+    return render_template('team.html', team=team, tree=tree)
+
+# Return a HTML tree with a person as root
+def build_tree(root_person, is_root):
+    result = ''
+
+    if (is_root):
+        result = '<ul><li>\n'
+    result += render_template('tree_node.html', person=root_person)
+    
+    if (len(root_person.subordinates) > 0):
+        result += '\n<ul>\n'
+        for subordinate in root_person.subordinates:
+            result += '<li>\n'
+            result += build_tree(subordinate, False)
+            result += '</li>\n'
+        result += '\n</ul>\n'
+
+    if (is_root):
+        result += '\n</li></ul>\n'
+    return result
+
+def load_persons():
+    # Init teams
+    apps = Team('apps');
+    db.session.add(apps)
     db.session.commit()
 
-    print('Person : ' + str(person))
+    persons = []
+    managers = {}
+    with open('update.txt', 'r') as f:
+        for line in f:
+            if (len(line) > 0 and line[0] != '#'):
+                print(line)
+                neo = Person()
+                split = line.split(';')
 
-    return str(person.id)
+                neo.team = Team.query.filter_by(name=split[0]).first()
+                neo.login = split[1]
+                neo.surname = split[2]
+                neo.name = split[3]
+                neo.birthday = split[4]
+                neo.job = split[5]
+                neo.email = split[6]
+                neo.skype = split[7]
+                neo.fixe = split[8]
+                neo.mobile = split[9]
 
+                manager = split[10]
+                
+                if manager in managers:
+                    managers[manager].append(neo)
+                else:
+                    managers[manager] = [neo]
 
-'''
-    EDIT
-'''
+                persons.append(neo)
 
-class EditForm(Form):
-    person_id = HiddenField("PERSON_ID")
-    name = StringField('name', default=None)
-    # image = db.Column(db.String(120), unique=False)
-    email = StringField('email', default=None)
-    phone = StringField('phone', default=None)
-    job = StringField('job', default=None)
-    skype = StringField('skype', default=None)
+    print('PERSONS : ' + str(persons))
+    print('MANAGERS : ' + str(managers))
 
+    for person in persons:
+        # We link the managers
+        if person.login in managers:
+            person.subordinates = managers[person.login]
+        db.session.add(person)
 
-@app.route('/ajax/showEdit/<person_id>')
-def show_edit(person_id=None):
-    print('Editing a person person_id : ' + str(person_id))
-    person = Person.query.filter_by(id=person_id).first()
-    form = EditForm(person_id=person_id,name=person.name, email=person.email, phone=person.phone, job=person.job, skype=person.skype)
-    return render_template('form_module.html', person=person, form=form)
-
-@app.route('/editPerson', methods=['GET', 'POST'])
-def modify_person():
-    form = EditForm()
-    if form.validate_on_submit():
-        person_id = form.person_id.data
-        print("person_id : " + person_id)
-
-        person = Person.query.filter_by(id=person_id).first()
-        person.name = form.name.data
-        person.email = form.email.data
-        person.phone = form.phone.data
-        person.job = form.job.data
-        person.skype = form.skype.data
-        db.session.commit()
-
-        return redirect('/')
+    db.session.commit()
 
 
 if __name__ == "__main__":
     db.create_all()
 
-    #team = Team('Team test');
-    #db.session.add(team)
-    #db.session.commit()
+    persons = Person.query.all()
+    if (len(persons) == 0):
+        load_persons()
 
     app.run()

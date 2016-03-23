@@ -1,0 +1,12 @@
+{% extends "index.html" %}
+{% block title %}All persons{% endblock %}
+
+{% block body %}
+<div class="block_departement" id="">
+    {% for person in persons %}
+
+    {% include "tree_node.html" %}
+
+    {% endfor %}
+</div>
+{% endblock %}
