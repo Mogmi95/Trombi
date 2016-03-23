@@ -44,8 +44,8 @@ def build_tree(root_person, is_root):
 
     if (is_root):
         result = '<ul><li>\n'
-    result += render_template('tree_node.html', person=root_person)
-    
+    result += render_template('tree_node.html', person=root_person, smallpics=True)
+
     if (len(root_person.subordinates) > 0):
         result += '\n<ul>\n'
         for subordinate in root_person.subordinates:
@@ -85,7 +85,7 @@ def load_persons():
                 neo.mobile = split[9]
 
                 manager = split[10]
-                
+
                 if manager in managers:
                     managers[manager].append(neo)
                 else:

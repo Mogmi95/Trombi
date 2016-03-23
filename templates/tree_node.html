@@ -1,5 +1,10 @@
-<a href="/person/{{ person.login }}" class="personBox" style="background: url({{ url_for('static', filename='images/' + person.login + '.jpg') }}) center / cover;">
-<div class="personBoxText">
+{% if (smallpics == True) %}
+  <a href="/person/{{ person.login }}" class="personBoxSmall" style="background: url({{ url_for('static', filename='images/' + person.login + '.jpg') }}) center / cover;">
+  <div class="personBoxTextSmall">
+{% else %}
+  <a href="/person/{{ person.login }}" class="personBox" style="background: url({{ url_for('static', filename='images/' + person.login + '.jpg') }}) center / cover;">
+  <div class="personBoxText">
+{% endif %}
   <p>{{ person.name }} {{ person.surname }}</p>
 </div>
 </a>

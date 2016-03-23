@@ -1,26 +1,40 @@
 /* by Mogmi */
 
+body {
+	background-color: #C5CAE9;
+}
+
 .page-content {
+	margin: 64px;
 	padding: 16px;
+	min-height: 750px;
 }
 
 /* Cards */
 .personBox {
-
-		transition: all 0.5s;
-		-webkit-transition: all 0.5s;
-		-moz-transition: all 0.5s;
-
-	position:relative;
-	display: inline-block;
-
-opacity: 0.9;
-
-	height: 256px;
-	width: 256px;
+margin: 16px;
+transition: all 0.5s;
+-webkit-transition: all 0.5s;
+-moz-transition: all 0.5s;
+position:relative;
+display: inline-block;
+opacity: 0.75;
+height: 256px;
+width: 256px;
 }
 
-.personBoxText {
+.personBoxSmall {
+transition: all 0.5s;
+-webkit-transition: all 0.5s;
+-moz-transition: all 0.5s;
+position:relative;
+opacity: 0.75;
+height: 128px;
+width: 128px;
+}
+
+
+.personBoxText, .personBoxTextSmall {
 	position:absolute;
 	width: 100%;
 	bottom:0;
@@ -29,13 +43,23 @@ opacity: 0.9;
 	background-color: rgba(0, 0, 0, 0.5);
 }
 
+
 .personBoxText p {
 	color: #ffffff;
 	line-height: 64px;
 	padding-left: 8px;
 }
 
+.personBoxTextSmall p {
+	color: #ffffff;
+	line-height: 32px;
+}
+
 .personBox:hover {
+    opacity: 1;
+}
+
+.personBoxSmall:hover {
     opacity: 1;
 }
 
@@ -181,12 +205,12 @@ a {
 .tree li::before, .tree li::after{
     content: '';
     position: absolute; top: 0; right: 50%;
-    border-top: 4px solid #000;
+    border-top: 4px solid #607D8B;
     width: 50%; height: 20px;
 }
 .tree li::after{
     right: auto; left: 50%;
-    border-left: 4px solid #000;
+    border-left: 4px solid #607D8B;
 }
 
 /*We need to remove left-right connectors from elements without
@@ -205,7 +229,7 @@ right connector from last child*/
 }
 /*Adding back the vertical connector to the last nodes*/
 .tree li:last-child::before{
-    border-right: 4px solid #000;
+    border-right: 4px solid #607D8B;
     border-radius: 0 5px 0 0;
     -webkit-border-radius: 0 5px 0 0;
     -moz-border-radius: 0 5px 0 0;
@@ -220,7 +244,7 @@ right connector from last child*/
 .tree ul ul::before{
     content: '';
     position: absolute; top: 0; left: 50%;
-    border-left: 4px solid #000;
+    border-left: 4px solid #607D8B;
     width: 0; height: 20px;
 }
 
