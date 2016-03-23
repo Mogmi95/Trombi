@@ -1,7 +1,64 @@
-{{ person.login }}
-<br />
-Team : {{ person.team }}
-<br />
-Manager : {{ person.manager }}
-<br />
-Subordinates : {{ person.subordinates }}
+{% extends "index.html" %}
+{% block title %}{{ person.name }} {{ person.surname }}{% endblock %}
+
+{% block body %}
+
+<!-- Wide card with share menu button -->
+<style>
+.demo-card-wide.mdl-card {
+  margin-left: auto;
+  margin-right: auto;
+  width: 512px;
+}
+.demo-card-wide > .mdl-card__title {
+  color: #fff;
+  height: 256px;
+  background: url({{ url_for('static', filename='images/' + person.login + '.jpg') }}) center / cover;
+}
+.demo-card-wide > .mdl-card__menu {
+  color: #fff;
+}
+</style>
+
+<div class="demo-card-wide mdl-card mdl-shadow--2dp">
+  <div class="mdl-card__title">
+    <h2 class="mdl-card__title-text">{{ person.name }} {{ person.surname }}</h2>
+  </div>
+  <div class="mdl-card__supporting-text">
+
+    <table style="width:100%">
+      <tr>
+        <td>Login :</td>
+        <td>{{ person.login }}</td>
+      </tr>
+      <tr>
+        <td>Anniversaire :</td>
+        <td>{{ person.birthday }}</td>
+      </tr>
+      <tr>
+        <td>Email :</td>
+        <td><a href="mailto:{{ person.email }}">{{ person.email }}</a></td>
+      </tr>
+      <tr>
+        <td>Mobile pro :</td>
+        <td>{{ person.mobile }}</td>
+      </tr>
+      <tr>
+        <td>Skype :</td>
+        <td><a href="skype:{{ person.skype }}">{{ person.skype }}</a></td>
+      </tr>
+      <tr>
+        <td>Manager :</td>
+        <td>{{ person.manager.name }} {{ person.manager.surname }}</td>
+      </tr>
+</table>
+
+  </div>
+  <div class="mdl-card__actions mdl-card--border">
+    <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
+      Génerer une V-Card
+    </a>
+  </div>
+</div>
+
+{% endblock %}
