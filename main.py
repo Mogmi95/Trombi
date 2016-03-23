@@ -1,6 +1,6 @@
 import flask
 import flask.ext.sqlalchemy
-from flask import render_template, redirect
+from flask import render_template, redirect, request
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy import Table, Column, Integer, ForeignKey
 from flask.ext.wtf import Form
@@ -29,13 +29,16 @@ def show_person(login=None):
 def show_search(query=None):
     persons = Person.query.filter_by(login=query)
 
-    print(dir(persons))
-
     if (len(persons.all()) == 1):
         return render_template('person.html', person=persons.first())
 
 
     return render_template('all.html', persons=persons)
+
+@app.route('/search/', methods=['POST'])
+def search():
+    query = request.form['search']
+    return show_search(query)
 
 @app.route("/team/<team>")
 def show_team(team=None):

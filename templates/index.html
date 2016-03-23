@@ -33,7 +33,9 @@
           <i class="material-icons">search</i>
         </label>
         <div class="mdl-textfield__expandable-holder">
-          <input class="mdl-textfield__input" type="text" name="sample" id="waterfall-exp">
+          <form method="post" action="{{ url_for('search') }}">
+            <input class="mdl-textfield__input" type="text" name="search" id="waterfall-exp">
+          </form>
         </div>
       </div>
     </div>
