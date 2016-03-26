@@ -1,58 +1,66 @@
 /* by Mogmi */
 
 body {
-	background-color: #C5CAE9;
+    background-color: #efefef;
+}
+
+.page-content-wrapper {
+    position: relative;
+    padding: 16px;
+    min-height: 750px;
+    overflow: auto;
 }
 
 .page-content {
-	margin: 64px;
-	padding: 16px;
-	min-height: 750px;
 }
 
 /* Cards */
 .personBox {
-margin: 16px;
-transition: all 0.5s;
--webkit-transition: all 0.5s;
--moz-transition: all 0.5s;
-position:relative;
-display: inline-block;
-opacity: 0.75;
-height: 256px;
-width: 256px;
+    margin: 16px;
+    transition: all 0.5s;
+    -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    position:relative;
+    display: inline-block;
+    opacity: 0.75;
+    height: 256px;
+    width: 256px;
 }
 
 .personBoxSmall {
-transition: all 0.5s;
--webkit-transition: all 0.5s;
--moz-transition: all 0.5s;
-position:relative;
-opacity: 0.75;
-height: 128px;
-width: 128px;
+    transition: all 0.5s;
+    -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    position:relative;
+    opacity: 0.75;
+    height: 128px;
+    width: 128px;
+}
+
+.tree-container {
+    width: 3000px;
 }
 
 
 .personBoxText, .personBoxTextSmall {
-	position:absolute;
-	width: 100%;
-	bottom:0;
-	left:0;
-	height: 25%;
-	background-color: rgba(0, 0, 0, 0.5);
+    position:absolute;
+    width: 100%;
+    bottom:0;
+    left:0;
+    height: 25%;
+    background-color: rgba(0, 0, 0, 0.5);
 }
 
 
 .personBoxText p {
-	color: #ffffff;
-	line-height: 64px;
-	padding-left: 8px;
+    color: #ffffff;
+    line-height: 64px;
+    padding-left: 8px;
 }
 
 .personBoxTextSmall p {
-	color: #ffffff;
-	line-height: 32px;
+    color: #ffffff;
+    line-height: 32px;
 }
 
 .personBox:hover {
@@ -67,60 +75,60 @@ width: 128px;
 
 /*############################################################*/
 .black_overlay{
-	display: block;
-	position: fixed;
-	top: 0%;
-	left: 0%;
-	width: 100%;
-	height: 100%;
-	background-color: black;
-	z-index:1001;
-	-moz-opacity: 0.8;
-	opacity:.80;
-	filter: alpha(opacity=80);
+    display: block;
+    position: fixed;
+    top: 0%;
+    left: 0%;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    z-index:1001;
+    -moz-opacity: 0.8;
+    opacity:.80;
+    filter: alpha(opacity=80);
 }
 
 .white_content {
-	display: block;
-	position: fixed;
-	padding: 32px;
-	left: 75%;
-	top: 25%;
-	margin: 0 0 0 -37.5%;
-	border-radius: 10px;
-	background-color: white;
-	z-index:1002;
-	overflow: auto;
+    display: block;
+    position: fixed;
+    padding: 32px;
+    left: 75%;
+    top: 25%;
+    margin: 0 0 0 -37.5%;
+    border-radius: 10px;
+    background-color: white;
+    z-index:1002;
+    overflow: auto;
 }
 
 
 
 h1 {
-	color: #FFFFFF;
-	padding-left: 16px;
-	height: 50px;
-	line-height: 50px;
-	padding: 0px;
-	margin: 0px;
+    color: #FFFFFF;
+    padding-left: 16px;
+    height: 50px;
+    line-height: 50px;
+    padding: 0px;
+    margin: 0px;
 }
 
 h2 {
-	color: #073c61;
-	padding-left: 16px;
-	padding-top: 30px;
+    color: #073c61;
+    padding-left: 16px;
+    padding-top: 30px;
 }
 
 .header {
-	background-color: #2E5F81;
-	padding: 2px;
-	height: 50px;
+    background-color: #2E5F81;
+    padding: 2px;
+    height: 50px;
 }
 
 .header img {
-	float: left;
-	height: 50px;
-	margin-left: 8px;
-	margin-right: 8px;
+    float: left;
+    height: 50px;
+    margin-left: 8px;
+    margin-right: 8px;
 }
 
 
@@ -129,49 +137,49 @@ h2 {
 
 
 .personBoxImage {
-	width: 200px;
-	height: 200px;
-	border-top-left-radius: 10px;
-	border-top-right-radius: 10px;
-	display: table-cell;
-	vertical-align: middle;
+    width: 200px;
+    height: 200px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    display: table-cell;
+    vertical-align: middle;
 }
 
 .personBoxImagePlus {
-	display: block;
-	margin-left: auto;
-	margin-right: auto;
-	vertical-align: middle;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    vertical-align: middle;
 }
 
 #personImage {
-	width: 100px;
-	height: 100px;
-	display: block;
-	margin-left: auto;
-	margin-right: auto;
+    width: 100px;
+    height: 100px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .formEdit {
-	margin-top: 16px;
-	margin-left: auto;
-	margin-right: auto;
+    margin-top: 16px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 
 
 .formTitles {
-	font-weight: bold;
+    font-weight: bold;
 }
 
 td {
-	padding: 8px;
-	white-space: nowrap;
+    padding: 8px;
+    white-space: nowrap;
 }
 
 a {
-	text-decoration: none;
-	color: #121212;
+    text-decoration: none;
+    color: #121212;
 }
 
 # Overlay
@@ -183,7 +191,6 @@ a {
 
 .tree ul {
     padding-top: 20px; position: relative;
-
     transition: all 0.5s;
     -webkit-transition: all 0.5s;
     -moz-transition: all 0.5s;
@@ -264,11 +271,11 @@ right connector from last child*/
 /*Time for some hover effects*/
 /*We will apply the hover effect the the lineage of the element also
 .tree li a:hover, .tree li a:hover+ul li a {
-    background: #c8e4f8; color: #000; border: 1px solid #94a0b4;
+background: #c8e4f8; color: #000; border: 1px solid #94a0b4;
 }
 .tree li a:hover+ul li::after,
 .tree li a:hover+ul li::before,
 .tree li a:hover+ul::before,
 .tree li a:hover+ul ul::before{
-    border-color:  #94a0b4;
+border-color:  #94a0b4;
 }*/

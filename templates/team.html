@@ -1,10 +1,23 @@
 {% extends "index.html" %}
-{% block title %}TEAM{% endblock %}
 
 {% block body %}
 
+{% if showAll %}
+    {% for team in teams %}
+        <a href="/team/{{team.name}}">
+        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+            {{team.name}}
+          </button>
+      </a>
+    {% endfor %}
+{% else %}
+
 <div class="tree">
-    {{ tree | safe }}
+    <div class="tree-container">
+        {{ tree | safe }}
+    </div>
 </div>
+
+{% endif %}
 
 {% endblock %}

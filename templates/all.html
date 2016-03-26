@@ -1,12 +1,75 @@
 {% extends "index.html" %}
-{% block title %}All persons{% endblock %}
+{% block title %}Trombinoscope{% endblock %}
 
 {% block body %}
-<div class="block_departement" id="">
+<style>
+
+    .card-image.mdl-card {
+        opacity: 0.9;
+    }
+
+    .card-image.mdl-card:hover {
+        opacity:1;
+    }
+
+    .card-image > .mdl-card__actions {
+        height: 52px;
+        padding: 16px;
+        background: rgba(0, 0, 0, 0.4);
+    }
+    .card-image__filename {
+        color: #fff;
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    .custom-grid {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .cell-spacer {
+        min-height: 160px;
+    }
+
+    .cell-text-container {
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .cell-text {
+        color: #ffffff;
+        line-height: 42px;
+        padding-left: 16px;
+    }
+
+    .custom {
+        opacity: 0.9;
+    }
+
+    .custom:hover {
+        opacity: 1;
+    }
+
+</style>
+
+{{ message }}
+
+<div class="mdl-grid custom-grid">
     {% for person in persons %}
-
-    {% include "tree_node.html" %}
-
+    <div class="mdl-cell mdl-cell--3-col mdl-cell--2-col-phone custom" style="background: url({{ url_for('static', filename='images/' + person.login + '.jpg') }}) center / cover;">
+        <a href="/person/{{ person.login }}">
+            <div class="cell-spacer"></div> 
+            <div class="cell-text-container">
+                <span class="cell-text">
+                    {{ person.name }} {{ person.surname }}
+                </span>
+            </div>
+        </a>
+    </div>
     {% endfor %}
+
+
+    <script src="lazysizes.min.js" async=""></script>
 </div>
+
 {% endblock %}
