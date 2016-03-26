@@ -99,20 +99,18 @@ def build_tree(root_person, is_root):
 
 def load_persons():
     # Init teams
-    apps = Team('apps');
-    db.session.add(apps)
-    db.session.commit()
 
     persons = []
     managers = {}
+    teams = {}
+
     with open('update.txt', 'r') as f:
         for line in f:
-            if (len(line) > 0 and line[0] != '#'):
+            if (len(line) > 1 and line[0] != '#'):
                 print(line)
                 neo = Person()
                 split = line.split(';')
 
-                neo.team = Team.query.filter_by(name=split[0]).first()
                 neo.login = split[1]
                 neo.surname = split[2]
                 neo.name = split[3]
@@ -123,6 +121,7 @@ def load_persons():
                 neo.fixe = split[8]
                 neo.mobile = split[9]
 
+                team = split[0]
                 manager = split[10]
 
                 if manager in managers:
@@ -130,16 +129,28 @@ def load_persons():
                 else:
                     managers[manager] = [neo]
 
+                if team in teams:
+                    teams[team].append(neo)
+                else:
+                    teams[team] = [neo]
+
                 persons.append(neo)
 
     print('PERSONS : ' + str(persons))
     print('MANAGERS : ' + str(managers))
+    print('TEAMS : ' + str(teams))
 
     for person in persons:
         # We link the managers
         if person.login in managers:
             person.subordinates = managers[person.login]
+
         db.session.add(person)
+
+    for team_name in teams:
+        neo_team = Team(team_name)
+        neo_team.persons = teams[team_name]
+        db.session.add(neo_team)
 
     db.session.commit()
 
