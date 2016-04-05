@@ -1,281 +1,172 @@
 /* by Mogmi */
 
 body {
-    background-color: #efefef;
-}
-
-.page-content-wrapper {
-    position: relative;
-    padding: 16px;
-    min-height: 750px;
-    overflow: auto;
-}
-
-.page-content {
-}
-
-/* Cards */
-.personBox {
-    margin: 16px;
-    transition: all 0.5s;
-    -webkit-transition: all 0.5s;
-    -moz-transition: all 0.5s;
-    position:relative;
-    display: inline-block;
-    opacity: 0.75;
-    height: 256px;
-    width: 256px;
-}
-
-.personBoxSmall {
-    transition: all 0.5s;
-    -webkit-transition: all 0.5s;
-    -moz-transition: all 0.5s;
-    position:relative;
-    opacity: 0.75;
-    height: 128px;
-    width: 128px;
-}
-
-.tree-container {
-    width: 3000px;
-}
-
-
-.personBoxText, .personBoxTextSmall {
-    position:absolute;
-    width: 100%;
-    bottom:0;
-    left:0;
-    height: 25%;
-    background-color: rgba(0, 0, 0, 0.5);
-}
-
-
-.personBoxText p {
-    color: #ffffff;
-    line-height: 64px;
-    padding-left: 8px;
-}
-
-.personBoxTextSmall p {
-    color: #ffffff;
-    line-height: 32px;
-}
-
-.personBox:hover {
-    opacity: 1;
-}
-
-.personBoxSmall:hover {
-    opacity: 1;
-}
-
-
-
-/*############################################################*/
-.black_overlay{
-    display: block;
-    position: fixed;
-    top: 0%;
-    left: 0%;
-    width: 100%;
-    height: 100%;
-    background-color: black;
-    z-index:1001;
-    -moz-opacity: 0.8;
-    opacity:.80;
-    filter: alpha(opacity=80);
-}
-
-.white_content {
-    display: block;
-    position: fixed;
-    padding: 32px;
-    left: 75%;
-    top: 25%;
-    margin: 0 0 0 -37.5%;
-    border-radius: 10px;
-    background-color: white;
-    z-index:1002;
-    overflow: auto;
-}
-
-
-
-h1 {
-    color: #FFFFFF;
-    padding-left: 16px;
-    height: 50px;
-    line-height: 50px;
-    padding: 0px;
-    margin: 0px;
-}
-
-h2 {
-    color: #073c61;
-    padding-left: 16px;
-    padding-top: 30px;
-}
-
-.header {
-    background-color: #2E5F81;
-    padding: 2px;
-    height: 50px;
-}
-
-.header img {
-    float: left;
-    height: 50px;
-    margin-left: 8px;
-    margin-right: 8px;
-}
-
-
-.block_department {
-}
-
-
-.personBoxImage {
-    width: 200px;
-    height: 200px;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-    display: table-cell;
-    vertical-align: middle;
-}
-
-.personBoxImagePlus {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    vertical-align: middle;
-}
-
-#personImage {
-    width: 100px;
-    height: 100px;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.formEdit {
-    margin-top: 16px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-
-
-.formTitles {
-    font-weight: bold;
-}
-
-td {
-    padding: 8px;
-    white-space: nowrap;
+  background-color: #efefef;
 }
 
 a {
-    text-decoration: none;
-    color: #121212;
+  text-decoration: none;
+  color: #3f51b5;
 }
 
-# Overlay
+.page-content {
+  padding: 16px;
+  min-height: 750px;
+}
 
+/* All */
 
-# TREEEEEEEEEEE
+.custom-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.cell-spacer {
+  min-height: 160px;
+}
+.cell-text-container {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+.cell-text {
+  color: #fff;
+  line-height: 42px;
+  padding-left: 16px;
+  font-family: 'Roboto';
+  font-weight: 500;
+}
+.card-style {
+  background: #fff;
+  border-radius: 2px;
+  position: relative;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  transition: all 0.2s ease-in-out;
+}
+.card-style:hover {
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+}
 
-* {margin: 0; padding: 0;}
+/* Tree */
 
+.tree-container {
+  width: 3000px;
+}
+.treeNode {
+  background: #123456;
+  height: 128px;
+  width: 128px;
+  border: solid 0px #000;
+}
+.treeNodeSpacer {
+  height: 75%;
+}
+.treeNodeText {
+  height: 25%;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #fff;
+}
+* {
+  margin: 0;
+  padding: 0;
+}
 .tree ul {
-    padding-top: 20px; position: relative;
-    transition: all 0.5s;
-    -webkit-transition: all 0.5s;
-    -moz-transition: all 0.5s;
+  padding-top: 20px;
+  position: relative;
+  transition: all 0.5s;
+  -webkit-transition: all 0.5s;
+  -moz-transition: all 0.5s;
 }
-
 .tree li {
-    float: left; text-align: center;
-    list-style-type: none;
-    position: relative;
-    padding: 20px 5px 0 5px;
-
-    transition: all 0.5s;
-    -webkit-transition: all 0.5s;
-    -moz-transition: all 0.5s;
+  float: left;
+  text-align: center;
+  list-style-type: none;
+  position: relative;
+  padding: 20px 5px 0 5px;
+  transition: all 0.5s;
+  -webkit-transition: all 0.5s;
+  -moz-transition: all 0.5s;
 }
 
 /*We will use ::before and ::after to draw the connectors*/
 
-.tree li::before, .tree li::after{
-    content: '';
-    position: absolute; top: 0; right: 50%;
-    border-top: 4px solid #607D8B;
-    width: 50%; height: 20px;
+.tree li::before, .tree li::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 50%;
+  border-top: 4px solid #000;
+  width: 50%;
+  height: 16px;
 }
-.tree li::after{
-    right: auto; left: 50%;
-    border-left: 4px solid #607D8B;
+.tree li::after {
+  right: auto;
+  left: 50%;
+  border-left: 4px solid #000;
 }
 
 /*We need to remove left-right connectors from elements without
 any siblings*/
+
 .tree li:only-child::after, .tree li:only-child::before {
-    display: none;
+  display: none;
 }
 
 /*Remove space from the top of single children*/
-.tree li:only-child{ padding-top: 0;}
+
+.tree li:only-child {
+  padding-top: 0;
+}
 
 /*Remove left connector from first child and
 right connector from last child*/
-.tree li:first-child::before, .tree li:last-child::after{
-    border: 0 none;
+
+.tree li:first-child::before, .tree li:last-child::after {
+  border: 0 none;
 }
+
 /*Adding back the vertical connector to the last nodes*/
-.tree li:last-child::before{
-    border-right: 4px solid #607D8B;
-    border-radius: 0 5px 0 0;
-    -webkit-border-radius: 0 5px 0 0;
-    -moz-border-radius: 0 5px 0 0;
+
+.tree li:last-child::before {
+  border-right: 4px solid #000;
+  border-radius: 0 5px 0 0;
+  -webkit-border-radius: 0 5px 0 0;
+  -moz-border-radius: 0 5px 0 0;
 }
-.tree li:first-child::after{
-    border-radius: 5px 0 0 0;
-    -webkit-border-radius: 5px 0 0 0;
-    -moz-border-radius: 5px 0 0 0;
+.tree li:first-child::after {
+  border-radius: 5px 0 0 0;
+  -webkit-border-radius: 5px 0 0 0;
+  -moz-border-radius: 5px 0 0 0;
 }
 
 /*Time to add downward connectors from parents*/
-.tree ul ul::before{
-    content: '';
-    position: absolute; top: 0; left: 50%;
-    border-left: 4px solid #607D8B;
-    width: 0; height: 20px;
+
+.tree ul ul::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  border-left: 4px solid #000;
+  width: 0;
+  height: 20px;
 }
-
-.tree li a{
-    text-decoration: none;
-    display: inline-block;
-
-    border-radius: 5px;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-
-    transition: all 0.5s;
-    -webkit-transition: all 0.5s;
-    -moz-transition: all 0.5s;
+.tree li a {
+  text-decoration: none;
+  display: inline-block;
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  transition: all 0.5s;
+  -webkit-transition: all 0.5s;
+  -moz-transition: all 0.5s;
 }
 
 /*Time for some hover effects*/
+
+
 /*We will apply the hover effect the the lineage of the element also
+
 .tree li a:hover, .tree li a:hover+ul li a {
-background: #c8e4f8; color: #000; border: 1px solid #94a0b4;
+  background: #c8e4f8;
+  color: #000;
 }
-.tree li a:hover+ul li::after,
-.tree li a:hover+ul li::before,
-.tree li a:hover+ul::before,
-.tree li a:hover+ul ul::before{
-border-color:  #94a0b4;
+.tree li a:hover+ul li::after, .tree li a:hover+ul li::before, .tree li a:hover+ul::before, .tree li a:hover+ul ul::before {
+  border-color: #ff00ff;
 }*/

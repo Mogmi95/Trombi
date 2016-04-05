@@ -2,68 +2,12 @@
 {% block title %}Trombinoscope{% endblock %}
 
 {% block body %}
-<style>
-
-    .card-image.mdl-card {
-        opacity: 0.9;
-    }
-
-    .card-image.mdl-card:hover {
-        opacity:1;
-    }
-
-    .card-image > .mdl-card__actions {
-        height: 52px;
-        padding: 16px;
-        background: rgba(0, 0, 0, 0.4);
-    }
-    .card-image__filename {
-        color: #fff;
-        font-size: 14px;
-        font-weight: 500;
-    }
-
-    .custom-grid {
-        max-width: 1200px;
-        margin: 0 auto;
-    }
-
-    .cell-spacer {
-        min-height: 160px;
-    }
-
-    .cell-text-container {
-        background-color: rgba(0, 0, 0, 0.5);
-    }
-
-    .cell-text {
-        color: #fff;
-        line-height: 42px;
-        padding-left: 8px;
-        font-family: 'Roboto';
-       font-weight: 200;
-    }
-
-    .custom {
-      background: #fff;
-border-radius: 2px;
-position: relative;
-
-box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-transition: all 0.2s ease-in-out;
-    }
-
-    .custom:hover {
-          box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
-    }
-
-</style>
 
 {{ message }}
 
 <div class="mdl-grid custom-grid">
     {% for person in persons %}
-    <div class="mdl-cell mdl-cell--2-col mdl-cell--2-col-phone custom" style="background: url({{ url_for('static', filename='images/' + person.login + '.jpg') }}) center / cover;">
+    <div class="mdl-cell mdl-cell--3-col mdl-cell--2-col-phone card-style" style="background: url({{ url_for('static', filename='images/' + person.login + '.jpg') }}) center / cover;">
         <a href="/person/{{ person.login }}">
             <div class="cell-spacer"></div>
             <div class="cell-text-container">
@@ -75,8 +19,6 @@ transition: all 0.2s ease-in-out;
     </div>
     {% endfor %}
 
-
-    <script src="lazysizes.min.js" async=""></script>
 </div>
 
 {% endblock %}
