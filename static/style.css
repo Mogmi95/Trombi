@@ -24,7 +24,7 @@ a {
   min-height: 160px;
 }
 .cell-text-container {
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.3);
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -50,7 +50,7 @@ a {
 }
 
 .card-style:hover .cell-text-container {
-  display: none;
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 /* Tree */
