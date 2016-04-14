@@ -11,7 +11,7 @@ class Team(db.Model):
 
     def __init__(self, name):
         self.name = name
- 
+
     def __repr__(self):
         return 'Team(' + str(self.id) + ')=' + self.name
 
@@ -35,13 +35,11 @@ class Person(db.Model):
     fixe = db.Column(db.String(120), unique=False)
     job = db.Column(db.String(120), unique=False)
     skype = db.Column(db.String(120), unique=False)
-    
+
     manager_id = Column(Integer, ForeignKey('person.id'))
     manager = relationship("Person", backref="subordinates", remote_side="Person.id")
 
     team_id = Column(Integer, ForeignKey('team.id'))
 
     def __repr__(self):
-        return 'Person(' + str(self.id) + ') ' + self.name + ' team= ' + str(self.team)
-
-
+        return str(self.id)

@@ -17,13 +17,18 @@ def main():
 @app.route("/all")
 def show_all():
     title = "Trombinoscope"
-    persons = Person.query.all()
+    persons = Person.query.order_by(Person.surname).all()
     return render_template('all.html', persons=persons, title=title)
 
 @app.route("/person/<login>")
 def show_person(login=None):
     person = Person.query.filter_by(login=login).first()
     title = person.name + " " + person.surname
+
+    print('Name : ' + person.name)
+    print('Manager : ' + str(person.manager))
+    print('Subordinates : ' + str(person.subordinates))
+
     return render_template('person.html', person=person, title=title)
 
 @app.route("/person/vcard/vcard-<login>.vcf")
@@ -64,18 +69,54 @@ def search():
 def show_all_teams():
     title = "Equipes"
     teams = Team.query.all()
-    return render_template('team.html', showAll=True, teams=teams, title=title)
+    return render_template('teamjs.html', showAll=True, teams=teams, title=title)
 
 
 @app.route("/team/<team>")
 def show_team(team=None):
+    print('HELLO')
+
     team = Team.query.filter_by(name=team).first()
+
+
     title = "Equipe " + team.name
 
+    print(team.persons)
+
     root_manager = team.get_manager()
+
+    print("Manager : " + str(root_manager))
+    print("Paysans : " + str(root_manager.subordinates))
+    print("Paysans : " + str(root_manager.manager))
     tree = build_tree(root_manager, True)
 
-    return render_template('team.html', team=team, tree=tree, title=title)
+    treejs = build_treejs(root_manager, True)
+
+    return render_template('teamjs.html', team=team, tree=tree, treejs=treejs, title=title)
+
+
+def build_treejs(root_person, is_root):
+    result = ""
+
+    parent = ''
+    if (not is_root):
+        parent = root_person.manager.login
+
+#style=\"background: url(/static/images/" + root_person.login + ".jpg) center / cover;\"
+
+    #result += "[{v:'" + root_person.login + "', f:'<img class=\"treeImage\" src=\"http://jeanbaptiste.bayle.free.fr/AVATAR/grey_81618-default-avatar-200x200.jpg\" /><p>" + root_person.name + " " + root_person.surname + "</p>'}, '" + root_person.manager.login + "', 'The President'],"
+    #result += "[{v:'" + root_person.login + "', f:'<a href=\"/person/" + root_person.login + "\"><div class=\"treeImage\" src=\"/static/images/" + root_person.login + ".jpg\"></div><p>" + root_person.name + " " + root_person.surname + "</p></a>'}, '" + parent + "', 'The President'],"
+    result += "[{v:'" + root_person.login + "', f:'<div class=\"rootTreeNodeElement\">\
+        <div class=\"treeNode\" style=\"background: url(/static/images/" + root_person.login + ".jpg) center / cover;\" >\
+            <div class=\"treeNodeText\">" "</div>\
+        </div>\
+    </div>'}, '" + parent + "', '" + root_person.name + " " + root_person.surname + "'],"
+
+
+    for subordinate in root_person.subordinates:
+        result += build_treejs(subordinate, False)
+
+    return result
 
 # Return a HTML tree with a person as root
 def build_tree(root_person, is_root):
@@ -104,25 +145,31 @@ def load_persons():
     managers = {}
     teams = {}
 
-    with open('update.txt', 'r') as f:
+    # DEPT,SERVICE,LOGIN,NOM,PRENOM,NAISSANCE,FONCTION,MAIL,SKYPE,FIXE,PORTABLE,MANAGER
+    with open('update.csv', 'r') as f:
         for line in f:
             if (len(line) > 1 and line[0] != '#'):
                 print(line)
                 neo = Person()
-                split = line.split(';')
 
-                neo.login = split[1]
-                neo.surname = split[2]
-                neo.name = split[3]
-                neo.birthday = split[4]
-                neo.job = split[5]
-                neo.email = split[6]
-                neo.skype = split[7]
-                neo.fixe = split[8]
-                neo.mobile = split[9]
+                #print('LEUL : ' + str(type(unicode(line))))
+                split = line[:-1].split(',')
+
+                neo.login = split[2].strip().lower().decode('utf-8')
+                neo.surname = split[3].decode('utf-8')
+                neo.name = split[4].decode('utf-8')
+                neo.birthday = split[5].decode('utf-8')
+                neo.job = split[6].decode('utf-8')
+                neo.email = split[7].decode('utf-8')
+                neo.skype = split[8].decode('utf-8')
+                neo.fixe = split[9].decode('utf-8')
+                neo.mobile = split[10].decode('utf-8')
+
 
                 team = split[0]
-                manager = split[10]
+                manager = split[11]
+
+                print("YEEHAMANAGER : " + manager)
 
                 if manager in managers:
                     managers[manager].append(neo)
@@ -136,21 +183,25 @@ def load_persons():
 
                 persons.append(neo)
 
-    print('PERSONS : ' + str(persons))
-    print('MANAGERS : ' + str(managers))
-    print('TEAMS : ' + str(teams))
 
     for person in persons:
         # We link the managers
         if person.login in managers:
+            print('Manager : ' + person.login)
             person.subordinates = managers[person.login]
-
+            for lol in person.subordinates:
+                print('     -> ' + lol.login)
         db.session.add(person)
 
     for team_name in teams:
+        print(team_name)
         neo_team = Team(team_name)
         neo_team.persons = teams[team_name]
         db.session.add(neo_team)
+
+    print('PERSONS : ' + str(persons))
+    print('MANAGERS : ' + str(managers))
+    print('TEAMS : ' + str(teams))
 
     db.session.commit()
 

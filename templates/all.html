@@ -7,12 +7,12 @@
 
 <div class="mdl-grid custom-grid">
     {% for person in persons %}
-    <div class="mdl-cell mdl-cell--3-col mdl-cell--2-col-phone card-style" style="background: url({{ url_for('static', filename='images/' + person.login + '.jpg') }}) center / cover;">
+    <div class="mdl-cell mdl-cell--2-col mdl-cell--2-col-phone card-style" style="background: url({{ url_for('static', filename='images/' + person.login + '.jpg') }}) center / cover;">
         <a href="/person/{{ person.login }}">
             <div class="cell-spacer"></div>
             <div class="cell-text-container">
                 <span class="cell-text">
-                    {{ person.name }} {{ person.surname }}
+                    {{ person.name }} {{ person.surname.upper() }}
                 </span>
             </div>
         </a>
