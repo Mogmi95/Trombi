@@ -7,7 +7,7 @@
 
 <div class="mdl-grid custom-grid">
     {% for person in persons %}
-    <div class="mdl-cell mdl-cell--2-col mdl-cell--2-col-phone card-style" style="background: url({{ url_for('static', filename='images/' + person.login + '.jpg') }}) center / cover;">
+    <div class="mdl-cell mdl-cell--2-col mdl-cell--2-col-tablet mdl-cell--2-col-phone card-style" style="background: url({{ url_for('static', filename='images/' + person.login + '.jpg') }}) center / cover;">
         <a href="/person/{{ person.login }}">
             <div class="cell-spacer"></div>
             <div class="cell-text-container">

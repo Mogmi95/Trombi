@@ -7,44 +7,61 @@
     .demo-card-wide.mdl-card {
         margin-left: auto;
         margin-right: auto;
+        margin-top: 16px;
         width: 500px;
     }
     .demo-card-wide > .mdl-card__title {
         color: #fff;
         height: 256px;
-        background: url({{ url_for('static', filename='images/' + person.login + '.jpg') }}) center / cover;
     }
     .demo-card-wide > .mdl-card__menu {
         color: #fff;
+    }
+
+    .pizza {
+      position: absolute;
+      left: 16px;
+      top: 16px;
+      width: 200px;
+      height: 240px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+      background: url({{ url_for('static', filename='images/' + person.login + '.jpg') }}) center / cover;
+    }
+
+    .mdl-card__title-text-container {
+      position: absolute;
+      padding-right: 16px;
+      left: 240px;
+      top: 32px;
+      color: #000;
     }
 </style>
 
 <div class="demo-card-wide mdl-card mdl-shadow--3dp">
     <div class="mdl-card__title">
-        <h2 class="mdl-card__title-text">{{ person.name }} {{ person.surname }}</h2>
+      <div class="pizza"></div>
+      <div class="mdl-card__title-text-container">
+      <h2 class="mdl-card__title-text">{{ person.name }} {{ person.surname }}</h2>
+      <p>{{ person.job }}</p>
+      <p><a href="/team/{{ person.team.name }}">{{ person.team.name }}</a></p>
+
+      <p>Manager : <a href="/person/{{ person.manager.login }}">{{ person.manager.name }} {{ person.manager.surname }}</a></p>
+
+      <a href="/person/vcard/vcard-{{ person.login }}.vcf" download>
+        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+          Telecharger V-Card
+        </button>
+      </a>
+
+
     </div>
+    </div>
+
     <div class="mdl-card__supporting-text">
+      <div class="mdl-card__actions mdl-card--border"></div>
 
 
         <ul class="demo-list-icon mdl-list">
-            <li class="mdl-list__item">
-            <span class="mdl-list__item-primary-content">
-                <i class="material-icons mdl-list__item-icon">person</i>
-                {{ person.name }} {{ person.surname }}
-            </span>
-            </li>
-            <li class="mdl-list__item">
-            <span class="mdl-list__item-primary-content">
-                <i class="material-icons mdl-list__item-icon">label</i>
-                <a href="/team/{{ person.team.name }}">{{ person.team.name }}</a>
-            </span>
-            </li>
-            <li class="mdl-list__item">
-            <span class="mdl-list__item-primary-content">
-                <i class="material-icons mdl-list__item-icon">build</i>
-                {{ person.job }}
-            </span>
-            </li>
             <li class="mdl-list__item">
             <span class="mdl-list__item-primary-content">
                 <i class="material-icons mdl-list__item-icon">cake</i>
@@ -60,29 +77,25 @@
             <li class="mdl-list__item">
             <span class="mdl-list__item-primary-content">
                 <i class="material-icons mdl-list__item-icon">call</i>
-                {{ person.mobile }} (mobile)
+                <span>{{ person.mobile }} (mobile)</span>
             </span>
             </li>
             <li class="mdl-list__item">
             <span class="mdl-list__item-primary-content">
                 <i class="material-icons mdl-list__item-icon">call</i>
-                {{ person.fixe }} (fixe)
+                <span>{{ person.fixe }} (fixe)</span>
             </span>
             </li>
             <li class="mdl-list__item">
             <span class="mdl-list__item-primary-content">
                 <i class="material-icons mdl-list__item-icon">call</i>
-                <a href="skype:{{ person.skype }}">{{ person.skype }}</a> (skype)
+                <span><a href="skype:{{ person.skype }}">{{ person.skype }} </a> (skype)</span>
             </span>
             </li>
         </ul>
 
     </div>
-    <div class="mdl-card__actions mdl-card--border">
-        <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="/person/vcard/vcard-{{ person.login }}.vcf" download>
-            Generer V-Card
-        </a>
-    </div>
+
 </div>
 
 {% endblock %}

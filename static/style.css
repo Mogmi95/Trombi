@@ -14,6 +14,10 @@ a {
   min-height: 750px;
 }
 
+.imgLogo {
+  height: 48px;
+}
+
 /* All */
 
 .custom-grid {
