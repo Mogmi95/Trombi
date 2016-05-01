@@ -11,7 +11,7 @@ a {
 
 .page-content {
   padding: 16px;
-  min-height: 750px;
+  min-height: 850px;
 }
 
 .imgLogo {
@@ -67,20 +67,66 @@ a {
 
 .rootTreeNodeElement {
   background-color: rgba(0, 0, 0, 0.5);
-  width: 64px;
-  height: 64px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  width: 128px;
+  height: 168px;
+}
+
+.rootTreeNodeElement:hover {
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
 }
 
 .treeNode {
   position: relative;
   top: -2px;
   left: -2px;
-  width: 64px;
-  height: 64px;
+  width: 128px;
+  height: 168px;
+}
+
+.treeNodeTextContainer {
+  position: relative;
+  width: 128px;
+  height: 42px;
+  top: 124px;
+  left: -2px;
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .treeNodeText {
-  width: 64px;
-  height: 64px;
+  position: relative;
+  top: -2px;
+  left: -2px;
+  color: #fff;
+}
+
+.rootTreeNodeElementTeam {
+  position: relative;
+  top: -2px;
+  left: -2px;
+  background-color: #3f51b5;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  width: 128px;
+  height: 128px;
+
+}
+
+.rootTreeNodeElementTeam:hover {
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+}
+
+.treeNodeTeam {
+  position: relative;
+  top: -2px;
+  left: -2px;
+  width: 128px;
+  height: 128px;
+}
+
+.treeNodeTextTeam {
+  position: absolute;
+  top: 40%;
+  width: 128px;
+  height: 128px;
   color: #fff;
 }

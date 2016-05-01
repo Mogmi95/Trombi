@@ -110,9 +110,9 @@ def build_treejs_teams(root_team):
     return result
 
 def get_node_team(team, parent):
-    return "[{v:'" + team.name + "', f:'<a href=\"/team/"+ team.name +"\"><div class=\"rootTreeNodeElement\">\
-        <div class=\"treeNode\">\
-            <div class=\"treeNodeText\">"+ team.name +"</div>\
+    return "[{v:'" + team.name + "', f:'<a href=\"/team/"+ team.name +"\"><div class=\"rootTreeNodeElementTeam\">\
+        <div class=\"treeNodeTeam\">\
+            <div class=\"treeNodeTextTeam\">"+ team.name +"</div>\
         </div>\
     </div></a>'}, '" + parent + "', '" + team.name + "'],"
 
@@ -128,7 +128,7 @@ def build_treejs_persons(root_person, is_root):
     #result += "[{v:'" + root_person.login + "', f:'<a href=\"/person/" + root_person.login + "\"><div class=\"treeImage\" src=\"/static/images/" + root_person.login + ".jpg\"></div><p>" + root_person.name + " " + root_person.surname + "</p></a>'}, '" + parent + "', 'The President'],"
     result += "[{v:'" + root_person.login + "', f:'<a href=\"/person/"+ root_person.login +"\"><div class=\"rootTreeNodeElement\">\
         <div class=\"treeNode\" style=\"background: url(/static/images/" + root_person.login + ".jpg) center / cover;\" >\
-            <div class=\"treeNodeText\">" "</div>\
+            <div class=\"treeNodeTextContainer\"><div class=\"treeNodeText\">" + root_person.name + " " + root_person.surname + "</div></div>\
         </div>\
     </div></a>'}, '" + parent + "', '" + root_person.name + " " + root_person.surname + "'],"
 
