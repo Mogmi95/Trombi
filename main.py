@@ -54,6 +54,7 @@ def show_search(query=None):
     persons = Person.query.filter(or_(\
             Person.login.like(query),\
             Person.name.like(query),\
+            Person.job.like(query),\
             Person.surname.like(query)))
 
     if (len(persons.all()) == 1):
