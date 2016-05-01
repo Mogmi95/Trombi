@@ -2,15 +2,7 @@
 
 {% block body %}
 
-{% if showAll %}
-    {% for team in teams %}
-        <a href="/team/{{team.name}}">
-        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-            {{team.name}}
-          </button>
-      </a>
-    {% endfor %}
-{% else %}
+
 <div class="tree">
 <div id="chart_div"></div>
 </div>
@@ -40,6 +32,5 @@ function drawChart() {
 }
 </script>
 
-{% endif %}
 
 {% endblock %}

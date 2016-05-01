@@ -68,8 +68,8 @@ def search():
 @app.route("/team")
 def show_all_teams():
     title = "Equipes"
-    teams = Team.query.all()
-    return render_template('teamjs.html', showAll=True, teams=teams, title=title)
+    head_team = Team.query.filter_by(high_team=None).first()
+    return show_team(head_team.name)
 
 
 @app.route("/team/<team>")
@@ -77,44 +77,64 @@ def show_team(team=None):
     print('HELLO')
 
     team = Team.query.filter_by(name=team).first()
-
-
     title = "Equipe " + team.name
+
+    print("subteam : " + str(team.sub_teams))
+
+    # If the team has sub-teams, we display them. Otherwise we list the persons inside
+    if (team.sub_teams is None or team.sub_teams == []):
+        print('HEEEEEEEEEEEEERE 1')
+        # We show the persons
+        root_manager = team.get_manager()
+        print('HEEEEEEEEEEEEERE 2')
+        print(root_manager)
+        treejs = build_treejs_persons(root_manager, True)
+        print('HEEEEEEEEEEEEERE 3')
+    else:
+        # We show the teams inside
+        treejs = build_treejs_teams(team)
 
     print(team.persons)
 
-    root_manager = team.get_manager()
+    return render_template('teamjs.html', team=team, treejs=treejs, title=title)
 
-    print("Manager : " + str(root_manager))
-    print("Paysans : " + str(root_manager.subordinates))
-    print("Paysans : " + str(root_manager.manager))
-    tree = build_tree(root_manager, True)
+def build_treejs_teams(root_team):
+    print(root_team)
+    result = ''
 
-    treejs = build_treejs(root_manager, True)
+    result += get_node_team(root_team, '')
 
-    return render_template('teamjs.html', team=team, tree=tree, treejs=treejs, title=title)
+    for subteam in root_team.sub_teams:
+         result += get_node_team(subteam, root_team.name)
 
+    return result
 
-def build_treejs(root_person, is_root):
-    result = ""
+def get_node_team(team, parent):
+    return "[{v:'" + team.name + "', f:'<a href=\"/team/"+ team.name +"\"><div class=\"rootTreeNodeElement\">\
+        <div class=\"treeNode\">\
+            <div class=\"treeNodeText\">"+ team.name +"</div>\
+        </div>\
+    </div></a>'}, '" + parent + "', '" + team.name + "'],"
+
+def build_treejs_persons(root_person, is_root):
+    print(root_person)
+    result = ''
 
     parent = ''
     if (not is_root):
         parent = root_person.manager.login
 
-#style=\"background: url(/static/images/" + root_person.login + ".jpg) center / cover;\"
-
     #result += "[{v:'" + root_person.login + "', f:'<img class=\"treeImage\" src=\"http://jeanbaptiste.bayle.free.fr/AVATAR/grey_81618-default-avatar-200x200.jpg\" /><p>" + root_person.name + " " + root_person.surname + "</p>'}, '" + root_person.manager.login + "', 'The President'],"
     #result += "[{v:'" + root_person.login + "', f:'<a href=\"/person/" + root_person.login + "\"><div class=\"treeImage\" src=\"/static/images/" + root_person.login + ".jpg\"></div><p>" + root_person.name + " " + root_person.surname + "</p></a>'}, '" + parent + "', 'The President'],"
-    result += "[{v:'" + root_person.login + "', f:'<div class=\"rootTreeNodeElement\">\
+    result += "[{v:'" + root_person.login + "', f:'<a href=\"/person/"+ root_person.login +"\"><div class=\"rootTreeNodeElement\">\
         <div class=\"treeNode\" style=\"background: url(/static/images/" + root_person.login + ".jpg) center / cover;\" >\
             <div class=\"treeNodeText\">" "</div>\
         </div>\
-    </div>'}, '" + parent + "', '" + root_person.name + " " + root_person.surname + "'],"
+    </div></a>'}, '" + parent + "', '" + root_person.name + " " + root_person.surname + "'],"
 
 
     for subordinate in root_person.subordinates:
-        result += build_treejs(subordinate, False)
+        result += build_treejs_persons(subordinate, False)
 
     return result
 
@@ -143,18 +163,54 @@ def load_persons():
 
     persons = []
     managers = {}
-    teams = {}
+    teams = []
+    teams_order = {}
+    existing_teams = {}
 
-    # DEPT,SERVICE,LOGIN,NOM,PRENOM,NAISSANCE,FONCTION,MAIL,SKYPE,FIXE,PORTABLE,MANAGER
-    with open('update.csv', 'r') as f:
+    with open('update_teams.csv', 'r') as f:
         for line in f:
             if (len(line) > 1 and line[0] != '#'):
-                print(line)
+                split = line[:-1].split(',')
+                print(split)
+                team = split[0]
+                subteam = split[1]
+
+                if (not team in teams):
+                    teams.append(team)
+                if (not subteam in teams):
+                    teams.append(subteam)
+
+                if team in teams_order:
+                    teams_order[team].append(subteam)
+                else:
+                    teams_order[team] = [subteam]
+
+    print(teams)
+    print(teams_order)
+
+    for team_name in teams:
+        print(team_name)
+        neo_team = Team(team_name)
+        existing_teams[team_name] = neo_team
+        db.session.add(neo_team)
+
+    for team_name in teams_order:
+        current_team = existing_teams[team_name]
+        for subteam in teams_order[team_name]:
+            print('HEHEHE : ' + str(current_team.sub_teams))
+            existing_teams[subteam].high_team = current_team
+
+
+
+    # DEPT,SERVICE,LOGIN,NOM,PRENOM,NAISSANCE,FONCTION,MAIL,SKYPE,FIXE,PORTABLE,MANAGER
+    with open('update_persons.csv', 'r') as f:
+        for line in f:
+            if (len(line) > 1 and line[0] != '#'):
+                # print(line)
                 neo = Person()
 
                 #print('LEUL : ' + str(type(unicode(line))))
                 split = line[:-1].split(',')
-
                 neo.login = split[2].strip().lower().decode('utf-8')
                 neo.surname = split[3].decode('utf-8')
                 neo.name = split[4].decode('utf-8')
@@ -166,20 +222,18 @@ def load_persons():
                 neo.mobile = split[10].decode('utf-8')
 
 
-                team = split[0]
+                team = split[1]
                 manager = split[11]
-
-                print("YEEHAMANAGER : " + manager)
 
                 if manager in managers:
                     managers[manager].append(neo)
                 else:
                     managers[manager] = [neo]
 
-                if team in teams:
-                    teams[team].append(neo)
+                if (team in existing_teams):
+                    neo.team = existing_teams[team]
                 else:
-                    teams[team] = [neo]
+                    print('Error: Missing team ' + team)
 
                 persons.append(neo)
 
@@ -189,19 +243,13 @@ def load_persons():
         if person.login in managers:
             print('Manager : ' + person.login)
             person.subordinates = managers[person.login]
-            for lol in person.subordinates:
-                print('     -> ' + lol.login)
+            # for lol in person.subordinates:
+            #     print('     -> ' + lol.login)
         db.session.add(person)
 
-    for team_name in teams:
-        print(team_name)
-        neo_team = Team(team_name)
-        neo_team.persons = teams[team_name]
-        db.session.add(neo_team)
-
-    print('PERSONS : ' + str(persons))
-    print('MANAGERS : ' + str(managers))
-    print('TEAMS : ' + str(teams))
+    # print('PERSONS : ' + str(persons))
+    # print('MANAGERS : ' + str(managers))
+    print('TEAMS : ' + str(existing_teams))
 
     db.session.commit()
 

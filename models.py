@@ -7,17 +7,23 @@ class Team(db.Model):
     __tablename__ = 'team'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), unique=False)
+
     persons = relationship("Person", backref="team")
+    team_id = Column(Integer, ForeignKey('team.id'))
+    high_team = relationship("Team", backref="sub_teams", remote_side="Team.id")
 
     def __init__(self, name):
         self.name = name
 
     def __repr__(self):
-        return 'Team(' + str(self.id) + ')=' + self.name
+        return 'Team(' + self.name + ') = ' + str(self.persons)
 
     def get_manager(self):
         # The manager of a team is the person who's boss is in a different team (or no boss)
+        print('HEEEEEEEEEEEEERE : ' + str(self.persons))
         for person in self.persons:
+            print('HEEEEEEEEEEEEERE')
+            print(person)
             if ((person.manager is None) or (person.manager.team_id != self.id)):
                 return person
 
@@ -42,4 +48,4 @@ class Person(db.Model):
     team_id = Column(Integer, ForeignKey('team.id'))
 
     def __repr__(self):
-        return str(self.id)
+        return 'Person('+ self.skype + ")"
