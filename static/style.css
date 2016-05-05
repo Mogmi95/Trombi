@@ -60,10 +60,10 @@ a {
 /* Calendar */
 
 .calendar_container {
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
   margin-top: 32px;
-  margin-bottom: 32px;
-  margin-left: 200px;
-  margin-right: 200px;
 }
 
 /* Tree */
