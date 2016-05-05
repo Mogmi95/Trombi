@@ -6,6 +6,7 @@
 <script src='{{ url_for('static', filename='js/jquery.min.js') }}'></script>
 <script src='{{ url_for('static', filename='js/moment.min.js') }}'></script>
 <script src='{{ url_for('static', filename='js/fullcalendar.js') }}'></script>
+<script src='{{ url_for('static', filename='js/lang_calendar/fr.js') }}'></script>
 
 {% endblock %}
 
@@ -13,7 +14,9 @@
 
 {% block body %}
 
-<div id='calendar'></div>
+<div class="calendar_container">
+  <div id='calendar'></div>
+</div>
 
 <script type="text/javascript">
 
@@ -21,7 +24,16 @@ $(document).ready(function() {
   // page is now ready, initialize the calendar...
     $('#calendar').fullCalendar({
         firstDay: 1, // Set first day of the week as monday
-        events: {{ events | safe }}, // Events to display, format [{title  : 'event1', start  : '2010-01-01'},]
+        aspectRatio: 2,
+
+        eventSources: [
+          {% for events in events_list %}
+            {
+              events: {{ events | safe }}
+            },
+          {% endfor %}
+        ]
+
     })
 });
 

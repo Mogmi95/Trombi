@@ -72,17 +72,20 @@ def show_calendar():
 
     persons = Person.query.all()
 
+    events_list = []
 
-    events = '['
+    # Birthday events
+    birthday_events = '['
     for person in persons:
         if (person.birthday != ''):
-            events += '{title: "' + person.name + ' ' + person.surname + '", start: "' + person.birthday + '"},'
-    events += ']'
+            birthday_events += '{title: "' + person.name + ' ' + person.surname + '", start: "' + person.birthday + '"},'
+    birthday_events += '], color: "#e74c3c", textColor: "#ffffff"'
 
+    events_list.append(birthday_events)
 
     # events = '[{title: "Pizza", start: "2016-05-06"}]'
 
-    return render_template('calendar.html', title=title, events=events)
+    return render_template('calendar.html', title=title, events_list=events_list)
 
 @app.route("/team")
 def show_all_teams():
