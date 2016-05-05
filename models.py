@@ -20,9 +20,7 @@ class Team(db.Model):
 
     def get_manager(self):
         # The manager of a team is the person who's boss is in a different team (or no boss)
-        print('HEEEEEEEEEEEEERE : ' + str(self.persons))
         for person in self.persons:
-            print('HEEEEEEEEEEEEERE')
             print(person)
             if ((person.manager is None) or (person.manager.team_id != self.id)):
                 return person

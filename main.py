@@ -66,17 +66,32 @@ def search():
     query = request.form['search']
     return show_search(query)
 
+@app.route("/calendar")
+def show_calendar():
+    title = "Calendrier"
+
+    persons = Person.query.all()
+
+
+    events = '['
+    for person in persons:
+        if (person.birthday != ''):
+            events += '{title: "' + person.name + ' ' + person.surname + '", start: "' + person.birthday + '"},'
+    events += ']'
+
+
+    # events = '[{title: "Pizza", start: "2016-05-06"}]'
+
+    return render_template('calendar.html', title=title, events=events)
+
 @app.route("/team")
 def show_all_teams():
     title = "Equipes"
     head_team = Team.query.filter_by(high_team=None).first()
     return show_team(head_team.name)
 
-
 @app.route("/team/<team>")
 def show_team(team=None):
-    print('HELLO')
-
     team = Team.query.filter_by(name=team).first()
     title = "Equipe " + team.name
 
@@ -84,13 +99,10 @@ def show_team(team=None):
 
     # If the team has sub-teams, we display them. Otherwise we list the persons inside
     if (team.sub_teams is None or team.sub_teams == []):
-        print('HEEEEEEEEEEEEERE 1')
         # We show the persons
         root_manager = team.get_manager()
-        print('HEEEEEEEEEEEEERE 2')
         print(root_manager)
         treejs = build_treejs_persons(root_manager, True)
-        print('HEEEEEEEEEEEEERE 3')
     else:
         # We show the teams inside
         treejs = build_treejs_teams(team)
@@ -125,8 +137,6 @@ def build_treejs_persons(root_person, is_root):
     if (not is_root):
         parent = root_person.manager.login
 
-    #result += "[{v:'" + root_person.login + "', f:'<img class=\"treeImage\" src=\"http://jeanbaptiste.bayle.free.fr/AVATAR/grey_81618-default-avatar-200x200.jpg\" /><p>" + root_person.name + " " + root_person.surname + "</p>'}, '" + root_person.manager.login + "', 'The President'],"
-    #result += "[{v:'" + root_person.login + "', f:'<a href=\"/person/" + root_person.login + "\"><div class=\"treeImage\" src=\"/static/images/" + root_person.login + ".jpg\"></div><p>" + root_person.name + " " + root_person.surname + "</p></a>'}, '" + parent + "', 'The President'],"
     result += "[{v:'" + root_person.login + "', f:'<a href=\"/person/"+ root_person.login +"\"><div class=\"rootTreeNodeElement\">\
         <div class=\"treeNode\" style=\"background: url(/static/images/" + root_person.login + ".jpg) center / cover;\" >\
             <div class=\"treeNodeTextContainer\"><div class=\"treeNodeText\">" + root_person.name + " " + root_person.surname + "</div></div>\
@@ -198,24 +208,23 @@ def load_persons():
     for team_name in teams_order:
         current_team = existing_teams[team_name]
         for subteam in teams_order[team_name]:
-            print('HEHEHE : ' + str(current_team.sub_teams))
             existing_teams[subteam].high_team = current_team
 
 
 
     # DEPT,SERVICE,LOGIN,NOM,PRENOM,NAISSANCE,FONCTION,MAIL,SKYPE,FIXE,PORTABLE,MANAGER
-    with open('update_persons.csv', 'r') as f:
+    with open('update_persons2.csv', 'r') as f:
         for line in f:
             if (len(line) > 1 and line[0] != '#'):
                 # print(line)
                 neo = Person()
 
                 #print('LEUL : ' + str(type(unicode(line))))
-                split = line[:-1].split(',')
+                split = line[:-1].split(';')
                 neo.login = split[2].strip().lower().decode('utf-8')
                 neo.surname = split[3].decode('utf-8')
                 neo.name = split[4].decode('utf-8')
-                neo.birthday = split[5].decode('utf-8')
+                neo.birthday = format_birth_date(split[5]).decode('utf-8')
                 neo.job = split[6].decode('utf-8')
                 neo.email = split[7].decode('utf-8')
                 neo.skype = split[8].decode('utf-8')
@@ -250,10 +259,32 @@ def load_persons():
 
     # print('PERSONS : ' + str(persons))
     # print('MANAGERS : ' + str(managers))
-    print('TEAMS : ' + str(existing_teams))
+    # print('TEAMS : ' + str(existing_teams))
 
     db.session.commit()
 
+def format_birth_date(date):
+    if (date is None or date == ''):
+        return ''
+
+    result = '2016-'
+    split = None
+    if (' ' in date):
+        split = date.split(' ')
+    elif ('-' in date):
+        split = date.split('-')
+
+    date_dict = {'jan': '01', 'fev' : '02', 'mar' : '03', 'apr' : '04', 'may': '05', 'jun' : '06', 'jul' : '07', 'aout' : '08', 'sep' : '09', 'oct' : '10', 'nov' : '11', 'dec' : '12'}
+
+    try:
+        result += date_dict[split[1].lower()] + '-' + split[0]
+    except:
+        print('Cannot convert : ' + date)
+        return ''
+
+    # print("new date : " + result)
+
+    return result
 
 if __name__ == "__main__":
     db.create_all()

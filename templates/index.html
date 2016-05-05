@@ -8,9 +8,9 @@
 
   <link rel="icon" href="{{ url_for('static', filename='images/favicon.png') }}">
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-  <link rel="stylesheet" href="https://code.getmdl.io/1.1.3/material.indigo-amber.min.css" />
   <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700" type="text/css">
 
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='material.indigo-amber.min.css') }}" media="screen" />
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}" media="screen" />
 
   <script defer src="https://code.getmdl.io/1.1.3/material.min.js"></script>
@@ -21,6 +21,8 @@
       padding-right: 0;
     }
   </style>
+
+  {% block head %} {% endblock %}
 </head>
 
 <body>
@@ -29,7 +31,7 @@
     <header class="mdl-layout__header">
       <div class="mdl-layout__header-row">
         <!-- Title -->
-        <span class="mdl-layout-title"><a href="#"><img class="imgLogo" src="{{ url_for('static', filename='images/logo.png') }}" /></a></span>
+        <span class="mdl-layout-title"><a href="http://trombi.mogmi.fr"><img class="imgLogo" src="{{ url_for('static', filename='images/logo.png') }}" /></a></span>
 
         <!-- Add spacer, to align navigation to the right -->
         <div class="mdl-layout-spacer"></div>
@@ -38,6 +40,7 @@
         <nav class="mdl-navigation mdl-layout--large-screen-only">
           <a class="mdl-navigation__link" href="/all">Accueil</a>
           <a class="mdl-navigation__link" href="/team">Equipes</a>
+          <a class="mdl-navigation__link" href="/calendar">Calendrier</a>
         </nav>
 
         <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable mdl-textfield--floating-label mdl-textfield--align-right">
@@ -52,10 +55,11 @@
       </div>
     </header>
     <div class="mdl-layout__drawer">
-      <span class="mdl-layout-title">Title</span>
+      <span class="mdl-layout-title"></span>
       <nav class="mdl-navigation">
-        <a class="mdl-navigation__link" href="/all">Accueil</a>
+        <a class="mdl-navigation__link" href="/all">Personnes</a>
         <a class="mdl-navigation__link" href="/team">Equipes</a>
+        <a class="mdl-navigation__link" href="/calendar">Calendrier</a>
       </nav>
     </div>
     <main class="mdl-layout__content">

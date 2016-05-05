@@ -1,0 +1,30 @@
+{% extends "index.html" %}
+
+{% block head %}
+
+<link rel='stylesheet' href='{{ url_for('static', filename='fullcalendar.css') }}' />
+<script src='{{ url_for('static', filename='js/jquery.min.js') }}'></script>
+<script src='{{ url_for('static', filename='js/moment.min.js') }}'></script>
+<script src='{{ url_for('static', filename='js/fullcalendar.js') }}'></script>
+
+{% endblock %}
+
+
+
+{% block body %}
+
+<div id='calendar'></div>
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+  // page is now ready, initialize the calendar...
+    $('#calendar').fullCalendar({
+        firstDay: 1, // Set first day of the week as monday
+        events: {{ events | safe }}, // Events to display, format [{title  : 'event1', start  : '2010-01-01'},]
+    })
+});
+
+</script>
+
+{% endblock %}
