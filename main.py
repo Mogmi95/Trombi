@@ -141,7 +141,7 @@ def build_treejs_persons(root_person, is_root):
         parent = root_person.manager.login
 
     result += "[{v:'" + root_person.login + "', f:'<a href=\"/person/"+ root_person.login +"\"><div class=\"rootTreeNodeElement\">\
-        <div class=\"treeNode\" style=\"background: url(/static/images/" + root_person.login + ".jpg) center / cover;\" >\
+        <div class=\"treeNode\" style=\"background: url(/static/images/photos/" + root_person.login + ".jpg) center / cover;\" >\
             <div class=\"treeNodeTextContainer\"><div class=\"treeNodeText\">" + root_person.name + " " + root_person.surname + "</div></div>\
         </div>\
     </div></a>'}, '" + parent + "', '" + root_person.name + " " + root_person.surname + "'],"
