@@ -78,7 +78,7 @@ def show_calendar():
     birthday_events = '['
     for person in persons:
         if (person.birthday != ''):
-            birthday_events += '{title: "' + person.name + ' ' + person.surname + '", start: "' + person.birthday + '"},'
+            birthday_events += '{title: "' + person.name + ' ' + person.surname + '", start: "' + person.birthday + '", url: "/person/' + person.login + '"},'
     birthday_events += '], color: "#e74c3c", textColor: "#ffffff"'
 
     events_list.append(birthday_events)
