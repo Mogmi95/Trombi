@@ -3,7 +3,13 @@
 
 {% block body %}
 
+{{ request.query }}
+
 {{ message }}
+
+{% if raw_mode is none %}
+
+<span><a href="{{ raw_url }}?raw=true">RAW MODE</a></span>
 
 <div class="mdl-grid custom-grid">
     {% for person in persons %}
@@ -18,7 +24,41 @@
         </a>
     </div>
     {% endfor %}
-
 </div>
+
+{% else %}
+
+<span><a href="{{ raw_url }}?raw=false">NORMAL MODE</a></span>
+
+<div class="raw_data_table_container">
+  <table class="raw_data_table mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+    <thead>
+      <tr>
+        <th class="mdl-data-table__cell--non-numeric">Picture</th>
+        <th class="mdl-data-table__cell--non-numeric">Login</th>
+        <th class="mdl-data-table__cell--non-numeric">Name</th>
+        <th class="mdl-data-table__cell--non-numeric">Surname</th>
+        <th class="mdl-data-table__cell--non-numeric">Team</th>
+        <th class="mdl-data-table__cell--non-numeric">Skype</th>
+        <th class="mdl-data-table__cell--non-numeric">VCard</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for person in persons %}
+      <tr>
+        <td class="mdl-data-table__cell--non-numeric"><a href="/person/{{ person.login }}"><div class="raw_list_img" style="background: url({{ url_for('static', filename='images/photos/' + person.login + '.jpg') }}) center / cover;"></div></a></td>
+        <td class="mdl-data-table__cell--non-numeric">{{ person.login }}</td>
+        <td class="mdl-data-table__cell--non-numeric">{{ person.name }}</td>
+        <td class="mdl-data-table__cell--non-numeric">{{ person.surname }}</td>
+        <td class="mdl-data-table__cell--non-numeric">{{ person.team.name }}</td>
+        <td class="mdl-data-table__cell--non-numeric">{{ person.skype }}</td>
+        <td class="mdl-data-table__cell--non-numeric"><a href="/person/vcard/vcard-{{ person.login }}.vcf" download><button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">VCard</button></a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endif %}
 
 {% endblock %}

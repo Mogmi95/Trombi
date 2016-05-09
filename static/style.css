@@ -57,6 +57,19 @@ a {
   background-color: rgba(0, 0, 0, 0.5);
 }
 
+/* All raw list */
+
+.raw_data_table_container {
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.raw_list_img {
+  width: 100px;
+  height: 100px;
+}
+
 /* Person */
 
 .demo-card-wide.mdl-card {

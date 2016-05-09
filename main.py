@@ -1,6 +1,6 @@
 import flask
 import flask.ext.sqlalchemy
-from flask import render_template, redirect, request
+from flask import render_template, redirect, request, url_for
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy import Table, Column, Integer, ForeignKey, or_
 from flask.ext.wtf import Form
@@ -10,6 +10,12 @@ from wtforms.validators import DataRequired
 from app import db, app
 from models import Person, Team
 
+def get_raw_mode(request):
+    raw_mode = request.args.get('raw')
+    if (raw_mode != 'true'):
+        raw_mode = None
+    return raw_mode
+
 @app.route("/")
 def main():
     return show_all()
@@ -18,7 +24,7 @@ def main():
 def show_all():
     title = "Trombi"
     persons = Person.query.order_by(Person.surname).all()
-    return render_template('all.html', persons=persons, title=title)
+    return render_template('all.html', persons=persons, title=title, raw_mode=get_raw_mode(request), raw_url='')
 
 @app.route("/person/<login>")
 def show_person(login=None):
@@ -50,6 +56,7 @@ def create_vcard(person):
 def show_search(query=None):
     title = "Search"
     message = "Results for \"" + query + "\" :"
+    initial_query = query
     query = '%' + query + '%'
     persons = Person.query.filter(or_(\
             Person.login.like(query),\
@@ -59,7 +66,7 @@ def show_search(query=None):
 
     if (len(persons.all()) == 1):
         return show_person(persons.first().login)
-    return render_template('all.html', persons=persons, message=message, title=title)
+    return render_template('all.html', persons=persons, message=message, title=title, raw_mode=get_raw_mode(request), raw_url=url_for('show_search', query=initial_query))
 
 @app.route('/search/', methods=['POST'])
 def search():
@@ -112,7 +119,7 @@ def show_team(team=None):
 
     print(team.persons)
 
-    return render_template('team.html', team=team, tree=tree, title=title)
+    return render_template('team.html', team=team, tree=tree, title=title, raw_mode=get_raw_mode(request), raw_url='')
 
 def build_tree_teams(team):
     print(team)
