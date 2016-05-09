@@ -2,24 +2,36 @@
 
 {% block body %}
 
-<h2>{{ {{team.name}} }}</h2>
-
-{% if showAll %}
-    {% for team in teams %}
-        <a href="/team/{{team.name}}">
-        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-            {{team.name}}
-          </button>
-      </a>
-    {% endfor %}
-{% else %}
+<h2>{{team.name}}</h2>
 
 <div class="tree">
-    <div class="tree-container">
-        {{ tree | safe }}
-    </div>
+<div id="chart_div"></div>
 </div>
+<script type="text/javascript">
+google.charts.load('current', {packages:["orgchart"]});
+google.charts.setOnLoadCallback(drawChart);
 
-{% endif %}
+
+function drawChart() {
+  var data = new google.visualization.DataTable();
+  data.addColumn('string', 'Name');
+  data.addColumn('string', 'Manager');
+  data.addColumn('string', 'ToolTip');
+
+
+
+  // For each orgchart box, provide the name, manager, and tooltip to show.
+  data.addRows([
+    {{ tree | safe }}
+  ]);
+
+  // Create the chart.
+  var chart = new google.visualization.OrgChart(document.getElementById('chart_div'));
+  // Draw the chart, setting the allowHtml option to true for the tooltips.
+
+  chart.draw(data, {allowHtml:true, size:'large', nodeClass:"myNodeClass", selectedNodeClass:"myNodeClass"});
+}
+</script>
+
 
 {% endblock %}

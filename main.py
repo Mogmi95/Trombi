@@ -105,16 +105,16 @@ def show_team(team=None):
         # We show the persons
         root_manager = team.get_manager()
         print(root_manager)
-        treejs = build_treejs_persons(root_manager, True)
+        tree = build_tree_persons(root_manager, True)
     else:
         # We show the teams inside
-        treejs = build_treejs_teams(team)
+        tree = build_tree_teams(team)
 
     print(team.persons)
 
-    return render_template('teamjs.html', team=team, treejs=treejs, title=title)
+    return render_template('team.html', team=team, tree=tree, title=title)
 
-def build_treejs_teams(team):
+def build_tree_teams(team):
     print(team)
     result = ''
 
@@ -137,7 +137,7 @@ def get_node_team(team, parent):
         </div>\
     </div></a>'}, '" + parent + "', '" + team.name + "'],\n"
 
-def build_treejs_persons(root_person, is_root):
+def build_tree_persons(root_person, is_root):
     print(root_person)
     result = ''
 
@@ -147,7 +147,7 @@ def build_treejs_persons(root_person, is_root):
 
     result +=get_node_person(root_person, parent)
     for subordinate in root_person.subordinates:
-        result += build_treejs_persons(subordinate, False)
+        result += build_tree_persons(subordinate, False)
 
     return result
 
