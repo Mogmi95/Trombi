@@ -57,6 +57,40 @@ a {
   background-color: rgba(0, 0, 0, 0.5);
 }
 
+/* Person */
+
+.demo-card-wide.mdl-card {
+  position: relative;
+  margin-top: 32px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 500px;
+}
+.demo-card-wide > .mdl-card__title {
+    color: #fff;
+    height: 256px;
+}
+.demo-card-wide > .mdl-card__menu {
+    color: #fff;
+}
+
+.mdl-card__title-text-container {
+  position: absolute;
+  padding-right: 16px;
+  left: 240px;
+  top: 32px;
+  color: #000;
+}
+
+.person_avatar {
+  position: absolute;
+  left: 16px;
+  top: 16px;
+  width: 200px;
+  height: 240px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+}
+
 /* Calendar */
 
 .calendar_container {

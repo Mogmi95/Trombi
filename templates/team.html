@@ -2,6 +2,8 @@
 
 {% block body %}
 
+<h2>{{ {{team.name}} }}</h2>
+
 {% if showAll %}
     {% for team in teams %}
         <a href="/team/{{team.name}}">

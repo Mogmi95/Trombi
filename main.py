@@ -16,7 +16,7 @@ def main():
 
 @app.route("/all")
 def show_all():
-    title = "Trombinoscope"
+    title = "Trombi"
     persons = Person.query.order_by(Person.surname).all()
     return render_template('all.html', persons=persons, title=title)
 
@@ -48,8 +48,8 @@ def create_vcard(person):
 
 @app.route("/search/<query>")
 def show_search(query=None):
-    title = "Recherche"
-    message = "Resultats pour \"" + query + "\" :"
+    title = "Search"
+    message = "Results for \"" + query + "\" :"
     query = '%' + query + '%'
     persons = Person.query.filter(or_(\
             Person.login.like(query),\
@@ -68,7 +68,7 @@ def search():
 
 @app.route("/calendar")
 def show_calendar():
-    title = "Calendrier"
+    title = "Calendar"
 
     persons = Person.query.all()
 
@@ -89,14 +89,14 @@ def show_calendar():
 
 @app.route("/team")
 def show_all_teams():
-    title = "Equipes"
+    title = "Teams"
     head_team = Team.query.filter_by(high_team=None).first()
     return show_team(head_team.name)
 
 @app.route("/team/<team>")
 def show_team(team=None):
     team = Team.query.filter_by(name=team).first()
-    title = "Equipe " + team.name
+    title = "Team " + team.name
 
     print("subteam : " + str(team.sub_teams))
 
@@ -114,23 +114,28 @@ def show_team(team=None):
 
     return render_template('teamjs.html', team=team, treejs=treejs, title=title)
 
-def build_treejs_teams(root_team):
-    print(root_team)
+def build_treejs_teams(team):
+    print(team)
     result = ''
 
-    result += get_node_team(root_team, '')
+    # The first item is the manager of all other teams
+    team_manager = team.get_manager()
+    result += get_node_person(team_manager, '')
 
-    for subteam in root_team.sub_teams:
-         result += get_node_team(subteam, root_team.name)
+    for subteam in team.sub_teams:
+         result += get_node_team(subteam, team_manager.login)
+         for subsubteam in subteam.sub_teams:
+              result += get_node_team(subsubteam, subteam.name)
 
     return result
 
 def get_node_team(team, parent):
+    # TODO : make render_template
     return "[{v:'" + team.name + "', f:'<a href=\"/team/"+ team.name +"\"><div class=\"rootTreeNodeElementTeam\">\
         <div class=\"treeNodeTeam\">\
             <div class=\"treeNodeTextTeam\">"+ team.name +"</div>\
         </div>\
-    </div></a>'}, '" + parent + "', '" + team.name + "'],"
+    </div></a>'}, '" + parent + "', '" + team.name + "'],\n"
 
 def build_treejs_persons(root_person, is_root):
     print(root_person)
@@ -140,37 +145,19 @@ def build_treejs_persons(root_person, is_root):
     if (not is_root):
         parent = root_person.manager.login
 
-    result += "[{v:'" + root_person.login + "', f:'<a href=\"/person/"+ root_person.login +"\"><div class=\"rootTreeNodeElement\">\
-        <div class=\"treeNode\" style=\"background: url(/static/images/photos/" + root_person.login + ".jpg) center / cover;\" >\
-            <div class=\"treeNodeTextContainer\"><div class=\"treeNodeText\">" + root_person.name + " " + root_person.surname + "</div></div>\
-        </div>\
-    </div></a>'}, '" + parent + "', '" + root_person.name + " " + root_person.surname + "'],"
-
-
+    result +=get_node_person(root_person, parent)
     for subordinate in root_person.subordinates:
         result += build_treejs_persons(subordinate, False)
 
     return result
 
-# Return a HTML tree with a person as root
-def build_tree(root_person, is_root):
-    result = ''
-
-    if (is_root):
-        result = '<ul><li>\n'
-    result += render_template('tree_node.html', person=root_person, smallpics=True)
-
-    if (len(root_person.subordinates) > 0):
-        result += '\n<ul>\n'
-        for subordinate in root_person.subordinates:
-            result += '<li>\n'
-            result += build_tree(subordinate, False)
-            result += '</li>\n'
-        result += '\n</ul>\n'
-
-    if (is_root):
-        result += '\n</li></ul>\n'
-    return result
+def get_node_person(person, parent):
+    # TODO : make render_template
+    return "[{v:'" + person.login + "', f:'<a href=\"/person/"+ person.login +"\"><div class=\"rootTreeNodeElement\">\
+        <div class=\"treeNode\" style=\"background: url(/static/images/photos/" + person.login + ".jpg) center / cover;\" >\
+            <div class=\"treeNodeTextContainer\"><div class=\"treeNodeText\">" + person.name + " <br /> " + person.surname + "</div></div>\
+        </div>\
+    </div></a>'}, '" + parent + "', '" + person.name + " " + person.surname + "'],"
 
 def load_persons():
     # Init teams
@@ -181,7 +168,8 @@ def load_persons():
     teams_order = {}
     existing_teams = {}
 
-    with open('update_teams.csv', 'r') as f:
+    with open('test_teams.csv', 'r') as f:
+    #with open('update_teams.csv', 'r') as f:
         for line in f:
             if (len(line) > 1 and line[0] != '#'):
                 split = line[:-1].split(',')
@@ -216,7 +204,7 @@ def load_persons():
 
 
     # DEPT,SERVICE,LOGIN,NOM,PRENOM,NAISSANCE,FONCTION,MAIL,SKYPE,FIXE,PORTABLE,MANAGER
-    with open('update_persons2.csv', 'r') as f:
+    with open('update_persons.csv', 'r') as f:
         for line in f:
             if (len(line) > 1 and line[0] != '#'):
                 # print(line)
@@ -277,10 +265,14 @@ def format_birth_date(date):
     elif ('-' in date):
         split = date.split('-')
 
+    # TODO : remove this, the date should be correct in the csv
     date_dict = {'jan': '01', 'fev' : '02', 'mar' : '03', 'apr' : '04', 'may': '05', 'jun' : '06', 'jul' : '07', 'aout' : '08', 'sep' : '09', 'oct' : '10', 'nov' : '11', 'dec' : '12'}
 
     try:
-        result += date_dict[split[1].lower()] + '-' + split[0]
+        day = split[0]
+        if (len(split[0]) == 1):
+            day = '0' + day
+        result += date_dict[split[1].lower()] + '-' + day
     except:
         print('Cannot convert : ' + date)
         return ''

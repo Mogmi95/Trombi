@@ -2,56 +2,25 @@
 
 {% block body %}
 
-<!-- Wide card with share menu button -->
-<style>
-
-    .demo-card-wide.mdl-card {
-      position: relative;
-      margin-top: 32px;
-        margin-left: auto;
-        margin-right: auto;
-        width: 500px;
-    }
-    .demo-card-wide > .mdl-card__title {
-        color: #fff;
-        height: 256px;
-    }
-    .demo-card-wide > .mdl-card__menu {
-        color: #fff;
-    }
-
-    .pizza {
-      position: absolute;
-      left: 16px;
-      top: 16px;
-      width: 200px;
-      height: 240px;
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
-      background: url({{ url_for('static', filename='images/photos/' + person.login + '.jpg') }}) center / cover;
-    }
-
-    .mdl-card__title-text-container {
-      position: absolute;
-      padding-right: 16px;
-      left: 240px;
-      top: 32px;
-      color: #000;
-    }
-</style>
 
 <div class="demo-card-wide mdl-card mdl-shadow--3dp">
     <div class="mdl-card__title">
-      <div class="pizza"></div>
+      <div class="person_avatar" style="background: url({{ url_for('static', filename='images/photos/' + person.login + '.jpg') }}) center / cover;"></div>
       <div class="mdl-card__title-text-container">
       <h2 class="mdl-card__title-text">{{ person.name }} {{ person.surname }}</h2>
       <p>{{ person.job }}</p>
+      {% if person.team is not none and person.team.high_team is not none %}
+        <p><a href="/team/{{ person.team.name }}">{{ person.team.high_team.name }}</a></p>
+      {% endif %}
       <p><a href="/team/{{ person.team.name }}">{{ person.team.name }}</a></p>
 
-      <p>Manager : <a href="/person/{{ person.manager.login }}">{{ person.manager.name }} {{ person.manager.surname }}</a></p>
+      {% if person.manager is not none %}
+        <p>Manager : <a href="/person/{{ person.manager.login }}">{{ person.manager.name }} {{ person.manager.surname }}</a></p>
+      {% endif %}
 
       <a href="/person/vcard/vcard-{{ person.login }}.vcf" download>
         <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-          Telecharger V-Card
+          Download V-Card
         </button>
       </a>
 
@@ -64,36 +33,46 @@
 
 
         <ul class="demo-list-icon mdl-list">
+          {% if person.birthday != '' %}
             <li class="mdl-list__item">
             <span class="mdl-list__item-primary-content">
                 <i class="material-icons mdl-list__item-icon">cake</i>
                 {{ person.birthday }}
             </span>
             </li>
+          {% endif %}
+          {% if person.email != '' %}
             <li class="mdl-list__item">
             <span class="mdl-list__item-primary-content">
                 <i class="material-icons mdl-list__item-icon">mail</i>
                 <a href="mailto:{{ person.email }}">{{ person.email }}</a>
             </span>
             </li>
+            {% endif %}
+          {% if person.mobile != '' %}
             <li class="mdl-list__item">
             <span class="mdl-list__item-primary-content">
                 <i class="material-icons mdl-list__item-icon">call</i>
                 <span><a href="tel:{{ person.mobile }}">{{ person.mobile }}</a> (mobile)</span>
             </span>
             </li>
+          {% endif %}
+          {% if person.fixe != '' %}
             <li class="mdl-list__item">
             <span class="mdl-list__item-primary-content">
                 <i class="material-icons mdl-list__item-icon">call</i>
                 <span><a href="tel:{{ person.fixe }}">{{ person.fixe }}</a> (fixe)</span>
             </span>
             </li>
+          {% endif %}
+          {% if person.skype != '' %}
             <li class="mdl-list__item">
             <span class="mdl-list__item-primary-content">
                 <i class="material-icons mdl-list__item-icon">call</i>
                 <span><a href="skype:{{ person.skype }}">{{ person.skype }} </a> (skype)</span>
             </span>
             </li>
+          {% endif %}
         </ul>
 
     </div>

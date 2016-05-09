@@ -7,14 +7,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <link rel="icon" href="{{ url_for('static', filename='images/favicon.png') }}">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700" type="text/css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='material_font.css') }}" type="text/css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='fonts.css') }}" type="text/css">
 
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='material.indigo-amber.min.css') }}" media="screen" />
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}" media="screen" />
 
   <script defer src="https://code.getmdl.io/1.1.3/material.min.js"></script>
   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script src='{{ url_for('static', filename='js/jquery.min.js') }}'></script>
 
   <style>
     .demo-layout-waterfall .mdl-layout__header-row .mdl-navigation__link:last-of-type {
@@ -38,9 +39,9 @@
 
         <!-- Navigation. We hide it in small screens. -->
         <nav class="mdl-navigation mdl-layout--large-screen-only">
-          <a class="mdl-navigation__link" href="/all">Personnes</a>
-          <a class="mdl-navigation__link" href="/team">Equipes</a>
-          <a class="mdl-navigation__link" href="/calendar">Calendrier</a>
+          <a class="mdl-navigation__link" href="/all">People</a>
+          <a class="mdl-navigation__link" href="/team">Teams</a>
+          <a class="mdl-navigation__link" href="/calendar">Calendar</a>
         </nav>
 
         <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable mdl-textfield--floating-label mdl-textfield--align-right">
@@ -48,7 +49,7 @@
             <i class="material-icons">search</i>
           </label>
             <form method="post" action="{{ url_for('search') }}">
-              <input class="mdl-textfield__input" type="text" placeholder="Recherche" name="search" id="fixed-header-drawer-exp">
+              <input class="mdl-textfield__input" type="text" placeholder="Search" name="search" id="fixed-header-drawer-exp">
             </form>
         </div>
 
@@ -57,9 +58,9 @@
     <div class="mdl-layout__drawer">
       <span class="mdl-layout-title"></span>
       <nav class="mdl-navigation">
-        <a class="mdl-navigation__link" href="/all">Personnes</a>
-        <a class="mdl-navigation__link" href="/team">Equipes</a>
-        <a class="mdl-navigation__link" href="/calendar">Calendrier</a>
+        <a class="mdl-navigation__link" href="/all">People</a>
+        <a class="mdl-navigation__link" href="/team">Teams</a>
+        <a class="mdl-navigation__link" href="/calendar">Calendar</a>
       </nav>
     </div>
     <main class="mdl-layout__content">
@@ -68,7 +69,7 @@
       </div>
       <footer class="mdl-mini-footer">
         <div class="mdl-mini-footer__left-section">
-          <div class="mdl-logo">Trombinoscope</div>
+          <div class="mdl-logo">Trombi</div>
           <ul class="mdl-mini-footer__link-list">
             <li><a href="https://github.com/Mogmi95/Trombi">Source code available on Github</a></li>
           </ul>
