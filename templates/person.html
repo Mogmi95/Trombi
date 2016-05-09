@@ -68,8 +68,8 @@
           {% if person.skype != '' %}
             <li class="mdl-list__item">
             <span class="mdl-list__item-primary-content">
-                <i class="material-icons mdl-list__item-icon">call</i>
-                <span><a href="skype:{{ person.skype }}">{{ person.skype }} </a> (skype)</span>
+                <img class="mdl-list__item-icon" src="{{ url_for('static', filename='images/skype.png') }}" />
+                <span><a href="skype:{{ person.skype }}">{{ person.skype }} </a></span>
             </span>
             </li>
           {% endif %}
