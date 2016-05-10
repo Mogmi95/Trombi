@@ -6,9 +6,13 @@ from sqlalchemy import Table, Column, Integer, ForeignKey, or_
 from flask.ext.wtf import Form
 from wtforms import StringField, BooleanField, HiddenField
 from wtforms.validators import DataRequired
+from flask_admin.contrib.sqla import ModelView
 
-from app import db, app
+from app import db, app, admin
 from models import Person, Team
+
+admin.add_view(ModelView(Person, db.session))
+admin.add_view(ModelView(Team, db.session))
 
 def get_list_mode(request):
     list_mode = request.args.get('list')
