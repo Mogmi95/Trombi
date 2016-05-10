@@ -10,11 +10,11 @@ from wtforms.validators import DataRequired
 from app import db, app
 from models import Person, Team
 
-def get_raw_mode(request):
-    raw_mode = request.args.get('raw')
-    if (raw_mode != 'true'):
-        raw_mode = None
-    return raw_mode
+def get_list_mode(request):
+    list_mode = request.args.get('list')
+    if (list_mode != 'true'):
+        list_mode = None
+    return list_mode
 
 @app.route("/")
 def main():
@@ -24,7 +24,7 @@ def main():
 def show_all():
     title = "Trombi"
     persons = Person.query.order_by(Person.surname).all()
-    return render_template('all.html', persons=persons, title=title, raw_mode=get_raw_mode(request), raw_url='')
+    return render_template('all.html', persons=persons, title=title, list_mode=get_list_mode(request), list_url='')
 
 @app.route("/person/<login>")
 def show_person(login=None):
@@ -66,7 +66,7 @@ def show_search(query=None):
 
     if (len(persons.all()) == 1):
         return show_person(persons.first().login)
-    return render_template('all.html', persons=persons, message=message, title=title, raw_mode=get_raw_mode(request), raw_url=url_for('show_search', query=initial_query))
+    return render_template('all.html', persons=persons, message=message, title=title, list_mode=get_list_mode(request), list_url=url_for('show_search', query=initial_query))
 
 @app.route('/search/', methods=['POST'])
 def search():
@@ -76,6 +76,7 @@ def search():
 @app.route("/calendar")
 def show_calendar():
     title = "Calendar"
+
 
     persons = Person.query.all()
 
@@ -119,7 +120,7 @@ def show_team(team=None):
 
     print(team.persons)
 
-    return render_template('team.html', team=team, tree=tree, title=title, raw_mode=get_raw_mode(request), raw_url='')
+    return render_template('team.html', team=team, tree=tree, title=title, list_mode=get_list_mode(request), list_url='')
 
 def build_tree_teams(team):
     print(team)
