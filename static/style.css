@@ -20,6 +20,22 @@ a {
 
 /* All */
 
+.viewModeContainer {
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: right;
+    padding-right: 4px;
+
+}
+
+.selectedImageIndicator {
+    border-bottom: solid 5px #e74c3c;
+}
+
+.notSelectedImageIndicator {
+    border-bottom: solid 5px rgba(0, 0, 0, 0);
+}
+
 .custom-grid {
   max-width: 1200px;
   margin: 0 auto;
@@ -63,6 +79,7 @@ a {
   max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
+  margin-top: 16px;
 }
 
 .list_list_img {
@@ -73,8 +90,8 @@ a {
 /* Person */
 
 .demo-card-wide.mdl-card {
-  position: relative;
-  margin-top: 32px;
+    position: relative;
+    margin-top: 32px;
     margin-left: auto;
     margin-right: auto;
     width: 500px;
@@ -88,10 +105,11 @@ a {
 }
 
 .mdl-card__title-text-container {
+  height: 240px;
+  width: 550px;
   position: absolute;
-  padding-right: 16px;
-  left: 240px;
-  top: 32px;
+  left: 234px;
+  top: 16px;
   color: #000;
 }
 
@@ -106,6 +124,29 @@ a {
 
 /* Calendar */
 
+.calendar_legend {
+  width: 100px;
+}
+
+.calendar_legend_birthday {
+  display: block;
+  float: left;
+  width: 100px;
+  color: #ffffff;
+  background: #e74c3c;
+  padding:8px;
+}
+
+.calendar_legend_arrival {
+  display: block;
+  float: left;
+  width: 100px;
+  color: #ffffff;
+  background: #4f60b9;
+  padding:8px;
+  margin-top: 8px;
+}
+
 .calendar_container {
   width: 80%;
   margin-left: auto;
@@ -114,6 +155,10 @@ a {
 }
 
 /* Tree */
+
+.titleTeamName {
+    float: left;
+}
 
 .tree {
   overflow: auto;

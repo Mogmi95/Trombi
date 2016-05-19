@@ -1,12 +1,15 @@
-{% extends "index.html" %}
+{% extends "index.j2" %}
 
 {% block body %}
 
-<h2>{{team.name}}</h2>
+<span class="titleTeamName">{{team.name}}</span>
+
+<div class="viewModeContainer">
+    <a href="{{ list_url }}?list=false" title="Toggle cards mode"><img class="{% if list_mode is none %}selectedImageIndicator{% else %}notSelectedImageIndicator{% endif %}" src="{{ url_for('static', filename='images/ic_view_module.png') }}" /></a>
+    <a href="{{ list_url }}?list=true" title="Toggle list mode"><img class="{% if list_mode is none %}notSelectedImageIndicator{% else %}selectedImageIndicator{% endif %}" src="{{ url_for('static', filename='images/ic_view_list.png') }}" /></a>
+</div>
 
 {% if list_mode is none %}
-
-<span><a href="{{ list_url }}?list=true">LIST MODE</a></span>
 
 <div class="tree">
 <div id="chart_div"></div>
@@ -23,7 +26,6 @@ function dlistChart() {
   data.addColumn('string', 'ToolTip');
 
 
-
   // For each orgchart box, provide the name, manager, and tooltip to show.
   data.addRows([
     {{ tree | safe }}
@@ -38,8 +40,6 @@ function dlistChart() {
 </script>
 
 {% else %}
-
-<span><a href="{{ list_url }}?list=false">NORMAL MODE</a></span>
 
 <div class="list_data_table_container">
   <table class="list_data_table mdl-data-table mdl-js-data-table mdl-shadow--2dp">

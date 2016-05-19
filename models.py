@@ -1,5 +1,6 @@
-from sqlalchemy import Table, Column, Integer, ForeignKey
-from sqlalchemy.orm import relationship, backref
+import datetime
+from sqlalchemy import Column, Integer, ForeignKey
+from sqlalchemy.orm import relationship
 
 from app import db
 
@@ -16,9 +17,10 @@ class Team(db.Model):
         self.name = name
 
     def __repr__(self):
-        return 'Team(' + self.name + ') = ' + str(self.persons)
+        return self.name
 
     def get_manager(self):
+        print(self.persons)
         # The manager of a team is the person who's boss is in a different team (or no boss)
         for person in self.persons:
             print(person)
@@ -33,7 +35,8 @@ class Person(db.Model):
     login = db.Column(db.String(80), unique=False)
     name = db.Column(db.String(80), unique=False)
     surname = db.Column(db.String(80), unique=False)
-    birthday = db.Column(db.String(80), unique=False)
+    birthday = db.Column(db.Integer, unique=False)
+    arrival = db.Column(db.Integer, unique=False)
     email = db.Column(db.String(120), unique=False)
     mobile = db.Column(db.String(120), unique=False)
     fixe = db.Column(db.String(120), unique=False)
@@ -46,4 +49,13 @@ class Person(db.Model):
     team_id = Column(Integer, ForeignKey('team.id'))
 
     def __repr__(self):
-        return 'Person('+ self.skype + ")"
+        return self.skype
+
+    def get_number_of_years(self):
+        return self.arrival
+
+    def get_arrival_date(self):
+        return datetime.datetime.fromtimestamp(float(self.arrival))
+
+    def get_birthday_date(self):
+        return datetime.datetime.fromtimestamp(float(self.birthday))

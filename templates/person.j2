@@ -1,7 +1,12 @@
-{% extends "index.html" %}
+{% extends "index.j2" %}
 
 {% block body %}
 
+<style>
+  .test {
+
+  }
+</style>
 
 <div class="demo-card-wide mdl-card mdl-shadow--3dp">
     <div class="mdl-card__title">
@@ -19,7 +24,7 @@
       {% endif %}
 
       <a href="/person/vcard/vcard-{{ person.login }}.vcf" download>
-        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+        <button class="test mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
           Download V-Card
         </button>
       </a>
