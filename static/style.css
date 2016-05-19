@@ -93,7 +93,6 @@ a {
 
 .list_data_table_container {
   width: 1200px;
-  background: #ff00ff;
   margin-left: auto;
   margin-right: auto;
   margin-top: 16px;
@@ -146,12 +145,12 @@ a {
 /* Calendar */
 
 .calendar_legend {
-  width: 100px;
+  margin-bottom: 16px;
+  text-align: center;
 }
 
 .calendar_legend_birthday {
-  display: block;
-  float: left;
+  display: inline-block;
   width: 100px;
   color: #ffffff;
   background: #e74c3c;
@@ -159,13 +158,12 @@ a {
 }
 
 .calendar_legend_arrival {
-  display: block;
-  float: left;
+  display: inline-block;
   width: 100px;
   color: #ffffff;
   background: #4f60b9;
   padding:8px;
-  margin-top: 8px;
+  margin-left: 8px;
 }
 
 .calendar_container {
