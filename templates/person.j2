@@ -2,12 +2,6 @@
 
 {% block body %}
 
-<style>
-.test {
-
-}
-</style>
-
 <div class="demo-card-wide mdl-card mdl-shadow--3dp">
   <div class="mdl-card__title">
     <div class="person_avatar" style="background: url({{ url_for('static', filename='images/photos/' + person.login + '.jpg') }}) center / cover;"></div>
@@ -24,7 +18,7 @@
       {% endif %}
 
       <a href="/person/vcard/vcard-{{ person.login }}.vcf" download>
-        <button class="test mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
           Download V-Card
         </button>
       </a>

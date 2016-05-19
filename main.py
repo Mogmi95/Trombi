@@ -108,7 +108,7 @@ def create_vcard(person):
 @app.route("/search/<query>")
 def show_search(query=None):
     title = "Search"
-    message = "Results for \"" + query + "\" :"
+    message = "{} result(s) for \"" + query + "\" :"
     initial_query = query
     query = '%' + query + '%'
     persons = Person.query.filter(or_(
@@ -122,7 +122,7 @@ def show_search(query=None):
     return render_template(
         'all.j2',
         persons=persons,
-        message=message,
+        message=message.format(len(persons.all())),
         title=title,
         list_mode=get_list_mode(request),
         list_url=url_for('show_search', query=initial_query)

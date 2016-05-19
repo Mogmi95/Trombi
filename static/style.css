@@ -20,12 +20,28 @@ a {
 
 /* All */
 
-.viewModeContainer {
-  max-width: 1200px;
-  margin: 0 auto;
-  text-align: right;
-  padding-right: 4px;
+.allPersonsHeader {
+  position: relative;
+  width: 1166px;
+  height: 60px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 8px;
+}
 
+.allPersonsHeaderMessage {
+  line-height: 60px;
+  font-family: 'Roboto';
+  font-size: 20px;
+  font-weight: 400;
+  font-style: italic;
+}
+
+.viewModeContainer {
+  height: 60px;
+  position: absolute;
+  right:0px;
+  top: 8px;
 }
 
 .selectedImageIndicator {
@@ -76,10 +92,15 @@ a {
 /* All list list */
 
 .list_data_table_container {
-  max-width: 1200px;
+  width: 1200px;
+  background: #ff00ff;
   margin-left: auto;
   margin-right: auto;
   margin-top: 16px;
+}
+
+.list_data_table {
+  width: 1200px;
 }
 
 .list_list_img {
