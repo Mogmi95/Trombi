@@ -24,19 +24,19 @@
 
 $(document).ready(function() {
   // page is now ready, initialize the calendar...
-    $('#calendar').fullCalendar({
-        firstDay: 1, // Set first day of the week as monday
-        aspectRatio: 2,
+  $('#calendar').fullCalendar({
+    firstDay: 1, // Set first day of the week as monday
+    aspectRatio: 2,
 
-        eventSources: [
-          {% for events in events_list %}
-            {
-              events: {{ events | safe }}
-            },
-          {% endfor %}
-        ]
+    eventSources: [
+      {% for events in events_list %}
+      {
+        events: {{ events | safe }}
+      },
+      {% endfor %}
+    ]
 
-    })
+  })
 });
 
 </script>

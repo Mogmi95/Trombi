@@ -18,11 +18,11 @@
   <script src='{{ url_for('static', filename='js/jquery.min.js') }}'></script>
 
   <style>
-    .demo-layout-waterfall .mdl-layout__header-row .mdl-navigation__link:last-of-type {
-      padding-right: 0;
-    }
+  .demo-layout-waterfall .mdl-layout__header-row .mdl-navigation__link:last-of-type {
+    padding-right: 0;
+  }
   </style>
-
+  
   {% block head %} {% endblock %}
 </head>
 
@@ -49,9 +49,9 @@
           <label class="mdl-button mdl-js-button mdl-button--icon" for="fixed-header-drawer-exp">
             <i class="material-icons">search</i>
           </label>
-            <form method="post" action="{{ url_for('search') }}">
-              <input class="mdl-textfield__input" type="text" placeholder="Search" name="search" id="fixed-header-drawer-exp">
-            </form>
+          <form method="post" action="{{ url_for('search') }}">
+            <input class="mdl-textfield__input" type="text" placeholder="Search" name="search" id="fixed-header-drawer-exp">
+          </form>
         </div>
 
       </div>

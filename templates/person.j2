@@ -3,24 +3,24 @@
 {% block body %}
 
 <style>
-  .test {
+.test {
 
-  }
+}
 </style>
 
 <div class="demo-card-wide mdl-card mdl-shadow--3dp">
-    <div class="mdl-card__title">
-      <div class="person_avatar" style="background: url({{ url_for('static', filename='images/photos/' + person.login + '.jpg') }}) center / cover;"></div>
-      <div class="mdl-card__title-text-container">
+  <div class="mdl-card__title">
+    <div class="person_avatar" style="background: url({{ url_for('static', filename='images/photos/' + person.login + '.jpg') }}) center / cover;"></div>
+    <div class="mdl-card__title-text-container">
       <h2 class="mdl-card__title-text">{{ person.name }} {{ person.surname }}</h2>
       <p>{{ person.job }}</p>
       {% if person.team is not none and person.team.high_team is not none %}
-        <p><a href="/team/{{ person.team.name }}">{{ person.team.high_team.name }}</a></p>
+      <p><a href="/team/{{ person.team.name }}">{{ person.team.high_team.name }}</a></p>
       {% endif %}
       <p><a href="/team/{{ person.team.name }}">{{ person.team.name }}</a></p>
 
       {% if person.manager is not none %}
-        <p>Manager : <a href="/person/{{ person.manager.login }}">{{ person.manager.name }} {{ person.manager.surname }}</a></p>
+      <p>Manager : <a href="/person/{{ person.manager.login }}">{{ person.manager.name }} {{ person.manager.surname }}</a></p>
       {% endif %}
 
       <a href="/person/vcard/vcard-{{ person.login }}.vcf" download>
@@ -31,56 +31,56 @@
 
 
     </div>
-    </div>
+  </div>
 
-    <div class="mdl-card__supporting-text">
-      <div class="mdl-card__actions mdl-card--border"></div>
+  <div class="mdl-card__supporting-text">
+    <div class="mdl-card__actions mdl-card--border"></div>
 
 
-        <ul class="demo-list-icon mdl-list">
-          {% if person.birthday != '' %}
-            <li class="mdl-list__item">
-            <span class="mdl-list__item-primary-content">
-                <i class="material-icons mdl-list__item-icon">cake</i>
-                {{ person.birthday }}
-            </span>
-            </li>
-          {% endif %}
-          {% if person.email != '' %}
-            <li class="mdl-list__item">
-            <span class="mdl-list__item-primary-content">
-                <i class="material-icons mdl-list__item-icon">mail</i>
-                <a href="mailto:{{ person.email }}">{{ person.email }}</a>
-            </span>
-            </li>
-            {% endif %}
-          {% if person.mobile != '' %}
-            <li class="mdl-list__item">
-            <span class="mdl-list__item-primary-content">
-                <i class="material-icons mdl-list__item-icon">call</i>
-                <span><a href="tel:{{ person.mobile }}">{{ person.mobile }}</a> (mobile)</span>
-            </span>
-            </li>
-          {% endif %}
-          {% if person.fixe != '' %}
-            <li class="mdl-list__item">
-            <span class="mdl-list__item-primary-content">
-                <i class="material-icons mdl-list__item-icon">call</i>
-                <span><a href="tel:{{ person.fixe }}">{{ person.fixe }}</a> (fixe)</span>
-            </span>
-            </li>
-          {% endif %}
-          {% if person.skype != '' %}
-            <li class="mdl-list__item">
-            <span class="mdl-list__item-primary-content">
-                <img class="mdl-list__item-icon" src="{{ url_for('static', filename='images/skype.png') }}" />
-                <span><a href="skype:{{ person.skype }}">{{ person.skype }} </a></span>
-            </span>
-            </li>
-          {% endif %}
-        </ul>
+    <ul class="demo-list-icon mdl-list">
+      {% if person.birthday != '' %}
+      <li class="mdl-list__item">
+        <span class="mdl-list__item-primary-content">
+          <i class="material-icons mdl-list__item-icon">cake</i>
+          {{ person.birthday }}
+        </span>
+      </li>
+      {% endif %}
+      {% if person.email != '' %}
+      <li class="mdl-list__item">
+        <span class="mdl-list__item-primary-content">
+          <i class="material-icons mdl-list__item-icon">mail</i>
+          <a href="mailto:{{ person.email }}">{{ person.email }}</a>
+        </span>
+      </li>
+      {% endif %}
+      {% if person.mobile != '' %}
+      <li class="mdl-list__item">
+        <span class="mdl-list__item-primary-content">
+          <i class="material-icons mdl-list__item-icon">call</i>
+          <span><a href="tel:{{ person.mobile }}">{{ person.mobile }}</a> (mobile)</span>
+        </span>
+      </li>
+      {% endif %}
+      {% if person.fixe != '' %}
+      <li class="mdl-list__item">
+        <span class="mdl-list__item-primary-content">
+          <i class="material-icons mdl-list__item-icon">call</i>
+          <span><a href="tel:{{ person.fixe }}">{{ person.fixe }}</a> (fixe)</span>
+        </span>
+      </li>
+      {% endif %}
+      {% if person.skype != '' %}
+      <li class="mdl-list__item">
+        <span class="mdl-list__item-primary-content">
+          <img class="mdl-list__item-icon" src="{{ url_for('static', filename='images/skype.png') }}" />
+          <span><a href="skype:{{ person.skype }}">{{ person.skype }} </a></span>
+        </span>
+      </li>
+      {% endif %}
+    </ul>
 
-    </div>
+  </div>
 
 </div>
 {% endblock %}
