@@ -147,18 +147,22 @@ def show_calendar():
     arrival_events = '['
     for person in persons:
         if (person.birthday != ''):
-            birthday_events += u'{{title: "{} {}", start: "2016-{}", url: "/person/{}"}},'.format(
+            birth_date = person.get_birthday_date()
+            birthday_events += u'{{title: "{} {}", start: "{}", url: "/person/{}"}},'.format(
                 person.name,
                 person.surname,
-                person.birthday,
+                u'2016-{}-{}'.format(str(birth_date.month).zfill(2), str(birth_date.day).zfill(2)),
                 person.login,
             )
         if (person.arrival != ''):
             arr_date = person.get_arrival_date()
-            print(arr_date.month)
-            print(arr_date.day)
+            # TODO : don't harcode the current year
+            if (2016 - arr_date.year <= 0):
+                arrival_text = 'arrival'
+            else:
+                arrival_text = u'{} years'.format(2016 - arr_date.year)
             arrival_events += u'{{title: "{}", start: "{}", url: "/person/{}"}},'.format(
-                u'{} {} ({} years)'.format(person.name, person.surname, 2016 - arr_date.year),
+                u'{} {} ({})'.format(person.name, person.surname, arrival_text),
                 u'2016-{}-{}'.format(str(arr_date.month).zfill(2), str(arr_date.day).zfill(2)),
                 person.login
             )
@@ -372,7 +376,7 @@ def format_date(date):
                 )
     except:
         print('Cannot convert : ' + date)
-        return ''
+        return 0
 
     return result
 
