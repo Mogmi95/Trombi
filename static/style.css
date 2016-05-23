@@ -109,6 +109,115 @@ a {
 
 /* Person */
 
+.personCard {
+  position: relative;
+  width: 500px;
+  background: #fcfcfc;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 32px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+}
+
+.personCardManagerContainer {
+  position: absolute;
+  width: 132px;
+  height: 212px;
+  top: 0px;
+  left: -200px;
+  background: #fcfcfc;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+}
+
+.personCardManagerPicture {
+  position: absolute;
+  background: #fcfcfc;
+  width: 132px;
+  height: 132px;
+  top: 32px;
+}
+
+.personCardManagerTitle {
+  position: absolute;
+  background: #e74c3c;
+  width: 132px;
+  height: 32px;
+  color: #fcfcfc;
+  font-family: 'Roboto';
+  padding-top: 8px;
+  text-align: center;
+}
+
+.personCardManagerName {
+  position: absolute;
+  background: #fcfcfc;
+  width: 132px;
+  height: 48px;
+  color: black;
+  font-family: 'Roboto';
+  bottom: 0px;
+  padding-top: 8px;
+  text-align: center;
+}
+
+.personCardHeader {
+  height: 200px;
+  /*background: url('/static/images/person_header.png') center / cover;*/
+  margin-bottom: 40px;
+  background: #e74c3c;
+}
+
+.personCardHeaderTeamIndicator {
+  position: absolute;
+  color: #e74c3c;
+  width: 250px;
+  height: 44px;
+  text-align: center;
+  top: 212px;
+  left: 233px;
+  padding: 4px;
+  font-family: 'Roboto';
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.personCardHeaderName {
+  position: absolute;
+  color: #fcfcfc;
+  width: 234px;
+  top: 32px;
+  left: 250px;
+  font-family: 'Roboto';
+  font-size: 30px;
+  font-weight: 500;
+}
+
+.personCardHeaderDescription {
+  position: absolute;
+  color: #fcfcfc;
+  width: 234px;
+  top: 150px;
+  left: 250px;
+  font-family: 'Roboto';
+  font-size: 20px;
+  font-weight: 400;
+  font-style: italic;
+}
+
+.personCardHeaderAvatar {
+  position: absolute;
+  height: 200px;
+  width: 200px;
+  height: 240px;
+  top: 16px;
+  left: 16px;
+  border: solid 8px #fcfcfc;
+  /*box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);*/
+}
+
+
+
+
 .demo-card-wide.mdl-card {
   position: relative;
   margin-top: 32px;

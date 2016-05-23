@@ -358,44 +358,18 @@ def load_persons():
 
 def format_date(date):
     if (date is None or date == ''):
-        return ''
-
-    result = ''
-    split = date.split('/')
+        return 0
 
     print(date)
     try:
-        if (len(split) == 3):
-            # print(datetime.datetime.strptime(date, "%m/%d/%Y"))
-            return str(time.mktime(
-                datetime.datetime.strptime(date, "%m/%d/%Y").timetuple())
+        if (len(date.split('/')) == 3):
+            return time.mktime(
+                datetime.datetime.strptime(date, "%m/%d/%Y").timetuple()
                 )
-            # Year is present
-            # TODO : result += split[2]
-            result += '2016'
-
-            month = split[0]
-            if (len(month) == 1):
-                month = '0' + month
-            result += '-' + month
-
-            day = split[1]
-            if (len(day) == 1):
-                day = '0' + day
-            result += '-' + day
-
-            print("new date : " + result)
         else:
-            # No year
-            month = split[1]
-            if (len(month) == 1):
-                month = '0' + month
-            result += month
-
-            day = split[0]
-            if (len(day) == 1):
-                day = '0' + day
-            result += '-' + day
+            return time.mktime(
+                datetime.datetime.strptime(date, "%d/%m").timetuple()
+                )
     except:
         print('Cannot convert : ' + date)
         return ''

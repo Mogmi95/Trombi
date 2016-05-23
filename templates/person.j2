@@ -2,41 +2,42 @@
 
 {% block body %}
 
-<div class="demo-card-wide mdl-card mdl-shadow--3dp">
-  <div class="mdl-card__title">
-    <div class="person_avatar" style="background: url({{ url_for('static', filename='images/photos/' + person.login + '.jpg') }}) center / cover;"></div>
-    <div class="mdl-card__title-text-container">
-      <h2 class="mdl-card__title-text">{{ person.name }} {{ person.surname }}</h2>
-      <p>{{ person.job }}</p>
-      {% if person.team is not none and person.team.high_team is not none %}
-      <p><a href="/team/{{ person.team.name }}">{{ person.team.high_team.name }}</a></p>
-      {% endif %}
-      <p><a href="/team/{{ person.team.name }}">{{ person.team.name }}</a></p>
-
-      {% if person.manager is not none %}
-      <p>Manager : <a href="/person/{{ person.manager.login }}">{{ person.manager.name }} {{ person.manager.surname }}</a></p>
-      {% endif %}
-
-      <a href="/person/vcard/vcard-{{ person.login }}.vcf" download>
-        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-          Download V-Card
-        </button>
-      </a>
+<div class="personCard">
 
 
-    </div>
+
+<a href="/person/{{ person.manager.login }}">
+  <div class="personCardManagerContainer">
+    <div class="personCardManagerTitle">Manager</div>
+    <div class="personCardManagerPicture" style="background: url({{ url_for('static', filename='images/photos/' + person.manager.login + '.jpg') }}) center / cover;"></div>
+    <div class="personCardManagerName">{{ person.manager.name }}<br/>{{ person.manager.surname }}</div>
+  </div>
+</a>
+
+
+  <div class="personCardHeader">
+    <div class="personCardHeaderAvatar" style="background: url({{ url_for('static', filename='images/photos/' + person.login + '.jpg') }}) center / cover;"></div>
+    <div class="personCardHeaderTeamIndicator">{{ person.team.name }}</div>
+    <div class="personCardHeaderName">{{ person.name }}<br /><br />{{ person.surname.upper() }}</div>
+    <div class="personCardHeaderDescription">{{ person.job }}</div>
   </div>
 
   <div class="mdl-card__supporting-text">
-    <div class="mdl-card__actions mdl-card--border"></div>
-
-
+    <!--<div class="mdl-card__actions mdl-card--border"></div>-->
     <ul class="demo-list-icon mdl-list">
       {% if person.birthday != '' %}
       <li class="mdl-list__item">
         <span class="mdl-list__item-primary-content">
           <i class="material-icons mdl-list__item-icon">cake</i>
-          {{ person.birthday }}
+          {{ person.get_birthday_date() }}
+        </span>
+      </li>
+      {% endif %}
+      {% if person.arrival != '' %}
+      <li class="mdl-list__item">
+        <span class="mdl-list__item-primary-content">
+          <i class="material-icons mdl-list__item-icon">cake</i>
+          {{ person.get_arrival_date() }}
         </span>
       </li>
       {% endif %}
@@ -74,7 +75,41 @@
       {% endif %}
     </ul>
 
+    <a href="/person/vcard/vcard-{{ person.login }}.vcf" download>
+      <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+        Download V-Card
+      </button>
+    </a>
+
+  </div>
+</div>
+
+<!--<div class="demo-card-wide mdl-card mdl-shadow--3dp">
+  <div class="mdl-card__title">
+    <div class="person_avatar" style="background: url({{ url_for('static', filename='images/photos/' + person.login + '.jpg') }}) center / cover;"></div>
+    <div class="mdl-card__title-text-container">
+      <h2 class="mdl-card__title-text">{{ person.name }} {{ person.surname }}</h2>
+      <p>{{ person.job }}</p>
+      {% if person.team is not none and person.team.high_team is not none %}
+      <p><a href="/team/{{ person.team.name }}">{{ person.team.high_team.name }}</a></p>
+      {% endif %}
+      <p><a href="/team/{{ person.team.name }}">{{ person.team.name }}</a></p>
+
+      {% if person.manager is not none %}
+      <p>Manager : <a href="/person/{{ person.manager.login }}">{{ person.manager.name }} {{ person.manager.surname }}</a></p>
+      {% endif %}
+
+      <a href="/person/vcard/vcard-{{ person.login }}.vcf" download>
+        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+          Download V-Card
+        </button>
+      </a>
+
+
+    </div>
   </div>
 
-</div>
+
+
+</div>-->
 {% endblock %}
