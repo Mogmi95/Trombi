@@ -167,7 +167,7 @@ def show_calendar():
                 person.login
             )
             # arrival_events += '{title: "' + person.name + ' ' + person.surname + ' (' + person.get_number_of_years() + ' years)", start: "' + person.get_arrival_date() + '", url: "/person/' + person.login + '"},'
-    birthday_events += '], color: "#4f60b9", textColor: "#ffffff"'
+    birthday_events += '], color: "#368cbf", textColor: "#ffffff"'
     arrival_events += '], color: "#e74c3c", textColor: "#ffffff"'
 
     events_list.append(birthday_events)
@@ -236,11 +236,17 @@ def build_tree_teams(team):
 
 def get_node_team(team, parent):
     # TODO : make render_template
-    return "[{v:'" + team.name + "', f:'<a href=\"/team/" + team.name + "\"><div class=\"rootTreeNodeElementTeam\">\
-        <div class=\"treeNodeTeam\">\
-            <div class=\"treeNodeTextTeam\">" + team.name + "</div>\
-        </div>\
-    </div></a>'}, '" + parent + "', '" + team.name + "'],\n"
+    # TODO : add a better way to handle invisible blocks
+    if (team.name == '1'):
+        # We display only a vertical bar
+        return "[{v:'" + team.name + "', f:'<div class=\"rootTreeNodeElement\" >\
+                    <div class=\"verticalLine\"></div>\
+                    </div>'}, '" + parent + "', '" + team.name + "'],\n"
+    else:
+        return "[{v:'" + team.name + "', f:'<div class=\"rootTreeNodeElement\" >\
+                    <a href=\"/team/" + team.name + "\"><div class=\"rootTreeNodeElementFiller\" >\
+                    <div class=\"rootTreeNodeLinkCenter\"><div class=\"rootTreeNodeLinkCenterChild\">" + team.name + "</div></div></div></a>\
+                    </div>'}, '" + parent + "', '" + team.name + "'],\n"
 
 
 def build_tree_persons(root_person, is_root):
@@ -260,11 +266,11 @@ def build_tree_persons(root_person, is_root):
 
 def get_node_person(person, parent):
     # TODO : make render_template
-    return "[{v:'" + person.login + "', f:'<a href=\"/person/" + person.login + "\"><div class=\"rootTreeNodeElement\">\
-        <div class=\"treeNode\" style=\"background: url(/static/images/photos/" + person.login + ".jpg) center / cover;\" >\
+    return "[{v:'" + person.login + "', f:'<div class=\"rootTreeNodeElement\"><a href=\"/person/" + person.login + "\">\
+        <div class=\"rootTreeNodeElementFiller\" style=\"background: url(/static/images/photos/" + person.login + ".jpg) center / cover;\" >\
             <div class=\"treeNodeTextContainer\"><div class=\"treeNodeText\">" + person.name + " <br /> " + person.surname + "</div></div>\
         </div>\
-    </div></a>'}, '" + parent + "', '" + person.name + " " + person.surname + "'],"
+    </a></div>'}, '" + parent + "', '" + person.name + " " + person.surname + "'],"
 
 
 def load_persons():

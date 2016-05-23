@@ -17,7 +17,9 @@
 
   <div class="personCardHeader">
     <div class="personCardHeaderAvatar" style="background: url({{ url_for('static', filename='images/photos/' + person.login + '.jpg') }}) center / cover;"></div>
-    <div class="personCardHeaderTeamIndicator">{{ person.team.name }}</div>
+    {% if person.manager is not none %}
+      <a href="/team/{{ person.manager.team.name }}"><div class="personCardHeaderTeamIndicator">{{ person.team.name }}</div></a>
+    {% endif %}
     <div class="personCardHeaderName">{{ person.name }}<br /><br />{{ person.surname.upper() }}</div>
     <div class="personCardHeaderDescription">{{ person.job }}</div>
   </div>
