@@ -68,7 +68,8 @@ def show_new_persons():
         ).order_by(
             Person.surname
         ).all()
-    message = "{} persons".format(len(persons))
+    #message = "{} persons".format(len(persons))
+    message = 'Recently arrived'
     return render_template(
         'all.j2',
         persons=persons,
