@@ -36,7 +36,7 @@ def main():
 def show_all():
     title = "Trombi"
     persons = Person.query.order_by(Person.surname).all()
-    message = "{} persons".format(len(persons))
+    message = "Whoa ! Already {} persons!".format(len(persons))
     return render_template(
         'all.j2',
         persons=persons,
@@ -199,9 +199,9 @@ def show_team(team=None):
     # Otherwise we list the persons inside
     if (team.sub_teams is None or team.sub_teams == []):
         # We show the persons
-        root_manager = team.get_manager()
-        print(root_manager)
-        tree = build_tree_persons(root_manager, True)
+        team_root_persons = team.get_root_persons()
+        print(team_root_persons)
+        tree = build_tree_persons(team_root_persons, True)
     else:
         # We show the teams inside
         tree = build_tree_teams(team)
@@ -223,7 +223,7 @@ def build_tree_teams(team):
     result = ''
 
     # The first item is the manager of all other teams
-    team_manager = team.get_manager()
+    team_manager = team.get_root_persons()[0]
     result += get_node_person(team_manager, '')
 
     for subteam in team.sub_teams:
@@ -249,17 +249,26 @@ def get_node_team(team, parent):
                     </div>'}, '" + parent + "', '" + team.name + "'],\n"
 
 
-def build_tree_persons(root_person, is_root):
-    print(root_person)
+def build_tree_persons(team_root_persons, is_root):
+    print(team_root_persons)
     result = ''
 
     parent = ''
-    if (not is_root):
-        parent = root_person.manager.login
+    if (is_root):
+        print("YAL")
+        print(team_root_persons[0])
+        print(team_root_persons[0].manager)
+        print("HOP")
+        parent_team = team_root_persons[0].manager.team
+        result += get_node_team(parent_team, parent)
+        parent = parent_team.name
+    else:
+        parent = team_root_persons[0].manager.login
 
-    result += get_node_person(root_person, parent)
-    for subordinate in root_person.subordinates:
-        result += build_tree_persons(subordinate, False)
+    for root_person in team_root_persons:
+        result += get_node_person(root_person, parent)
+        for subordinate in root_person.subordinates:
+            result += build_tree_persons([subordinate], False)
 
     return result
 
@@ -286,7 +295,7 @@ def load_persons():
     with io.open('test_teams.csv', 'r', encoding='utf8') as f:
         for line in f:
             if (len(line) > 1 and line[0] != '#'):
-                split = line[:-1].split(',')
+                split = line[:-1].split(';')
                 print(split)
                 team = split[0]
                 subteam = split[1]
