@@ -286,7 +286,7 @@ def load_persons():
     with io.open('test_teams.csv', 'r', encoding='utf8') as f:
         for line in f:
             if (len(line) > 1 and line[0] != '#'):
-                split = line[:-1].split(',')
+                split = line[:-1].split(';')
                 print(split)
                 team = split[0]
                 subteam = split[1]
