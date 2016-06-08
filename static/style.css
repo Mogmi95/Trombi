@@ -265,7 +265,7 @@ a {
   display: inline-block;
   width: 100px;
   color: #ffffff;
-  background: #e74c3c;
+  background: #368cbf;
   padding:8px;
 }
 
@@ -273,7 +273,7 @@ a {
   display: inline-block;
   width: 100px;
   color: #ffffff;
-  background: #368cbf;
+  background: #e74c3c;
   padding:8px;
   margin-left: 8px;
 }
@@ -318,7 +318,7 @@ a {
 .rootTreeNodeLinkCenter {
   display: table;
   position: absolute;
-  background: #368cbf;
+  background: #e74c3c;
   width: 133px;
   height: 169px;
   left: -1px;
