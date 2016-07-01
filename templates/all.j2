@@ -7,8 +7,8 @@
 <div class="allPersonsHeader">
   <span class="allPersonsHeaderMessage">{{ message }}</span>
   <div class="viewModeContainer">
-    <a href="{{ list_url }}?list=false" title="Toggle cards mode"><img class="{% if list_mode is none %}selectedImageIndicator{% else %}notSelectedImageIndicator{% endif %}" src="{{ url_for('static', filename='images/ic_view_module.png') }}" /></a>
-    <a href="{{ list_url }}?list=true" title="Toggle list mode"><img class="{% if list_mode is none %}notSelectedImageIndicator{% else %}selectedImageIndicator{% endif %}" src="{{ url_for('static', filename='images/ic_view_list.png') }}" /></a>
+    <!--<a href="{{ list_url }}?list=false" title="Toggle cards mode"><img class="{% if list_mode is none %}selectedImageIndicator{% else %}notSelectedImageIndicator{% endif %}" src="{{ url_for('static', filename='images/ic_view_module.png') }}" /></a>-->
+    <!--<a href="{{ list_url }}?list=true" title="Toggle list mode"><img class="{% if list_mode is none %}notSelectedImageIndicator{% else %}selectedImageIndicator{% endif %}" src="{{ url_for('static', filename='images/ic_view_list.png') }}" /></a>-->
   </div>
 </div>
 
@@ -36,11 +36,10 @@
     <thead>
       <tr>
         <th class="mdl-data-table__cell--non-numeric">Picture</th>
-        <th class="mdl-data-table__cell--non-numeric">Login</th>
         <th class="mdl-data-table__cell--non-numeric">Name</th>
         <th class="mdl-data-table__cell--non-numeric">Surname</th>
         <th class="mdl-data-table__cell--non-numeric">Team</th>
-        <th class="mdl-data-table__cell--non-numeric">Skype</th>
+        <th class="mdl-data-table__cell--non-numeric">Title</th>
         <th class="mdl-data-table__cell--non-numeric">VCard</th>
       </tr>
     </thead>
@@ -48,11 +47,10 @@
       {% for person in persons %}
       <tr>
         <td class="mdl-data-table__cell--non-numeric"><a href="/person/{{ person.login }}"><div class="list_list_img" style="background: url({{ url_for('static', filename='images/photos/' + person.login + '.jpg') }}) center / cover;"></div></a></td>
-        <td class="mdl-data-table__cell--non-numeric">{{ person.login }}</td>
         <td class="mdl-data-table__cell--non-numeric">{{ person.name }}</td>
         <td class="mdl-data-table__cell--non-numeric">{{ person.surname }}</td>
         <td class="mdl-data-table__cell--non-numeric">{{ person.team.name }}</td>
-        <td class="mdl-data-table__cell--non-numeric">{{ person.skype }}</td>
+        <td class="mdl-data-table__cell--non-numeric">{{ person.job }}</td>
         <td class="mdl-data-table__cell--non-numeric"><a href="/person/vcard/vcard-{{ person.login }}.vcf" download><button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">VCard</button></a></td>
       </tr>
       {% endfor %}

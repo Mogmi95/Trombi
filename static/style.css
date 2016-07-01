@@ -265,7 +265,8 @@ a {
   display: inline-block;
   width: 100px;
   color: #ffffff;
-  background: #368cbf;
+  /*background: #368cbf;*/
+  background: #a9d03f;
   padding:8px;
 }
 
@@ -273,9 +274,18 @@ a {
   display: inline-block;
   width: 100px;
   color: #ffffff;
-  background: #e74c3c;
+  background: #368cbf;
   padding:8px;
   margin-left: 8px;
+}
+
+.calendar_legend_event {
+    display: inline-block;
+    width: 100px;
+    color: #ffffff;
+    background: #db6b1a;
+    padding:8px;
+    margin-left: 8px;
 }
 
 .calendar_container {
