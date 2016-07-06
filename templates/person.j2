@@ -31,15 +31,15 @@
       <li class="mdl-list__item">
         <span class="mdl-list__item-primary-content">
           <i class="material-icons mdl-list__item-icon">cake</i>
-          {{ person.get_birthday_date() }}
+          {{ person.get_pretty_birthday_date() }}
         </span>
       </li>
       {% endif %}
       {% if person.arrival != '' %}
       <li class="mdl-list__item">
         <span class="mdl-list__item-primary-content">
-          <i class="material-icons mdl-list__item-icon">cake</i>
-          {{ person.get_arrival_date() }}
+          <i class="material-icons mdl-list__item-icon">person_add</i>
+          {{ person.get_pretty_arrival_date() }}
         </span>
       </li>
       {% endif %}
@@ -77,12 +77,13 @@
       {% endif %}
     </ul>
 
+    <div class="personCardDownloadContainer">
     <a href="/person/vcard/vcard-{{ person.login }}.vcf" download>
       <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
         Download V-Card
       </button>
     </a>
-
+</div>
   </div>
 </div>
 

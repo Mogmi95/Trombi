@@ -193,7 +193,7 @@ a {
   top: 32px;
   left: 250px;
   font-family: 'Roboto';
-  font-size: 30px;
+  font-size: 24px;
   font-weight: 500;
 }
 
@@ -201,10 +201,10 @@ a {
   position: absolute;
   color: #fcfcfc;
   width: 234px;
-  top: 150px;
+  top: 120px;
   left: 250px;
   font-family: 'Roboto';
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 400;
   font-style: italic;
 }
@@ -220,6 +220,9 @@ a {
   /*box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);*/
 }
 
+.personCardDownloadContainer {
+  text-align: right;
+}
 
 .demo-card-wide.mdl-card {
   position: relative;
@@ -265,7 +268,8 @@ a {
   display: inline-block;
   width: 100px;
   color: #ffffff;
-  background: #368cbf;
+  /*background: #368cbf;*/
+  background: #a9d03f;
   padding:8px;
 }
 
@@ -273,9 +277,18 @@ a {
   display: inline-block;
   width: 100px;
   color: #ffffff;
-  background: #e74c3c;
+  background: #368cbf;
   padding:8px;
   margin-left: 8px;
+}
+
+.calendar_legend_event {
+    display: inline-block;
+    width: 100px;
+    color: #ffffff;
+    background: #db6b1a;
+    padding:8px;
+    margin-left: 8px;
 }
 
 .calendar_container {

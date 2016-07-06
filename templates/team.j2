@@ -2,7 +2,7 @@
 
 {% block body %}
 
-<!--<span class="titleTeamName">{{team.name}}</span>-->
+<h2>{{team.name}}</h2>
 
 <div class="viewModeContainer">
   <a href="{{ list_url }}?list=false" title="Toggle cards mode"><img class="{% if list_mode is none %}selectedImageIndicator{% else %}notSelectedImageIndicator{% endif %}" src="{{ url_for('static', filename='images/ic_view_module.png') }}" /></a>

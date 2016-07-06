@@ -60,5 +60,13 @@ class Person(db.Model):
     def get_arrival_date(self):
         return datetime.datetime.fromtimestamp(float(self.arrival))
 
+    def get_pretty_arrival_date(self):
+        date = datetime.datetime.fromtimestamp(float(self.arrival))
+        return date.strftime('Arrived %d, %B %Y')
+
     def get_birthday_date(self):
         return datetime.datetime.fromtimestamp(float(self.birthday))
+
+    def get_pretty_birthday_date(self):
+        date = datetime.datetime.fromtimestamp(float(self.birthday))
+        return date.strftime('Born %d, %B')

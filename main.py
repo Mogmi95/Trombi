@@ -36,7 +36,7 @@ def main():
 def show_all():
     title = "Trombi"
     persons = Person.query.order_by(Person.surname).all()
-    message = "Whoa ! Already {} persons!".format(len(persons))
+    message = "Whoa ! {} persons already!".format(len(persons))
     return render_template(
         'all.j2',
         persons=persons,
@@ -68,8 +68,8 @@ def show_new_persons():
         ).order_by(
             Person.surname
         ).all()
-    #message = "{} persons".format(len(persons))
-    message = 'Recently arrived'
+    # message = "{} persons".format(len(persons))
+    message = 'They just joined us'
     return render_template(
         'all.j2',
         persons=persons,
@@ -168,8 +168,8 @@ def show_calendar():
                 person.login
             )
             # arrival_events += '{title: "' + person.name + ' ' + person.surname + ' (' + person.get_number_of_years() + ' years)", start: "' + person.get_arrival_date() + '", url: "/person/' + person.login + '"},'
-    birthday_events += '], color: "#368cbf", textColor: "#ffffff"'
-    arrival_events += '], color: "#e74c3c", textColor: "#ffffff"'
+    birthday_events += '], color: "#a9d03f", textColor: "#ffffff"'
+    arrival_events += '], color: "#368cbf", textColor: "#ffffff"'
 
     events_list.append(birthday_events)
     events_list.append(arrival_events)
@@ -224,11 +224,14 @@ def build_tree_teams(team):
     result = ''
 
     # The first item is the manager of all other teams
-    team_manager = team.get_root_persons()[0]
-    result += get_node_person(team_manager, '')
+
+    # if (team_manager.login == 'fpotter'):
+    result += get_node_team(team, '')
+    # else
+    # result += get_node_person(team_manager, '')
 
     for subteam in team.sub_teams:
-        result += get_node_team(subteam, team_manager.login)
+        result += get_node_team(subteam, team.name)
         for subsubteam in subteam.sub_teams:
             result += get_node_team(subsubteam, subteam.name)
 
@@ -260,9 +263,9 @@ def build_tree_persons(team_root_persons, is_root):
         print(team_root_persons[0])
         print(team_root_persons[0].manager)
         print("HOP")
-        parent_team = team_root_persons[0].manager.team
-        result += get_node_team(parent_team, parent)
-        parent = parent_team.name
+        parent_team_manager = team_root_persons[0].manager
+        result += get_node_person(parent_team_manager, '')
+        parent = parent_team_manager.login
     else:
         parent = team_root_persons[0].manager.login
 
@@ -394,7 +397,7 @@ def format_date(date):
         print('Cannot convert : ' + date)
         return 0
 
-    return result
+    return ''
 
 if __name__ == "__main__":
     db.create_all()
