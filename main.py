@@ -171,8 +171,11 @@ def show_calendar():
     birthday_events += '], color: "#a9d03f", textColor: "#ffffff"'
     arrival_events += '], color: "#368cbf", textColor: "#ffffff"'
 
+    netatmevents = '[{title: "BBQ Boss", start: "2016-07-05", url: ""}], color: "#db6b1a", textColor: "#ffffff"'
+
     events_list.append(birthday_events)
     events_list.append(arrival_events)
+    events_list.append(netatmevents)
 
     # events = '[{title: "Pizza", start: "2016-05-06"}]'
 
