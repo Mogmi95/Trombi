@@ -16,8 +16,8 @@ from flask_admin.contrib.sqla import ModelView
 from app import db, app, admin
 from models import Person, Team
 
-admin.add_view(ModelView(Person, db.session))
-admin.add_view(ModelView(Team, db.session))
+# admin.add_view(ModelView(Person, db.session))
+# admin.add_view(ModelView(Team, db.session))
 
 
 def get_list_mode(request):
@@ -36,7 +36,7 @@ def main():
 def show_all():
     title = "Trombi"
     persons = Person.query.order_by(Person.surname).all()
-    message = "Whoa ! {} persons already!".format(len(persons))
+    message = "Whoa ! {} people already!".format(len(persons))
     return render_template(
         'all.j2',
         persons=persons,
@@ -52,9 +52,9 @@ def show_person(login=None):
     person = Person.query.filter_by(login=login).first()
     title = person.name + " " + person.surname
 
-    print('Name : ' + person.name)
-    print('Manager : ' + str(person.manager))
-    print('Subordinates : ' + str(person.subordinates))
+    # print('Name : ' + person.name)
+    # print('Manager : ' + str(person.manager))
+    # print('Subordinates : ' + str(person.subordinates))
 
     return render_template('person.j2', person=person, title=title)
 
@@ -87,12 +87,14 @@ def show_person_vcard(login=None):
 
 
 def create_vcard(person):
+    print('PIZZA : ' + str(type(person.email)))
     vcard = \
         'BEGIN:VCARD\n'\
         'VERSION:3.0\n'\
         'N:{};{}\n'\
         'FN:{} {}\n'\
         'TITLE:{}\n'\
+        'TEL;TYPE=WORK,VOICE:{}\n'\
         'EMAIL;TYPE=PREF,INTERNET:{}\n'\
         'END:VCARD'.format(
             person.surname,
@@ -100,6 +102,7 @@ def create_vcard(person):
             person.name,
             person.surname,
             person.job,
+            person.mobile,
             person.email
         )
     print(vcard)
@@ -146,28 +149,29 @@ def show_calendar():
     # Persons events
     birthday_events = '['
     arrival_events = '['
-    for person in persons:
-        if (person.birthday != ''):
-            birth_date = person.get_birthday_date()
-            birthday_events += u'{{title: "{} {}", start: "{}", url: "/person/{}"}},'.format(
-                person.name,
-                person.surname,
-                u'2016-{}-{}'.format(str(birth_date.month).zfill(2), str(birth_date.day).zfill(2)),
-                person.login,
-            )
-        if (person.arrival != ''):
-            arr_date = person.get_arrival_date()
-            # TODO : don't harcode the current year
-            if (2016 - arr_date.year <= 0):
-                arrival_text = 'arrival'
-            else:
-                arrival_text = u'{} years'.format(2016 - arr_date.year)
-            arrival_events += u'{{title: "{}", start: "{}", url: "/person/{}"}},'.format(
-                u'{} {} ({})'.format(person.name, person.surname, arrival_text),
-                u'2016-{}-{}'.format(str(arr_date.month).zfill(2), str(arr_date.day).zfill(2)),
-                person.login
-            )
-            # arrival_events += '{title: "' + person.name + ' ' + person.surname + ' (' + person.get_number_of_years() + ' years)", start: "' + person.get_arrival_date() + '", url: "/person/' + person.login + '"},'
+    for year in [2016, 2017]:
+        for person in persons:
+            if (person.birthday != ''):
+                birth_date = person.get_birthday_date()
+                birthday_events += u'{{title: "{} {}", start: "{}", url: "/person/{}"}},'.format(
+                    person.name,
+                    person.surname,
+                    u'{}-{}-{}'.format(year, str(birth_date.month).zfill(2), str(birth_date.day).zfill(2)),
+                    person.login,
+                )
+            if (person.arrival != ''):
+                arr_date = person.get_arrival_date()
+                # TODO : don't harcode the current year
+                if (year - arr_date.year <= 0):
+                    arrival_text = 'arrival'
+                else:
+                    arrival_text = u'{} years'.format(2016 - arr_date.year)
+                arrival_events += u'{{title: "{}", start: "{}", url: "/person/{}"}},'.format(
+                    u'{} {} ({})'.format(person.name, person.surname, arrival_text),
+                    u'{}-{}-{}'.format(year, str(arr_date.month).zfill(2), str(arr_date.day).zfill(2)),
+                    person.login
+                )
+                # arrival_events += '{title: "' + person.name + ' ' + person.surname + ' (' + person.get_number_of_years() + ' years)", start: "' + person.get_arrival_date() + '", url: "/person/' + person.login + '"},'
     birthday_events += '], color: "#a9d03f", textColor: "#ffffff"'
     arrival_events += '], color: "#368cbf", textColor: "#ffffff"'
 
@@ -284,7 +288,7 @@ def get_node_person(person, parent):
     # TODO : make render_template
     return "[{v:'" + person.login + "', f:'<div class=\"rootTreeNodeElement\"><a href=\"/person/" + person.login + "\">\
         <div class=\"rootTreeNodeElementFiller\" style=\"background: url(/static/images/photos/" + person.login + ".jpg) center / cover;\" >\
-            <div class=\"treeNodeTextContainer\"><div class=\"treeNodeText\">" + person.name + " <br /> " + person.surname + "</div></div>\
+            <div class=\"treeNodeTextContainer\"><div class=\"treeNodeText\">" + person.name + " <br /> " + person.surname.upper() + "</div></div>\
         </div>\
     </a></div>'}, '" + parent + "', '" + person.name + " " + person.surname + "'],"
 
@@ -386,6 +390,7 @@ def format_date(date):
     if (date is None or date == ''):
         return 0
 
+    print('NEW DATE')
     print(date)
     try:
         if (len(date.split('/')) == 3):
@@ -409,4 +414,4 @@ if __name__ == "__main__":
     if (len(persons) == 0):
         load_persons()
 
-    app.run()
+    app.run(port=5000)
