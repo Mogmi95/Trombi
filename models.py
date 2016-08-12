@@ -38,8 +38,8 @@ class Person(db.Model):
     login = db.Column(db.String(80), unique=False)
     name = db.Column(db.String(80), unique=False)
     surname = db.Column(db.String(80), unique=False)
-    birthday = db.Column(db.Integer, unique=False)
-    arrival = db.Column(db.Integer, unique=False)
+    birthday = db.Column(db.Date, unique=False)
+    arrival = db.Column(db.Date, unique=False)
     email = db.Column(db.String(120), unique=False)
     mobile = db.Column(db.String(120), unique=False)
     fixe = db.Column(db.String(120), unique=False)
@@ -61,12 +61,7 @@ class Person(db.Model):
         return datetime.datetime.fromtimestamp(float(self.arrival))
 
     def get_pretty_arrival_date(self):
-        date = datetime.datetime.fromtimestamp(float(self.arrival))
-        return date.strftime('Arrived %B, %d %Y')
-
-    def get_birthday_date(self):
-        return datetime.datetime.fromtimestamp(float(self.birthday))
+        return self.arrival.strftime('Arrived %B, %d %Y')
 
     def get_pretty_birthday_date(self):
-        date = datetime.datetime.fromtimestamp(float(self.birthday))
-        return date.strftime('Born %B, %d')
+        return self.birthday.strftime('Born %B, %d')

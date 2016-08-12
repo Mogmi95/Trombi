@@ -16,8 +16,8 @@ from flask_admin.contrib.sqla import ModelView
 from app import db, app, admin
 from models import Person, Team
 
-# admin.add_view(ModelView(Person, db.session))
-# admin.add_view(ModelView(Team, db.session))
+admin.add_view(ModelView(Person, db.session))
+admin.add_view(ModelView(Team, db.session))
 
 
 def get_list_mode(request):
@@ -152,7 +152,7 @@ def show_calendar():
     for year in [2016, 2017]:
         for person in persons:
             if (person.birthday != ''):
-                birth_date = person.get_birthday_date()
+                birth_date = person.birthday
                 birthday_events += u'{{title: "{} {}", start: "{}", url: "/person/{}"}},'.format(
                     person.name,
                     person.surname,
@@ -160,7 +160,7 @@ def show_calendar():
                     person.login,
                 )
             if (person.arrival != ''):
-                arr_date = person.get_arrival_date()
+                arr_date = person.arrival
                 # TODO : don't harcode the current year
                 if (year - arr_date.year <= 0):
                     arrival_text = 'arrival'
@@ -171,7 +171,7 @@ def show_calendar():
                     u'{}-{}-{}'.format(year, str(arr_date.month).zfill(2), str(arr_date.day).zfill(2)),
                     person.login
                 )
-                # arrival_events += '{title: "' + person.name + ' ' + person.surname + ' (' + person.get_number_of_years() + ' years)", start: "' + person.get_arrival_date() + '", url: "/person/' + person.login + '"},'
+                # arrival_events += '{title: "' + person.name + ' ' + person.surname + ' (' + person.get_number_of_years() + ' years)", start: "' + person.arrival + '", url: "/person/' + person.login + '"},'
     birthday_events += '], color: "#a9d03f", textColor: "#ffffff"'
     arrival_events += '], color: "#368cbf", textColor: "#ffffff"'
 
@@ -346,8 +346,8 @@ def load_persons():
                 neo.login = split[2].strip().lower()
                 neo.surname = split[3]
                 neo.name = split[4]
-                neo.birthday = format_date(split[5])
-                neo.arrival = format_date(split[6])
+                neo.birthday = datetime.datetime.fromtimestamp(float(format_date(split[5])))
+                neo.arrival = datetime.datetime.fromtimestamp(float(format_date(split[6])))
                 neo.job = split[7]
                 neo.email = split[8]
                 neo.skype = split[9]
