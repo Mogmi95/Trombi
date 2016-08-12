@@ -113,23 +113,33 @@ def create_vcard(person):
 def show_search(query=None):
     title = "Search"
     message = "{} result(s) for \"" + query + "\" :"
-    initial_query = query
-    query = '%' + query + '%'
-    persons = Person.query.filter(or_(
-            Person.login.like(query),
-            Person.name.like(query),
-            Person.job.like(query),
-            Person.surname.like(query)))
 
-    if (len(persons.all()) == 1):
-        return show_person(persons.first().login)
+    # Maybe re-do this part of the code in a more pytonic way
+    hash_persons = {}
+    for token in query.split(' '):
+        persons = Person.query.filter(or_(
+            Person.login.like('%' + token + '%'),
+            Person.name.like('%' + token + '%'),
+            Person.job.like('%' + token + '%'),
+            Person.surname.like('%' + token + '%')))
+
+        for person in persons.all():
+            hash_persons[person.login] = person
+        print(hash_persons)
+
+    persons = []
+    for person_key in hash_persons.keys():
+        persons.append(hash_persons[person_key])
+
+    if (len(persons) == 1):
+        return show_person(persons[0].login)
     return render_template(
         'all.j2',
         persons=persons,
-        message=message.format(len(persons.all())),
+        message=message.format(len(persons)),
         title=title,
         list_mode=get_list_mode(request),
-        list_url=url_for('show_search', query=initial_query)
+        list_url=url_for('show_search', query=query)
         )
 
 
