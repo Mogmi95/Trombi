@@ -1,5 +1,4 @@
 *.pyc
-*.csv
 static/images/photos/*.jpg
 static/images/photos/*.png
 static/images/logo.png

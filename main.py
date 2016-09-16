@@ -313,7 +313,7 @@ def load_persons():
     existing_teams = {}
 
     # with open('update_teams.csv', 'r') as f:
-    with io.open('test_teams.csv', 'r', encoding='utf8') as f:
+    with io.open('data/teams.csv', 'r', encoding='utf8') as f:
         for line in f:
             if (len(line) > 1 and line[0] != '#'):
                 split = line[:-1].split(';')
@@ -346,7 +346,7 @@ def load_persons():
             existing_teams[subteam].high_team = current_team
 
     # DEPT;SERVICE;LOGIN;NOM;PRENOM;NAISSANCE;ARRIVEE;FONCTION;MAIL;SKYPE;FIXE;PORTABLE;MANAGER
-    with io.open('update_persons.csv', 'r', encoding='utf8') as f:
+    with io.open('data/persons.csv', 'r', encoding='utf8') as f:
         for line in f:
             if (len(line) > 1 and line[0] != '#'):
                 # print(line)
