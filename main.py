@@ -9,9 +9,11 @@ Should write something nice here.
 import io
 import time
 import datetime
+from os import path
 from flask import render_template, request, url_for
 from sqlalchemy import or_
 from flask_admin.contrib.sqla import ModelView
+import config
 
 from app import db, app, admin
 from models import Person, Team
@@ -211,7 +213,6 @@ def show_team(team=None):
     title = "Team " + team.name
 
     print(team)
-    print("subteam : " + str(team.sub_teams))
 
     # If the team has sub-teams, we display them.
     # Otherwise we list the persons inside
@@ -276,10 +277,6 @@ def build_tree_persons(team_root_persons, is_root):
 
     parent = ''
     if (is_root):
-        print("YAL")
-        print(team_root_persons[0])
-        print(team_root_persons[0].manager)
-        print("HOP")
         parent_team_manager = team_root_persons[0].manager
         result += get_node_person(parent_team_manager, '')
         parent = parent_team_manager.login
@@ -312,8 +309,13 @@ def load_persons():
     teams_order = {}
     existing_teams = {}
 
-    # with open('update_teams.csv', 'r') as f:
-    with io.open('data/teams.csv', 'r', encoding='utf8') as f:
+    # We try to use a custom persons file if it exists. If not, default file
+    if (path.isfile(config.DATABASE_TEAMS_FILE)):
+        teams_file = config.DATABASE_TEAMS_FILE
+    else:
+        teams_file = config.DATABASE_TEAMS_DEFAULT_FILE
+
+    with io.open(teams_file, 'r', encoding='utf8') as f:
         for line in f:
             if (len(line) > 1 and line[0] != '#'):
                 split = line[:-1].split(';')
@@ -345,11 +347,15 @@ def load_persons():
         for subteam in teams_order[team_name]:
             existing_teams[subteam].high_team = current_team
 
-    # DEPT;SERVICE;LOGIN;NOM;PRENOM;NAISSANCE;ARRIVEE;FONCTION;MAIL;SKYPE;FIXE;PORTABLE;MANAGER
-    with io.open('data/persons.csv', 'r', encoding='utf8') as f:
+    # We try to use a custom persons file if it exists. If not, default file
+    if (path.isfile(config.DATABASE_PERSONS_FILE)):
+        persons_file = config.DATABASE_PERSONS_FILE
+    else:
+        persons_file = config.DATABASE_PERSONS_DEFAULT_FILE
+
+    with io.open(persons_file, 'r', encoding='utf8') as f:
         for line in f:
             if (len(line) > 1 and line[0] != '#'):
-                # print(line)
                 neo = Person()
 
                 split = line[:-1].split(';')
@@ -383,16 +389,8 @@ def load_persons():
     for person in persons:
         # We link the managers
         if person.login in managers:
-            print('Manager : ' + person.login)
             person.subordinates = managers[person.login]
-            # for lol in person.subordinates:
-            #     print('     -> ' + lol.login)
         db.session.add(person)
-
-    # print('PERSONS : ' + str(persons))
-    # print('MANAGERS : ' + str(managers))
-    # print('TEAMS : ' + str(existing_teams))
-
     db.session.commit()
 
 
@@ -400,7 +398,6 @@ def format_date(date):
     if (date is None or date == ''):
         return 0
 
-    print('NEW DATE')
     print(date)
     try:
         if (len(date.split('/')) == 3):
