@@ -10,17 +10,110 @@ import io
 import time
 import datetime
 from os import path
-from flask import render_template, request, url_for
+from flask import render_template, request, url_for, redirect
+from wtforms import form, fields, validators
 from sqlalchemy import or_
-from flask_admin.contrib.sqla import ModelView
+from flask_admin.contrib import sqla
+from flask_admin import helpers, expose
 import config
+import flask_admin as flask_admin
 
-from app import db, app, admin
-from models import Person, Team
+import flask_login as login
+from werkzeug.security import generate_password_hash, check_password_hash
 
-admin.add_view(ModelView(Person, db.session))
-admin.add_view(ModelView(Team, db.session))
 
+from app import db, app
+from models import Person, Team, TrombiAdmin
+
+
+# LOGIN PART
+
+# Define login and registration forms (for flask-login)
+class LoginForm(form.Form):
+    login = fields.StringField(u'Login', description='wolo', validators=[validators.required()])
+    password = fields.PasswordField(u'Password', validators=[validators.required()])
+
+    def validate_login(self, field):
+        user = self.get_user()
+
+        if user is None:
+            raise validators.ValidationError('Invalid user')
+
+        if not check_password_hash(user.password, self.password.data):
+            raise validators.ValidationError('Invalid password')
+
+    def get_user(self):
+        return db.session.query(TrombiAdmin).filter_by(login=self.login.data).first()
+
+
+# Initialize flask-login
+def init_login():
+    login_manager = login.LoginManager()
+    login_manager.init_app(app)
+
+    # Create user loader function
+    @login_manager.user_loader
+    def load_user(user_id):
+        return db.session.query(TrombiAdmin).get(user_id)
+
+
+
+# Create customized index view class that handles login & registration
+class MyAdminIndexView(flask_admin.AdminIndexView):
+
+    @expose('/')
+    def index(self):
+        if not login.current_user.is_authenticated:
+            return redirect(url_for('.login_view'))
+        return super(MyAdminIndexView, self).index()
+
+    @expose('/login/', methods=('GET', 'POST'))
+    def login_view(self):
+        # handle user login
+        form = LoginForm(request.form)
+        if helpers.validate_form_on_submit(form):
+            user = form.get_user()
+            login.login_user(user)
+
+        if login.current_user.is_authenticated:
+            return redirect(url_for('.index'))
+        #link = '<p>Don\'t have an account? <a href="' + url_for('.register_view') + '">Click here to register.</a></p>'
+        self._template_args['form'] = form
+        return super(MyAdminIndexView, self).index()
+
+    @expose('/logout/')
+    def logout_view(self):
+        login.logout_user()
+        return redirect(url_for('.index'))
+
+
+# Create customized model view class
+class MyModelView(sqla.ModelView):
+
+    def is_accessible(self):
+        return login.current_user.is_authenticated
+
+
+# Initialize flask-login
+init_login()
+
+# Create admin
+admin = flask_admin.Admin(app, 'Trombi admin', index_view=MyAdminIndexView(), base_template='master.html')
+
+# Add view
+
+# Do we want the admin to editate this ?
+# admin.add_view(MyModelView(TrombiAdmin, db.session))
+
+admin.add_view(MyModelView(Person, db.session))
+admin.add_view(MyModelView(Team, db.session))
+
+
+
+
+
+
+# END LOGIN TEST
 
 def get_list_mode(request):
     list_mode = request.args.get('list')
@@ -420,5 +513,11 @@ if __name__ == "__main__":
     persons = Person.query.all()
     if (len(persons) == 0):
         load_persons()
+
+        superadmin = TrombiAdmin()
+        superadmin.login = "admin"
+        superadmin.password = generate_password_hash("pizza")
+        db.session.add(superadmin)
+        db.session.commit()
 
     app.run(port=5000)

@@ -7,6 +7,6 @@ from flask_admin import Admin
 app = flask.Flask(__name__, static_url_path='/static')
 app.config.from_object('config')
 
-admin = Admin(app, name='Trombi')
+# admin = Admin(app, name='Trombi')
 
 db = SQLAlchemy(app)
