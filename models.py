@@ -88,3 +88,8 @@ class Person(db.Model):
 
     def get_pretty_birthday_date(self):
         return self.birthday.strftime('Born %B, %d')
+
+class Trivia(db.Model):
+    __tablename__ = 'trivia'
+    id = db.Column(db.Integer, primary_key=True)
+    text = db.Column(db.UnicodeText(), unique=False, default=u'Hello World!')

@@ -16,6 +16,7 @@ from sqlalchemy import or_
 from flask_admin.contrib import sqla
 from flask_admin import helpers, expose
 import config
+import markdown2
 import flask_admin as flask_admin
 
 import flask_login as login
@@ -23,7 +24,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 
 from app import db, app
-from models import Person, Team, TrombiAdmin
+from models import Person, Team, TrombiAdmin, Trivia
 
 
 # LOGIN PART
@@ -89,7 +90,6 @@ class MyAdminIndexView(flask_admin.AdminIndexView):
 
 # Create customized model view class
 class MyModelView(sqla.ModelView):
-
     def is_accessible(self):
         return login.current_user.is_authenticated
 
@@ -107,11 +107,7 @@ admin = flask_admin.Admin(app, 'Trombi admin', index_view=MyAdminIndexView(), ba
 
 admin.add_view(MyModelView(Person, db.session))
 admin.add_view(MyModelView(Team, db.session))
-
-
-
-
-
+admin.add_view(MyModelView(Trivia, db.session))
 
 # END LOGIN TEST
 
@@ -174,6 +170,14 @@ def show_new_persons():
         message=message
         )
 
+@app.route("/trivia")
+def show_trivia():
+    trivia = db.session.query(Trivia).first()
+    if (trivia is None):
+        text = u'Nothing here yet.'
+    else:
+        text = markdown2.markdown(trivia.text)
+    return render_template('trivia.j2', text=text)
 
 @app.route("/person/vcard/vcard-<login>.vcf")
 def show_person_vcard(login=None):
