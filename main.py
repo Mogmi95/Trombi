@@ -31,7 +31,7 @@ from models import Person, Team, TrombiAdmin, Trivia
 
 # Define login and registration forms (for flask-login)
 class LoginForm(form.Form):
-    login = fields.StringField(u'Login', description='wolo', validators=[validators.required()])
+    login = fields.StringField(u'Login', validators=[validators.required()])
     password = fields.PasswordField(u'Password', validators=[validators.required()])
 
     def validate_login(self, field):
@@ -143,10 +143,6 @@ def show_person(login=None):
     person = Person.query.filter_by(login=login).first()
     title = person.name + " " + person.surname
 
-    # print('Name : ' + person.name)
-    # print('Manager : ' + str(person.manager))
-    # print('Subordinates : ' + str(person.subordinates))
-
     return render_template('person.j2', person=person, title=title)
 
 
@@ -186,7 +182,6 @@ def show_person_vcard(login=None):
 
 
 def create_vcard(person):
-    print('PIZZA : ' + str(type(person.email)))
     vcard = \
         'BEGIN:VCARD\n'\
         'VERSION:3.0\n'\
@@ -204,7 +199,6 @@ def create_vcard(person):
             person.mobile,
             person.email
         )
-    print(vcard)
     return vcard
 
 
@@ -224,7 +218,6 @@ def show_search(query=None):
 
         for person in persons.all():
             hash_persons[person.login] = person
-        print(hash_persons)
 
     persons = []
     for person_key in hash_persons.keys():
@@ -309,20 +302,15 @@ def show_team(team=None):
     team = Team.query.filter_by(name=team).first()
     title = "Team " + team.name
 
-    print(team)
-
     # If the team has sub-teams, we display them.
     # Otherwise we list the persons inside
     if (team.sub_teams is None or team.sub_teams == []):
         # We show the persons
         team_root_persons = team.get_root_persons()
-        print(team_root_persons)
         tree = build_tree_persons(team_root_persons, True)
     else:
         # We show the teams inside
         tree = build_tree_teams(team)
-
-    print(team.persons)
 
     return render_template(
         'team.j2',
@@ -335,7 +323,6 @@ def show_team(team=None):
 
 
 def build_tree_teams(team):
-    print(team)
     result = ''
 
     # The first item is the manager of all other teams
@@ -369,10 +356,9 @@ def get_node_team(team, parent):
 
 
 def build_tree_persons(team_root_persons, is_root):
-    print(team_root_persons)
     result = ''
-
     parent = ''
+
     if (is_root):
         parent_team_manager = team_root_persons[0].manager
         result += get_node_person(parent_team_manager, '')
@@ -416,7 +402,6 @@ def load_persons():
         for line in f:
             if (len(line) > 1 and line[0] != '#'):
                 split = line[:-1].split(';')
-                print(split)
                 team = split[0]
                 subteam = split[1]
 
@@ -430,11 +415,7 @@ def load_persons():
                 else:
                     teams_order[team] = [subteam]
 
-    print(teams)
-    print(teams_order)
-
     for team_name in teams:
-        print(team_name)
         neo_team = Team(team_name)
         existing_teams[team_name] = neo_team
         db.session.add(neo_team)
@@ -477,8 +458,6 @@ def load_persons():
 
                 if (team in existing_teams):
                     neo.team = existing_teams[team]
-                    print(neo.skype + ' ' + str(neo.team))
-                    print('--------------')
                 else:
                     print('Error: Missing team ' + team)
                 persons.append(neo)
@@ -495,7 +474,6 @@ def format_date(date):
     if (date is None or date == ''):
         return 0
 
-    print(date)
     try:
         if (len(date.split('/')) == 3):
             return time.mktime(
