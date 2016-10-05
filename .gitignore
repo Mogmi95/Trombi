@@ -2,5 +2,6 @@
 static/images/photos/*.jpg
 static/images/photos/*.png
 static/images/logo.png
-
+data/persons.csv
+data/rooms.csv
 
