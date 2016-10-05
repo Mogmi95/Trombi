@@ -299,6 +299,7 @@ def show_all_teams():
 
 @app.route("/team/<team>")
 def show_team(team=None):
+    print("Team")
     team = Team.query.filter_by(name=team).first()
     title = "Team " + team.name
 
