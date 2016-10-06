@@ -16,7 +16,6 @@ from sqlalchemy import or_
 from flask_admin.contrib import sqla
 from flask_admin import helpers, expose
 import config
-import markdown2
 import flask_admin as flask_admin
 
 import flask_login as login
@@ -87,11 +86,29 @@ class MyAdminIndexView(flask_admin.AdminIndexView):
         login.logout_user()
         return redirect(url_for('.index'))
 
+from wtforms.widgets import TextArea
+from wtforms.fields import TextAreaField
+
+class CKEditorWidget(TextArea):
+    def __call__(self, field, **kwargs):
+        if kwargs.get('class'):
+            kwargs['class'] += " ckeditor"
+        else:
+            kwargs.setdefault('class', 'ckeditor')
+        return super(CKEditorWidget, self).__call__(field, **kwargs)
+
+class CKEditorField(TextAreaField):
+    widget = CKEditorWidget()
 
 # Create customized model view class
 class MyModelView(sqla.ModelView):
     def is_accessible(self):
         return login.current_user.is_authenticated
+    # Change edit in the admin
+    form_overrides = dict(text=CKEditorField)
+    can_view_details = True
+    create_template = 'edit.html'
+    edit_template = 'edit.html'
 
 
 # Initialize flask-login
@@ -172,7 +189,7 @@ def show_trivia():
     if (trivia is None):
         text = u'Nothing here yet.'
     else:
-        text = markdown2.markdown(trivia.text)
+        text = trivia.text
     return render_template('trivia.j2', text=text)
 
 @app.route("/person/vcard/vcard-<login>.vcf")
