@@ -142,14 +142,27 @@ def main():
 
 @app.route("/all")
 def show_all():
+    person_filter = request.args.get('filter')
+    print(person_filter)
     title = "Trombi"
-    persons = Person.query.order_by(Person.surname).all()
-    message = "Whoa ! {} people already!".format(len(persons))
+
+    if (person_filter is not None):
+        last_month_timestamp = time.time() - 2592000
+        persons = Person.query.filter(
+                Person.arrival > last_month_timestamp
+            ).order_by(
+                Person.surname
+            ).all()
+        message = "{} newbies".format(len(persons))
+    else:
+        persons = Person.query.order_by(Person.surname).all()
+        message = "{} people".format(len(persons))
     return render_template(
         'all.j2',
         persons=persons,
         title=title,
         list_mode=get_list_mode(request),
+        person_filter=person_filter,
         list_url='',
         message=message
         )
@@ -162,26 +175,6 @@ def show_person(login=None):
 
     return render_template('person.j2', person=person, title=title)
 
-
-@app.route("/newpersons")
-def show_new_persons():
-    title = "New persons"
-    last_month_timestamp = time.time() - 2592000
-    persons = Person.query.filter(
-            Person.arrival > last_month_timestamp
-        ).order_by(
-            Person.surname
-        ).all()
-    # message = "{} persons".format(len(persons))
-    message = 'They just joined us'
-    return render_template(
-        'all.j2',
-        persons=persons,
-        title=title,
-        list_mode=get_list_mode(request),
-        list_url='',
-        message=message
-        )
 
 @app.route("/trivia")
 def show_trivia():
