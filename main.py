@@ -23,7 +23,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 
 from app import db, app
-from models import Person, Team, TrombiAdmin, Trivia
+from models import Person, Team, TrombiAdmin, Trivia, Room
 
 
 # LOGIN PART
@@ -124,6 +124,7 @@ admin = flask_admin.Admin(app, 'Trombi admin', index_view=MyAdminIndexView(), ba
 
 admin.add_view(MyModelView(Person, db.session))
 admin.add_view(MyModelView(Team, db.session))
+admin.add_view(MyModelView(Room, db.session))
 admin.add_view(MyModelView(Trivia, db.session))
 
 # END LOGIN TEST
@@ -393,17 +394,15 @@ def get_node_person(person, parent):
         </div>\
     </a></div>'}, '" + parent + "', '" + person.name + " " + person.surname + "'],"
 
+# DATABASE INIT
 
-def load_persons():
+def load_teams():
     # Init teams
-
-    persons = []
-    managers = {}
     teams = []
     teams_order = {}
     existing_teams = {}
 
-    # We try to use a custom persons file if it exists. If not, default file
+    # We try to use a custom teams file if it exists. If not, default file
     if (path.isfile(config.DATABASE_TEAMS_FILE)):
         teams_file = config.DATABASE_TEAMS_FILE
     else:
@@ -435,6 +434,37 @@ def load_persons():
         current_team = existing_teams[team_name]
         for subteam in teams_order[team_name]:
             existing_teams[subteam].high_team = current_team
+
+    db.session.commit()
+
+def load_rooms():
+    # Init rooms
+    # We try to use a custom teams file if it exists. If not, default file
+    if (path.isfile(config.DATABASE_ROOMS_FILE)):
+        rooms_file = config.DATABASE_ROOMS_FILE
+    else:
+        rooms_file = config.DATABASE_ROOMS_DEFAULT_FILE
+
+    with io.open(rooms_file, 'r', encoding='utf8') as f:
+        for line in f:
+            if (len(line) > 1 and line[0] != '#'):
+                split = line[:-1].split(';')
+                room_name = split[0]
+                floor_number = split[1]
+                neo_room = Room(room_name, floor_number)
+                db.session.add(neo_room)
+
+    db.session.commit()
+
+
+def load_persons():
+    persons = []
+    managers = {}
+    existing_teams = {}
+    teams = Team.query.all()
+    for team in teams:
+        existing_teams[team.name] = team
+    print(existing_teams)
 
     # We try to use a custom persons file if it exists. If not, default file
     if (path.isfile(config.DATABASE_PERSONS_FILE)):
@@ -505,6 +535,8 @@ if __name__ == "__main__":
 
     persons = Person.query.all()
     if (len(persons) == 0):
+        load_teams()
+        load_rooms()
         load_persons()
 
         superadmin = TrombiAdmin()
