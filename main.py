@@ -460,11 +460,20 @@ def load_rooms():
 def load_persons():
     persons = []
     managers = {}
+
+    # TEAMS
     existing_teams = {}
     teams = Team.query.all()
     for team in teams:
         existing_teams[team.name] = team
     print(existing_teams)
+
+    # ROOMS
+    existing_rooms = {}
+    rooms = Room.query.all()
+    for room in rooms:
+        existing_rooms[room.name] = room
+    print(existing_rooms)
 
     # We try to use a custom persons file if it exists. If not, default file
     if (path.isfile(config.DATABASE_PERSONS_FILE)):
@@ -491,6 +500,7 @@ def load_persons():
 
                 team = split[1]
                 manager = split[12]
+                room = split[13]
 
                 if manager in managers:
                     managers[manager].append(neo)
@@ -499,6 +509,10 @@ def load_persons():
 
                 if (team in existing_teams):
                     neo.team = existing_teams[team]
+
+                if (room in existing_rooms):
+                    neo.room = existing_rooms[room]
+
                 else:
                     print('Error: Missing team ' + team)
                 persons.append(neo)
