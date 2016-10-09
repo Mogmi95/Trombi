@@ -108,6 +108,10 @@ class Room(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), unique=False)
     floor = db.Column(db.Integer)
+    # Relative X and Y positions inside the map
+    map_x_position = db.Column(db.Integer, default=50)
+    map_y_position = db.Column(db.Integer, default=25)
+
     persons = relationship("Person", backref="room")
 
 class Trivia(db.Model):
