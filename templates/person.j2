@@ -83,13 +83,13 @@
         Download V-Card
       </button>
     </a>
-
-<canvas id="map"></canvas>
-
 </div>
   </div>
 </div>
 
+<div class="personMapCard">
+  <canvas id="map"></canvas>
+</div>
 
 
 <script>
@@ -98,8 +98,8 @@ var context = canvas.getContext("2d");
 var img = new Image();
 var indicator = new Image();
 
-canvas.style.width ='100%';
-canvas.style.height='100%';
+//canvas.style.width ='100';
+//canvas.style.height='100%';
 
 img.onload = function () {
   // We search the dimension of the image to fit the canvas without deformation
