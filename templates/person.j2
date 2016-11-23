@@ -87,32 +87,50 @@
   </div>
 </div>
 
-<!--<div class="demo-card-wide mdl-card mdl-shadow--3dp">
-  <div class="mdl-card__title">
-    <div class="person_avatar" style="background: url({{ url_for('static', filename='images/photos/' + person.login + '.jpg') }}) center / cover;"></div>
-    <div class="mdl-card__title-text-container">
-      <h2 class="mdl-card__title-text">{{ person.name }} {{ person.surname }}</h2>
-      <p>{{ person.job }}</p>
-      {% if person.team is not none and person.team.high_team is not none %}
-      <p><a href="/team/{{ person.team.name }}">{{ person.team.high_team.name }}</a></p>
-      {% endif %}
-      <p><a href="/team/{{ person.team.name }}">{{ person.team.name }}</a></p>
-
-      {% if person.manager is not none %}
-      <p>Manager : <a href="/person/{{ person.manager.login }}">{{ person.manager.name }} {{ person.manager.surname }}</a></p>
-      {% endif %}
-
-      <a href="/person/vcard/vcard-{{ person.login }}.vcf" download>
-        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-          Download V-Card
-        </button>
-      </a>
+<div class="personMapCard">
+  <canvas id="map"></canvas>
+</div>
 
 
-    </div>
-  </div>
+<script>
+var canvas = document.getElementById('map');
+var context = canvas.getContext("2d");
+var img = new Image();
+var indicator = new Image();
+
+//canvas.style.width ='100';
+//canvas.style.height='100%';
+
+img.onload = function () {
+  // We search the dimension of the image to fit the canvas without deformation
+  var imgRatio = img.width / img.height;
+  var canvasRatio = canvas.width / canvas.height;
+  var imgWidth;
+  var imgHeight;
+
+  if (canvasRatio > imgRatio) {
+    imgWidth = img.width * canvas.height / img.height;
+    imgHeight = canvas.height;
+  } else {
+    imgWidth = canvas.width;
+    imgHeight = img.height * canvas.width / img.width;
+  }
+
+  var xMargin = (canvas.width - imgWidth) / 2;
+  var yMargin = (canvas.height - imgHeight) / 2;
+
+  context.drawImage(img, xMargin, yMargin, imgWidth, imgHeight)
+  indicator.onload = function () {
+    var xPos = imgWidth * {{ person.room.map_x_position }} / 100 - indicator.width / 2;
+    var yPos = imgHeight * {{ person.room.map_y_position }} / 100 - indicator.height / 2;
+    context.drawImage(indicator, xPos + xMargin, yPos + yMargin)
+  }
+  indicator.src = "{{url_for('static', filename='images/favicon.png') }}";
+  //context.drawImage(img, {{ person.room.map_x_position }}, {{ person.room.map_y_position }});
+}
+img.src = "{{url_for('static', filename='images/maps/' + person.room.get_floor_string() + '.png') }}";
+
+</script>
 
 
-
-</div>-->
 {% endblock %}

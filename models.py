@@ -33,6 +33,7 @@ class Team(db.Model):
     name = db.Column(db.String(80), unique=False)
 
     persons = relationship("Person", backref="team")
+
     team_id = Column(Integer, ForeignKey('team.id'))
     high_team = relationship("Team", backref="sub_teams", remote_side="Team.id")
 
@@ -74,6 +75,8 @@ class Person(db.Model):
 
     team_id = Column(Integer, ForeignKey('team.id'))
 
+    room_id = Column(Integer, ForeignKey('room.id'))
+
     def __repr__(self):
         return self.skype
 
@@ -89,7 +92,29 @@ class Person(db.Model):
     def get_pretty_birthday_date(self):
         return self.birthday.strftime('Born %B, %d')
 
+class Room(db.Model):
+    __tablename__ = 'room'
+
+    def __init__(self, name, floor):
+        self.name = name
+        self.floor = floor
+
+    def __repr__(self):
+        return self.name
+
+    def get_floor_string(self):
+        return str(self.floor)
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(80), unique=False)
+    floor = db.Column(db.Integer)
+    # Relative X and Y positions inside the map
+    map_x_position = db.Column(db.Integer, default=50)
+    map_y_position = db.Column(db.Integer, default=25)
+
+    persons = relationship("Person", backref="room")
+
 class Trivia(db.Model):
     __tablename__ = 'trivia'
     id = db.Column(db.Integer, primary_key=True)
-    text = db.Column(db.UnicodeText(), unique=False, default=u'Hello World!')
+    text = db.Column(db.Text(), unique=False, default=u'Hello World!')

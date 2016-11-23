@@ -16,7 +16,6 @@ from sqlalchemy import or_
 from flask_admin.contrib import sqla
 from flask_admin import helpers, expose
 import config
-import markdown2
 import flask_admin as flask_admin
 
 import flask_login as login
@@ -24,7 +23,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 
 from app import db, app
-from models import Person, Team, TrombiAdmin, Trivia
+from models import Person, Team, TrombiAdmin, Trivia, Room
 
 
 # LOGIN PART
@@ -87,11 +86,29 @@ class MyAdminIndexView(flask_admin.AdminIndexView):
         login.logout_user()
         return redirect(url_for('.index'))
 
+from wtforms.widgets import TextArea
+from wtforms.fields import TextAreaField
+
+class CKEditorWidget(TextArea):
+    def __call__(self, field, **kwargs):
+        if kwargs.get('class'):
+            kwargs['class'] += " ckeditor"
+        else:
+            kwargs.setdefault('class', 'ckeditor')
+        return super(CKEditorWidget, self).__call__(field, **kwargs)
+
+class CKEditorField(TextAreaField):
+    widget = CKEditorWidget()
 
 # Create customized model view class
 class MyModelView(sqla.ModelView):
     def is_accessible(self):
         return login.current_user.is_authenticated
+    # Change edit in the admin
+    form_overrides = dict(text=CKEditorField)
+    can_view_details = True
+    create_template = 'edit.html'
+    edit_template = 'edit.html'
 
 
 # Initialize flask-login
@@ -107,6 +124,7 @@ admin = flask_admin.Admin(app, 'Trombi admin', index_view=MyAdminIndexView(), ba
 
 admin.add_view(MyModelView(Person, db.session))
 admin.add_view(MyModelView(Team, db.session))
+admin.add_view(MyModelView(Room, db.session))
 admin.add_view(MyModelView(Trivia, db.session))
 
 # END LOGIN TEST
@@ -125,14 +143,27 @@ def main():
 
 @app.route("/all")
 def show_all():
+    person_filter = request.args.get('filter')
+    print(person_filter)
     title = "Trombi"
-    persons = Person.query.order_by(Person.surname).all()
-    message = "Whoa ! {} people already!".format(len(persons))
+
+    if (person_filter is not None):
+        last_month_timestamp = time.time() - 2592000
+        persons = Person.query.filter(
+                Person.arrival > last_month_timestamp
+            ).order_by(
+                Person.surname
+            ).all()
+        message = "{} newbies".format(len(persons))
+    else:
+        persons = Person.query.order_by(Person.surname).all()
+        message = "{} people".format(len(persons))
     return render_template(
         'all.j2',
         persons=persons,
         title=title,
         list_mode=get_list_mode(request),
+        person_filter=person_filter,
         list_url='',
         message=message
         )
@@ -146,33 +177,13 @@ def show_person(login=None):
     return render_template('person.j2', person=person, title=title)
 
 
-@app.route("/newpersons")
-def show_new_persons():
-    title = "New persons"
-    last_month_timestamp = time.time() - 2592000
-    persons = Person.query.filter(
-            Person.arrival > last_month_timestamp
-        ).order_by(
-            Person.surname
-        ).all()
-    # message = "{} persons".format(len(persons))
-    message = 'They just joined us'
-    return render_template(
-        'all.j2',
-        persons=persons,
-        title=title,
-        list_mode=get_list_mode(request),
-        list_url='',
-        message=message
-        )
-
 @app.route("/trivia")
 def show_trivia():
     trivia = db.session.query(Trivia).first()
     if (trivia is None):
         text = u'Nothing here yet.'
     else:
-        text = markdown2.markdown(trivia.text)
+        text = trivia.text
     return render_template('trivia.j2', text=text)
 
 @app.route("/person/vcard/vcard-<login>.vcf")
@@ -383,17 +394,15 @@ def get_node_person(person, parent):
         </div>\
     </a></div>'}, '" + parent + "', '" + person.name + " " + person.surname + "'],"
 
+# DATABASE INIT
 
-def load_persons():
+def load_teams():
     # Init teams
-
-    persons = []
-    managers = {}
     teams = []
     teams_order = {}
     existing_teams = {}
 
-    # We try to use a custom persons file if it exists. If not, default file
+    # We try to use a custom teams file if it exists. If not, default file
     if (path.isfile(config.DATABASE_TEAMS_FILE)):
         teams_file = config.DATABASE_TEAMS_FILE
     else:
@@ -426,6 +435,46 @@ def load_persons():
         for subteam in teams_order[team_name]:
             existing_teams[subteam].high_team = current_team
 
+    db.session.commit()
+
+def load_rooms():
+    # Init rooms
+    # We try to use a custom teams file if it exists. If not, default file
+    if (path.isfile(config.DATABASE_ROOMS_FILE)):
+        rooms_file = config.DATABASE_ROOMS_FILE
+    else:
+        rooms_file = config.DATABASE_ROOMS_DEFAULT_FILE
+
+    with io.open(rooms_file, 'r', encoding='utf8') as f:
+        for line in f:
+            if (len(line) > 1 and line[0] != '#'):
+                split = line[:-1].split(';')
+                room_name = split[0]
+                floor_number = split[1]
+                neo_room = Room(room_name, floor_number)
+                db.session.add(neo_room)
+
+    db.session.commit()
+
+
+def load_persons():
+    persons = []
+    managers = {}
+
+    # TEAMS
+    existing_teams = {}
+    teams = Team.query.all()
+    for team in teams:
+        existing_teams[team.name] = team
+    print(existing_teams)
+
+    # ROOMS
+    existing_rooms = {}
+    rooms = Room.query.all()
+    for room in rooms:
+        existing_rooms[room.name] = room
+    print(existing_rooms)
+
     # We try to use a custom persons file if it exists. If not, default file
     if (path.isfile(config.DATABASE_PERSONS_FILE)):
         persons_file = config.DATABASE_PERSONS_FILE
@@ -451,6 +500,7 @@ def load_persons():
 
                 team = split[1]
                 manager = split[12]
+                room = split[13]
 
                 if manager in managers:
                     managers[manager].append(neo)
@@ -459,6 +509,10 @@ def load_persons():
 
                 if (team in existing_teams):
                     neo.team = existing_teams[team]
+
+                if (room in existing_rooms):
+                    neo.room = existing_rooms[room]
+
                 else:
                     print('Error: Missing team ' + team + ' for ' + neo.login)
                 persons.append(neo)
@@ -495,6 +549,8 @@ if __name__ == "__main__":
 
     persons = Person.query.all()
     if (len(persons) == 0):
+        load_teams()
+        load_rooms()
         load_persons()
 
         superadmin = TrombiAdmin()
