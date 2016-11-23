@@ -460,7 +460,7 @@ def load_persons():
                 if (team in existing_teams):
                     neo.team = existing_teams[team]
                 else:
-                    print('Error: Missing team ' + team)
+                    print('Error: Missing team ' + team + ' for ' + neo.login)
                 persons.append(neo)
 
     for person in persons:
