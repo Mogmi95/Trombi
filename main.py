@@ -148,11 +148,14 @@ def show_all():
 
     if (person_filter is not None):
         last_month_timestamp = time.time() - 2592000
+        last_month_date = datetime.datetime.fromtimestamp(last_month_timestamp)
+        print(last_month_date)
         persons = Person.query.filter(
-                Person.arrival > last_month_timestamp
+                Person.arrival > last_month_date
             ).order_by(
                 Person.surname
             ).all()
+        print(len(persons))
         message = "{} newbies".format(len(persons))
     else:
         persons = Person.query.order_by(Person.surname).all()
