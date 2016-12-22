@@ -403,13 +403,7 @@ def load_teams():
     teams_order = {}
     existing_teams = {}
 
-    # We try to use a custom teams file if it exists. If not, default file
-    if (path.isfile(config.DATABASE_TEAMS_FILE)):
-        teams_file = config.DATABASE_TEAMS_FILE
-    else:
-        teams_file = config.DATABASE_TEAMS_DEFAULT_FILE
-
-    with io.open(teams_file, 'r', encoding='utf8') as f:
+    with io.open(config.DATABASE_TEAMS_FILE, 'r', encoding='utf8') as f:
         for line in f:
             if (len(line) > 1 and line[0] != '#'):
                 split = line[:-1].split(';')
@@ -440,13 +434,7 @@ def load_teams():
 
 def load_rooms():
     # Init rooms
-    # We try to use a custom teams file if it exists. If not, default file
-    if (path.isfile(config.DATABASE_ROOMS_FILE)):
-        rooms_file = config.DATABASE_ROOMS_FILE
-    else:
-        rooms_file = config.DATABASE_ROOMS_DEFAULT_FILE
-
-    with io.open(rooms_file, 'r', encoding='utf8') as f:
+    with io.open(config.DATABASE_ROOMS_FILE, 'r', encoding='utf8') as f:
         for line in f:
             if (len(line) > 1 and line[0] != '#'):
                 split = line[:-1].split(';')
@@ -454,8 +442,7 @@ def load_rooms():
                 floor_number = split[1]
                 neo_room = Room(room_name, floor_number)
                 db.session.add(neo_room)
-
-    db.session.commit()
+        db.session.commit()
 
 
 def load_persons():
@@ -474,13 +461,7 @@ def load_persons():
     for room in rooms:
         existing_rooms[room.name] = room
 
-    # We try to use a custom persons file if it exists. If not, default file
-    if (path.isfile(config.DATABASE_PERSONS_FILE)):
-        persons_file = config.DATABASE_PERSONS_FILE
-    else:
-        persons_file = config.DATABASE_PERSONS_DEFAULT_FILE
-
-    with io.open(persons_file, 'r', encoding='utf8') as f:
+    with io.open(config.DATABASE_PERSONS_FILE, 'r', encoding='utf8') as f:
         for line in f:
             if (len(line) > 1 and line[0] != '#'):
                 neo = Person()
@@ -543,19 +524,38 @@ def format_date(date):
 
     return ''
 
+def are_config_files_present():
+    if (not path.isfile('config.py')):
+        print('Error: No config file. Use "cp config-example.py config.py".')
+        return False
+    if (not path.isfile(config.DATABASE_PERSONS_FILE)):
+        print('Error: Missing : ' + config.DATABASE_PERSONS_FILE)
+        return False
+    if (not path.isfile(config.DATABASE_TEAMS_FILE)):
+        print('Error: Missing : ' + config.DATABASE_TEAMS_FILE)
+        return False
+    if (not path.isfile(config.DATABASE_ROOMS_FILE)):
+        print('Error: Missing : ' + config.DATABASE_ROOMS_FILE)
+        return False
+    return True
+
 if __name__ == "__main__":
     db.create_all()
 
-    persons = Person.query.all()
-    if (len(persons) == 0):
-        load_teams()
-        # load_rooms()
-        load_persons()
+    # We check that the config file exists
+    if (are_config_files_present()):
+        persons = Person.query.all()
+        if (len(persons) == 0):
+            load_teams()
+            # load_rooms()
+            load_persons()
 
-        superadmin = TrombiAdmin()
-        superadmin.login = "admin"
-        superadmin.password = generate_password_hash("pizza")
-        db.session.add(superadmin)
-        db.session.commit()
-
-    app.run(port=5000)
+            # We create an administrator
+            superadmin = TrombiAdmin()
+            superadmin.login = config.ADMIN_LOGIN
+            superadmin.password = generate_password_hash(config.ADMIN_PASSWORD)
+            db.session.add(superadmin)
+            db.session.commit()
+        app.run(port=5000)
+    else:
+        print("Terminated.")
