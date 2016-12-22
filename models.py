@@ -46,10 +46,8 @@ class Team(db.Model):
     # The root persons of a team are the persons who's boss
     # is in a different team (or no boss)
     def get_root_persons(self):
-        print(self.persons)
         root_persons = []
         for person in self.persons:
-            print(person)
             if ((person.manager is None) or (person.manager.team_id != self.id)):
                 root_persons.append(person)
         return root_persons

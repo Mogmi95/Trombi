@@ -144,7 +144,6 @@ def main():
 @app.route("/all")
 def show_all():
     person_filter = request.args.get('filter')
-    print(person_filter)
     title = "Trombi"
 
     if (person_filter is not None):
@@ -310,7 +309,6 @@ def show_all_teams():
 
 @app.route("/team/<team>")
 def show_team(team=None):
-    print("Team")
     team = Team.query.filter_by(name=team).first()
     title = "Team " + team.name
 
@@ -466,14 +464,12 @@ def load_persons():
     teams = Team.query.all()
     for team in teams:
         existing_teams[team.name] = team
-    print(existing_teams)
 
     # ROOMS
     existing_rooms = {}
     rooms = Room.query.all()
     for room in rooms:
         existing_rooms[room.name] = room
-    print(existing_rooms)
 
     # We try to use a custom persons file if it exists. If not, default file
     if (path.isfile(config.DATABASE_PERSONS_FILE)):
@@ -500,7 +496,7 @@ def load_persons():
 
                 team = split[1]
                 manager = split[12]
-                room = split[13]
+                # room = split[13]
 
                 if manager in managers:
                     managers[manager].append(neo)
@@ -510,8 +506,8 @@ def load_persons():
                 if (team in existing_teams):
                     neo.team = existing_teams[team]
 
-                if (room in existing_rooms):
-                    neo.room = existing_rooms[room]
+                # if (room in existing_rooms):
+                #    neo.room = existing_rooms[room]
 
                 else:
                     print('Error: Missing team ' + team + ' for ' + neo.login)
@@ -550,7 +546,7 @@ if __name__ == "__main__":
     persons = Person.query.all()
     if (len(persons) == 0):
         load_teams()
-        load_rooms()
+        # load_rooms()
         load_persons()
 
         superadmin = TrombiAdmin()
