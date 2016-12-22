@@ -1,7 +1,6 @@
 *.pyc
-static/images/photos/*.jpg
-static/images/photos/*.png
+static/images/photos
 static/images/logo.png
 data/persons.csv
 data/rooms.csv
-
+data/teams.csv
