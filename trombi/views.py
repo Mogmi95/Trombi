@@ -70,8 +70,12 @@ def show_all():
 def show_person(login=None):
     """Display information about a specific person."""
     person = Person.query.filter_by(login=login).first()
-    title = person.name + ' ' + person.surname
-    return render_template('person.j2', person=person, title=title)
+    if (person is None):
+        title = login + ' doesn\'t exists.'
+        return render_template('person_error.j2', person=person, title=title)
+    else:
+        title = person.name + ' ' + person.surname
+        return render_template('person.j2', person=person, title=title)
 
 
 @app.route("/trivia")
