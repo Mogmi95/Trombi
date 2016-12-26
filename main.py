@@ -88,29 +88,7 @@ def show_trivia():
 def show_person_vcard(login=None):
     """Show a Person's VCard."""
     person = Person.query.filter_by(login=login).first()
-    return create_vcard(person)
-
-
-def create_vcard(person):
-    """Create a VCard for a person."""
-    vcard = \
-        'BEGIN:VCARD\n'\
-        'VERSION:3.0\n'\
-        'N:{};{}\n'\
-        'FN:{} {}\n'\
-        'TITLE:{}\n'\
-        'TEL;TYPE=WORK,VOICE:{}\n'\
-        'EMAIL;TYPE=PREF,INTERNET:{}\n'\
-        'END:VCARD'.format(
-            person.surname,
-            person.name,
-            person.name,
-            person.surname,
-            person.job,
-            person.mobile,
-            person.email
-        )
-    return vcard
+    return person.create_vcard()
 
 
 @app.route("/search/<query>")

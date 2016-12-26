@@ -120,6 +120,27 @@ class Person(db.Model):
         """Get a printable version of the birthday date."""
         return self.birthday.strftime('Born %B, %d')
 
+    def create_vcard(self):
+        """Create a VCard for a person."""
+        vcard = \
+            'BEGIN:VCARD\n'\
+            'VERSION:3.0\n'\
+            'N:{};{}\n'\
+            'FN:{} {}\n'\
+            'TITLE:{}\n'\
+            'TEL;TYPE=WORK,VOICE:{}\n'\
+            'EMAIL;TYPE=PREF,INTERNET:{}\n'\
+            'END:VCARD'.format(
+                self.surname,
+                self.name,
+                self.name,
+                self.surname,
+                self.job,
+                self.mobile,
+                self.email
+            )
+        return vcard
+
 
 class Trivia(db.Model):
     """Represents the content of the trivia page."""
