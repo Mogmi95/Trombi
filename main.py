@@ -23,7 +23,7 @@ import flask_login as login
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from app import db, app
-from models import Person, Team, TrombiAdmin, Trivia, Room
+from models import Person, Team, TrombiAdmin, Trivia
 
 
 class LoginForm(form.Form):
@@ -144,7 +144,6 @@ admin = flask_admin.Admin(
 
 admin.add_view(MyModelView(Person, db.session))
 admin.add_view(MyModelView(Team, db.session))
-admin.add_view(MyModelView(Room, db.session))
 admin.add_view(MyModelView(Trivia, db.session))
 
 
@@ -463,19 +462,6 @@ def load_teams():
     db.session.commit()
 
 
-def load_rooms():
-    """We create the rooms from the data files."""
-    with io.open(config.DATABASE_ROOMS_FILE, 'r', encoding='utf8') as f:
-        for line in f:
-            if (len(line) > 1 and line[0] != '#'):
-                split = line[:-1].split(';')
-                room_name = split[0]
-                floor_number = split[1]
-                neo_room = Room(room_name, floor_number)
-                db.session.add(neo_room)
-        db.session.commit()
-
-
 def load_persons():
     """We create the persons from the data files."""
     persons = []
@@ -486,12 +472,6 @@ def load_persons():
     teams = Team.query.all()
     for team in teams:
         existing_teams[team.name] = team
-
-    # ROOMS
-    existing_rooms = {}
-    rooms = Room.query.all()
-    for room in rooms:
-        existing_rooms[room.name] = room
 
     with io.open(config.DATABASE_PERSONS_FILE, 'r', encoding='utf8') as f:
         for line in f:
@@ -516,8 +496,6 @@ def load_persons():
 
                 team = split[1]
                 manager = split[12]
-                # room = split[13]
-
                 if manager in managers:
                     managers[manager].append(neo)
                 else:
@@ -525,10 +503,6 @@ def load_persons():
 
                 if (team in existing_teams):
                     neo.team = existing_teams[team]
-
-                # if (room in existing_rooms):
-                #    neo.room = existing_rooms[room]
-
                 else:
                     print('Error: Missing team ' + team + ' for ' + neo.login)
                 persons.append(neo)
@@ -573,9 +547,6 @@ def are_config_files_present():
     if (not path.isfile(config.DATABASE_TEAMS_FILE)):
         print('Error: Missing : ' + config.DATABASE_TEAMS_FILE)
         return False
-    if (not path.isfile(config.DATABASE_ROOMS_FILE)):
-        print('Error: Missing : ' + config.DATABASE_ROOMS_FILE)
-        return False
     return True
 
 
@@ -588,7 +559,6 @@ if __name__ == "__main__":
         persons = Person.query.all()
         if (len(persons) == 0):
             load_teams()
-            # load_rooms()
             load_persons()
 
             # We create an administrator

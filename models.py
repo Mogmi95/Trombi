@@ -104,8 +104,6 @@ class Person(db.Model):
 
     team_id = Column(Integer, ForeignKey('team.id'))
 
-    room_id = Column(Integer, ForeignKey('room.id'))
-
     def __repr__(self):
         """Simple log method."""
         return self.skype
@@ -121,34 +119,6 @@ class Person(db.Model):
     def get_pretty_birthday_date(self):
         """Get a printable version of the birthday date."""
         return self.birthday.strftime('Born %B, %d')
-
-
-class Room(db.Model):
-    """Represents a room."""
-
-    __tablename__ = 'room'
-
-    def __init__(self, name, floor):
-        """Simple constructor."""
-        self.name = name
-        self.floor = floor
-
-    def __repr__(self):
-        """Simple log method."""
-        return self.name
-
-    def get_floor_string(self):
-        """Get the floor number in a str form."""
-        return str(self.floor)
-
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(80), unique=False)
-    floor = db.Column(db.Integer)
-    # Relative X and Y positions inside the map
-    map_x_position = db.Column(db.Integer, default=50)
-    map_y_position = db.Column(db.Integer, default=25)
-
-    persons = relationship("Person", backref="room")
 
 
 class Trivia(db.Model):
