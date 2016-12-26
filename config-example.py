@@ -1,6 +1,4 @@
-"""
-This is a basic config file.
-"""
+"""A basic config file."""
 
 import os
 

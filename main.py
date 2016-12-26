@@ -12,28 +12,31 @@ import datetime
 from os import path
 from flask import render_template, request, url_for, redirect
 from wtforms import form, fields, validators
+from wtforms.widgets import TextArea
+from wtforms.fields import TextAreaField
 from sqlalchemy import or_
 from flask_admin.contrib import sqla
 from flask_admin import helpers, expose
 import config
 import flask_admin as flask_admin
-
 import flask_login as login
 from werkzeug.security import generate_password_hash, check_password_hash
-
 
 from app import db, app
 from models import Person, Team, TrombiAdmin, Trivia, Room
 
 
-# LOGIN PART
-
-# Define login and registration forms (for flask-login)
 class LoginForm(form.Form):
+    """Define login and registration forms (for flask-login)."""
+
     login = fields.StringField(u'Login', validators=[validators.required()])
-    password = fields.PasswordField(u'Password', validators=[validators.required()])
+    password = fields.PasswordField(
+        u'Password',
+        validators=[validators.required()]
+    )
 
     def validate_login(self, field):
+        """Check if the user is administrator."""
         user = self.get_user()
 
         if user is None:
@@ -43,33 +46,36 @@ class LoginForm(form.Form):
             raise validators.ValidationError('Invalid password')
 
     def get_user(self):
-        return db.session.query(TrombiAdmin).filter_by(login=self.login.data).first()
+        """Get the admin from the database."""
+        return db.session.query(TrombiAdmin).filter_by(
+            login=self.login.data
+        ).first()
 
 
-# Initialize flask-login
 def init_login():
+    """Initialize flask-login."""
     login_manager = login.LoginManager()
     login_manager.init_app(app)
 
-    # Create user loader function
     @login_manager.user_loader
     def load_user(user_id):
+        """Create user loader function."""
         return db.session.query(TrombiAdmin).get(user_id)
 
 
-
-# Create customized index view class that handles login & registration
 class MyAdminIndexView(flask_admin.AdminIndexView):
+    """Create customized view class that handles login & registration."""
 
     @expose('/')
     def index(self):
+        """The root of the admin panel."""
         if not login.current_user.is_authenticated:
             return redirect(url_for('.login_view'))
         return super(MyAdminIndexView, self).index()
 
     @expose('/login/', methods=('GET', 'POST'))
     def login_view(self):
-        # handle user login
+        """Handle user login."""
         form = LoginForm(request.form)
         if helpers.validate_form_on_submit(form):
             user = form.get_user()
@@ -77,32 +83,41 @@ class MyAdminIndexView(flask_admin.AdminIndexView):
 
         if login.current_user.is_authenticated:
             return redirect(url_for('.index'))
-        #link = '<p>Don\'t have an account? <a href="' + url_for('.register_view') + '">Click here to register.</a></p>'
         self._template_args['form'] = form
         return super(MyAdminIndexView, self).index()
 
     @expose('/logout/')
     def logout_view(self):
+        """Handle user logout."""
         login.logout_user()
         return redirect(url_for('.index'))
 
-from wtforms.widgets import TextArea
-from wtforms.fields import TextAreaField
 
 class CKEditorWidget(TextArea):
+    """A custom text editor for the admin panel."""
+
     def __call__(self, field, **kwargs):
+        """Declare the text editor."""
         if kwargs.get('class'):
             kwargs['class'] += " ckeditor"
         else:
             kwargs.setdefault('class', 'ckeditor')
         return super(CKEditorWidget, self).__call__(field, **kwargs)
 
+
 class CKEditorField(TextAreaField):
+    """A custom text editor for the admin panel."""
+
     widget = CKEditorWidget()
 
-# Create customized model view class
+# TODO : Rename MyModelView
+
+
 class MyModelView(sqla.ModelView):
+    """Create customized model view class."""
+
     def is_accessible(self):
+        """Check if the current user can access the view."""
         return login.current_user.is_authenticated
     # Change edit in the admin
     form_overrides = dict(text=CKEditorField)
@@ -115,7 +130,12 @@ class MyModelView(sqla.ModelView):
 init_login()
 
 # Create admin
-admin = flask_admin.Admin(app, 'Trombi admin', index_view=MyAdminIndexView(), base_template='master.html')
+admin = flask_admin.Admin(
+    app,
+    'Trombi admin',
+    index_view=MyAdminIndexView(),
+    base_template='master.html'
+)
 
 # Add view
 
@@ -127,9 +147,9 @@ admin.add_view(MyModelView(Team, db.session))
 admin.add_view(MyModelView(Room, db.session))
 admin.add_view(MyModelView(Trivia, db.session))
 
-# END LOGIN TEST
 
 def get_list_mode(request):
+    """Get the current display mode for the dashboard."""
     list_mode = request.args.get('list')
     if (list_mode != 'true'):
         list_mode = None
@@ -138,11 +158,13 @@ def get_list_mode(request):
 
 @app.route("/")
 def main():
+    """Root view."""
     return show_all()
 
 
 @app.route("/all")
 def show_all():
+    """Show a list of all persons in the trombi."""
     person_filter = request.args.get('filter')
     title = "Trombi"
 
@@ -173,14 +195,15 @@ def show_all():
 
 @app.route("/person/<login>")
 def show_person(login=None):
+    """Display information about a specific person."""
     person = Person.query.filter_by(login=login).first()
-    title = person.name + " " + person.surname
-
+    title = "{} {}".format(person.name, person.surname)
     return render_template('person.j2', person=person, title=title)
 
 
 @app.route("/trivia")
 def show_trivia():
+    """Display various information stored in the database."""
     trivia = db.session.query(Trivia).first()
     if (trivia is None):
         text = u'Nothing here yet.'
@@ -188,13 +211,16 @@ def show_trivia():
         text = trivia.text
     return render_template('trivia.j2', text=text)
 
+
 @app.route("/person/vcard/vcard-<login>.vcf")
 def show_person_vcard(login=None):
+    """Show a Person's VCard."""
     person = Person.query.filter_by(login=login).first()
     return create_vcard(person)
 
 
 def create_vcard(person):
+    """Create a VCard for a person."""
     vcard = \
         'BEGIN:VCARD\n'\
         'VERSION:3.0\n'\
@@ -217,6 +243,7 @@ def create_vcard(person):
 
 @app.route("/search/<query>")
 def show_search(query=None):
+    """The search screen."""
     title = "Search"
     message = "{} result(s) for \"" + query + "\" :"
 
@@ -250,12 +277,14 @@ def show_search(query=None):
 
 @app.route('/search/', methods=['POST'])
 def search():
+    """Handle the search results."""
     query = request.form['search']
     return show_search(query)
 
 
 @app.route("/calendar")
 def show_calendar():
+    """The calendar screen."""
     title = "Calendar"
     persons = Person.query.all()
 
@@ -268,12 +297,7 @@ def show_calendar():
         for person in persons:
             if (person.birthday != ''):
                 birth_date = person.birthday
-                birthday_events += u'{{title: "{} {}", start: "{}", url: "/person/{}"}},'.format(
-                    person.name,
-                    person.surname,
-                    u'{}-{}-{}'.format(year, str(birth_date.month).zfill(2), str(birth_date.day).zfill(2)),
-                    person.login,
-                )
+                birthday_events += u'{{title: "{} {}", start: "{}", url: "/person/{}"}},'.format(person.name, person.surname, u'{}-{}-{}'.format(year, str(birth_date.month).zfill(2), str(birth_date.day).zfill(2)), person.login)
             if (person.arrival != ''):
                 arr_date = person.arrival
                 # TODO : don't harcode the current year
@@ -281,12 +305,20 @@ def show_calendar():
                     arrival_text = 'arrival'
                 else:
                     arrival_text = u'{} years'.format(year - arr_date.year)
+
                 arrival_events += u'{{title: "{}", start: "{}", url: "/person/{}"}},'.format(
-                    u'{} {} ({})'.format(person.name, person.surname, arrival_text),
-                    u'{}-{}-{}'.format(year, str(arr_date.month).zfill(2), str(arr_date.day).zfill(2)),
-                    person.login
-                )
-                # arrival_events += '{title: "' + person.name + ' ' + person.surname + ' (' + person.get_number_of_years() + ' years)", start: "' + person.arrival + '", url: "/person/' + person.login + '"},'
+                        u'{} {} ({})'.format(
+                            person.name,
+                            person.surname,
+                            arrival_text
+                        ),
+                        u'{}-{}-{}'.format(
+                            year,
+                            str(arr_date.month).zfill(2),
+                            str(arr_date.day).zfill(2)
+                        ),
+                        person.login
+                    )
     birthday_events += '], color: "#a9d03f", textColor: "#ffffff"'
     arrival_events += '], color: "#368cbf", textColor: "#ffffff"'
 
@@ -303,12 +335,14 @@ def show_calendar():
 
 @app.route("/team")
 def show_all_teams():
+    """Show a graph with all teams."""
     head_team = Team.query.filter_by(high_team=None).first()
     return show_team(head_team.name)
 
 
 @app.route("/team/<team>")
 def show_team(team=None):
+    """Show a graph for a specific team."""
     team = Team.query.filter_by(name=team).first()
     title = "Team " + team.name
 
@@ -333,14 +367,8 @@ def show_team(team=None):
 
 
 def build_tree_teams(team):
-    result = ''
-
-    # The first item is the manager of all other teams
-
-    # if (team_manager.login == 'fpotter'):
-    result += get_node_team(team, '')
-    # else
-    # result += get_node_person(team_manager, '')
+    """Default method to build a tree for a given team."""
+    result = get_node_team(team, '')
 
     for subteam in team.sub_teams:
         result += get_node_team(subteam, team.name)
@@ -351,6 +379,7 @@ def build_tree_teams(team):
 
 
 def get_node_team(team, parent):
+    """Default method to build a node for a given team."""
     # TODO : make render_template
     # TODO : add a better way to handle invisible blocks
     if (team.name == '1'):
@@ -366,6 +395,7 @@ def get_node_team(team, parent):
 
 
 def build_tree_persons(team_root_persons, is_root):
+    """Default method to build a tree for a given person."""
     result = ''
     parent = ''
 
@@ -385,17 +415,20 @@ def build_tree_persons(team_root_persons, is_root):
 
 
 def get_node_person(person, parent):
+    """Default method to build a node for a given person."""
     # TODO : make render_template
     return "[{v:'" + person.login + "', f:'<div class=\"rootTreeNodeElement\"><a href=\"/person/" + person.login + "\">\
         <div class=\"rootTreeNodeElementFiller\" style=\"background: url(/static/images/photos/" + person.login + ".jpg) center / cover;\" >\
             <div class=\"treeNodeTextContainer\"><div class=\"treeNodeText\">" + person.name + " <br /> " + person.surname.upper() + "</div></div>\
         </div>\
-    </a></div>'}, '" + parent + "', '" + person.name + " " + person.surname + "'],"
+    </a></div>'}, '" + parent + "', '" + person.name + " " + \
+        person.surname + "'],"
 
 # DATABASE INIT
 
+
 def load_teams():
-    # Init teams
+    """We create the teams from the data files."""
     teams = []
     teams_order = {}
     existing_teams = {}
@@ -429,8 +462,9 @@ def load_teams():
 
     db.session.commit()
 
+
 def load_rooms():
-    # Init rooms
+    """We create the rooms from the data files."""
     with io.open(config.DATABASE_ROOMS_FILE, 'r', encoding='utf8') as f:
         for line in f:
             if (len(line) > 1 and line[0] != '#'):
@@ -443,6 +477,7 @@ def load_rooms():
 
 
 def load_persons():
+    """We create the persons from the data files."""
     persons = []
     managers = {}
 
@@ -467,8 +502,12 @@ def load_persons():
                 neo.login = split[2].strip().lower()
                 neo.surname = split[3]
                 neo.name = split[4]
-                neo.birthday = datetime.datetime.fromtimestamp(float(format_date(split[5])))
-                neo.arrival = datetime.datetime.fromtimestamp(float(format_date(split[6])))
+                neo.birthday = datetime.datetime.fromtimestamp(
+                    float(format_date(split[5]))
+                )
+                neo.arrival = datetime.datetime.fromtimestamp(
+                    float(format_date(split[6]))
+                )
                 neo.job = split[7]
                 neo.email = split[8]
                 neo.skype = split[9]
@@ -503,6 +542,7 @@ def load_persons():
 
 
 def format_date(date):
+    """Parse the date from the data file."""
     if (date is None or date == ''):
         return 0
 
@@ -521,7 +561,9 @@ def format_date(date):
 
     return ''
 
+
 def are_config_files_present():
+    """Check if all needed files are present."""
     if (not path.isfile('config.py')):
         print('Error: No config file. Use "cp config-example.py config.py".')
         return False
@@ -536,7 +578,9 @@ def are_config_files_present():
         return False
     return True
 
+
 if __name__ == "__main__":
+    """Entry point."""
     db.create_all()
 
     # We check that the config file exists
