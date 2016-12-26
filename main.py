@@ -196,7 +196,7 @@ def show_all():
 def show_person(login=None):
     """Display information about a specific person."""
     person = Person.query.filter_by(login=login).first()
-    title = "{} {}".format(person.name, person.surname)
+    title = person.name + ' ' + person.surname
     return render_template('person.j2', person=person, title=title)
 
 
