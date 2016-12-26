@@ -20,6 +20,12 @@ from models import TrombiAdmin, Person, Team, Trivia
 import admin
 
 
+@app.errorhandler(404)
+def page_not_found(e):
+    """Custom 404 page."""
+    return render_template('404.j2')
+
+
 def get_list_mode(request):
     """Get the current display mode for the dashboard."""
     list_mode = request.args.get('list')

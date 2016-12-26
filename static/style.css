@@ -46,6 +46,12 @@ a {
   top: 8px;
 }
 
+.centered-message {
+    width: 100%;
+    background-color: #ffffff;
+    text-align: center;
+}
+
 .selectedImageIndicator {
   border-bottom: solid 5px #e74c3c;
 }
