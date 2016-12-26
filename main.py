@@ -280,7 +280,7 @@ def show_calendar():
                 if (year - arr_date.year <= 0):
                     arrival_text = 'arrival'
                 else:
-                    arrival_text = u'{} years'.format(2016 - arr_date.year)
+                    arrival_text = u'{} years'.format(year - arr_date.year)
                 arrival_events += u'{{title: "{}", start: "{}", url: "/person/{}"}},'.format(
                     u'{} {} ({})'.format(person.name, person.surname, arrival_text),
                     u'{}-{}-{}'.format(year, str(arr_date.month).zfill(2), str(arr_date.day).zfill(2)),
@@ -290,11 +290,8 @@ def show_calendar():
     birthday_events += '], color: "#a9d03f", textColor: "#ffffff"'
     arrival_events += '], color: "#368cbf", textColor: "#ffffff"'
 
-    netatmevents = '[{title: "BBQ Boss", start: "2016-07-05", url: ""}], color: "#db6b1a", textColor: "#ffffff"'
-
     events_list.append(birthday_events)
     events_list.append(arrival_events)
-    events_list.append(netatmevents)
 
     # events = '[{title: "Pizza", start: "2016-05-06"}]'
 
