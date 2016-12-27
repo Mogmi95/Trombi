@@ -8,3 +8,11 @@
 5. Open 127.0.0.1:5000 in your navigator
 6. ???
 7. Profit
+
+# Translations
+
+$ pybabel init -i messages.pot -d trombi/translations -l [LANG]
+$ pybabel extract -F babel.cfg -o messages.pot .
+$ pybabel update -i messages.pot -d trombi/translations
+$ poedit trombi/translations/[LANG]/LC_MESSAGES/messages.po
+$ pybabel compile -d trombi/translations
