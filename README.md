@@ -11,8 +11,19 @@
 
 # Translations
 
+~~~~
+# This line is only to create a new lang
 $ pybabel init -i messages.pot -d trombi/translations -l [LANG]
+
+# Extract the existing strings from the application
 $ pybabel extract -F babel.cfg -o messages.pot .
+
+# Updating the translation files with the new strings
 $ pybabel update -i messages.pot -d trombi/translations
+
+# Editing the translations (poedit is a cool tool for that)
 $ poedit trombi/translations/[LANG]/LC_MESSAGES/messages.po
+
+# Compile all the translations into an optimized file for production
 $ pybabel compile -d trombi/translations
+~~~~
