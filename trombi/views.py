@@ -28,7 +28,7 @@ def get_locale():
 @app.errorhandler(404)
 def page_not_found(e):
     """Custom 404 page."""
-    return render_template('404.j2')
+    return render_template('404.html')
 
 
 def get_list_mode(request):
@@ -65,7 +65,7 @@ def show_all():
         persons = Person.query.order_by(Person.surname).all()
         message = gettext(u'%(number)s people', number=len(persons))
     return render_template(
-        'all.j2',
+        'all.html',
         persons=persons,
         title=title,
         list_mode=get_list_mode(request),
@@ -81,10 +81,10 @@ def show_person(login=None):
     person = Person.query.filter_by(login=login).first()
     if (person is None):
         title = gettext(u'%(login)s doesn\'t exists.', login=login)
-        return render_template('person_error.j2', person=person, title=title)
+        return render_template('person_error.html', person=person, title=title)
     else:
         title = person.name + ' ' + person.surname
-        return render_template('person.j2', person=person, title=title)
+        return render_template('person.html', person=person, title=title)
 
 
 @app.route("/trivia")
@@ -95,7 +95,7 @@ def show_trivia():
         text = gettext(u'Nothing here yet.')
     else:
         text = trivia.text
-    return render_template('trivia.j2', text=text)
+    return render_template('trivia.html', text=text)
 
 
 @app.route("/person/vcard/vcard-<login>.vcf")
@@ -133,7 +133,7 @@ def show_search(query=None):
     if (len(persons) == 1):
         return show_person(persons[0].login)
     return render_template(
-        'all.j2',
+        'all.html',
         persons=persons,
         message=message.format(len(persons)),
         title=title,
@@ -196,7 +196,7 @@ def show_calendar():
     # events = '[{title: "Pizza", start: "2016-05-06"}]'
 
     return render_template(
-        'calendar.j2',
+        'calendar.html',
         title=title,
         events_list=events_list)
 
@@ -225,7 +225,7 @@ def show_team(team=None):
         tree = build_tree_teams(team)
 
     return render_template(
-        'team.j2',
+        'team.html',
         team=team,
         tree=tree,
         title=title,
