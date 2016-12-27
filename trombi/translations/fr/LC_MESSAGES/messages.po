@@ -1,0 +1,177 @@
+# French translations for PROJECT.
+# Copyright (C) 2016 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2016.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2016-12-27 14:46+0100\n"
+"PO-Revision-Date: 2016-12-27 14:48+0100\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fr\n"
+"Language-Team: fr <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.3.4\n"
+"X-Generator: Poedit 1.5.4\n"
+
+#: trombi/models.py:119
+#, python-format
+msgid "Arrived %(date)s"
+msgstr "Arrivée %(date)s"
+
+#: trombi/models.py:124
+#, python-format
+msgid "Born %(date)s"
+msgstr "Né %(date)s"
+
+#: trombi/templates/index.j2:74 trombi/views.py:48
+msgid "Trombi"
+msgstr "Trombi"
+
+#: trombi/views.py:59
+#, python-format
+msgid "%(number)s newbies"
+msgstr "%(number)s nouveaux"
+
+#: trombi/views.py:62
+#, python-format
+msgid "%(number)s people"
+msgstr "%(number)s personnes"
+
+#: trombi/views.py:79
+#, python-format
+msgid "%(login)s doesn't exists."
+msgstr "%(login)s n'existe pas."
+
+#: trombi/views.py:91
+msgid "Nothing here yet."
+msgstr "Rien pour l'instant."
+
+#: trombi/views.py:107
+msgid "Search"
+msgstr "Recherche"
+
+#: trombi/views.py:108
+#, python-format
+msgid "%(number)s result(s) for \"%(query)s\" :"
+msgstr "%(number)s resultat(s) pour \"%(query)s\" :"
+
+#: trombi/views.py:151
+msgid "Calendar"
+msgstr "Calendrier"
+
+#: trombi/views.py:168
+msgid "arrival"
+msgstr "arrivée"
+
+#: trombi/views.py:171
+#, python-format
+msgid "%(number)s years"
+msgstr "%(number)s années"
+
+#: trombi/views.py:211
+#, python-format
+msgid "Team %(team_name)s"
+msgstr "Equipe %(team_name)s"
+
+#: trombi/templates/404.j2:2 trombi/templates/404.j2:7
+msgid "Page not found"
+msgstr "Page non trouvée"
+
+#: trombi/templates/all.j2:2
+msgid "Trombinoscope"
+msgstr "Trombinoscope"
+
+#: trombi/templates/all.j2:11 trombi/templates/all.j2:12
+msgid "Show only newbies"
+msgstr "Voir les nouveaux"
+
+#: trombi/templates/all.j2:15 trombi/templates/all.j2:16
+msgid "Show everyone"
+msgstr "Voir tout le monde"
+
+#: trombi/templates/all.j2:47 trombi/templates/team.j2:48
+msgid "Picture"
+msgstr "Photo"
+
+#: trombi/templates/all.j2:48 trombi/templates/team.j2:50
+msgid "Name"
+msgstr "Nom"
+
+#: trombi/templates/all.j2:49 trombi/templates/team.j2:51
+msgid "Surname"
+msgstr "Prénom"
+
+#: trombi/templates/all.j2:50 trombi/templates/team.j2:52
+msgid "Team"
+msgstr "Equipe"
+
+#: trombi/templates/all.j2:51
+msgid "Title"
+msgstr "Titre"
+
+#: trombi/templates/all.j2:52 trombi/templates/all.j2:63
+#: trombi/templates/team.j2:54
+msgid "VCard"
+msgstr "VCard"
+
+#: trombi/templates/calendar.j2:17
+msgid "Birthday"
+msgstr "Anniversaire"
+
+#: trombi/templates/calendar.j2:18
+msgid "Netatniversary"
+msgstr "Netatversaire"
+
+#: trombi/templates/calendar.j2:19
+msgid "Eventatmo"
+msgstr "Eventatmo"
+
+#: trombi/templates/index.j2:42 trombi/templates/index.j2:62
+msgid "People"
+msgstr "Gens"
+
+#: trombi/templates/index.j2:43 trombi/templates/index.j2:63
+msgid "Teams"
+msgstr "Equipes"
+
+#: trombi/templates/index.j2:44 trombi/templates/index.j2:64
+msgid "Events"
+msgstr "Evènements"
+
+#: trombi/templates/index.j2:45 trombi/templates/index.j2:65
+msgid "Trivia"
+msgstr "Trivia"
+
+#: trombi/templates/index.j2:76
+msgid "Source code available on Github"
+msgstr "Code source disponible sur Github"
+
+#: trombi/templates/person.j2:10
+msgid "Manager"
+msgstr "Manager"
+
+#: trombi/templates/person.j2:58
+msgid "mobile"
+msgstr "portable"
+
+#: trombi/templates/person.j2:66
+msgid "fixe"
+msgstr "fixe"
+
+#: trombi/templates/person.j2:83
+msgid "Download V-Card"
+msgstr "Télécharger la V-Card"
+
+#: trombi/templates/team.j2:49
+msgid "Login"
+msgstr "Utilisateur"
+
+#: trombi/templates/team.j2:53
+msgid "Skype"
+msgstr "Skype"

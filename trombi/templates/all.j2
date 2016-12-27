@@ -1,5 +1,5 @@
 {% extends "index.j2" %}
-{% block title %}Trombinoscope{% endblock %}
+{% block title %}{{ gettext('Trombinoscope') }}{% endblock %}
 
 {% block body %}
 
@@ -8,12 +8,12 @@
   <span class="allPersonsHeaderMessage">{{ message }}</span>
   <div class="viewModeContainer">
     {% if person_filter is none %}
-      <a href="{{ url_for('show_all') }}?filter=newbies" title="show nouveaux">      <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-              Show only newbies
+      <a href="{{ url_for('show_all') }}?filter=newbies" title="{{ gettext('Show only newbies')}}">      <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+            {{ gettext('Show only newbies')}}
             </button></a>
     {% else %}
-      <a href="{{ url_for('show_all') }}" title="show all">      <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-              Show everyone
+      <a href="{{ url_for('show_all') }}" title="{{ gettext('Show everyone') }}">      <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+              {{ gettext('Show everyone') }}
             </button></a>
     {% endif %}
     <!--<a href="{{ list_url }}?list=false" title="Toggle cards mode"><img class="{% if list_mode is none %}selectedImageIndicator{% else %}notSelectedImageIndicator{% endif %}" src="{{ url_for('static', filename='images/ic_view_module.png') }}" /></a>-->
@@ -44,12 +44,12 @@
   <table class="list_data_table mdl-data-table mdl-js-data-table mdl-shadow--2dp">
     <thead>
       <tr>
-        <th class="mdl-data-table__cell--non-numeric">Picture</th>
-        <th class="mdl-data-table__cell--non-numeric">Name</th>
-        <th class="mdl-data-table__cell--non-numeric">Surname</th>
-        <th class="mdl-data-table__cell--non-numeric">Team</th>
-        <th class="mdl-data-table__cell--non-numeric">Title</th>
-        <th class="mdl-data-table__cell--non-numeric">VCard</th>
+        <th class="mdl-data-table__cell--non-numeric">{{ gettext('Picture') }}</th>
+        <th class="mdl-data-table__cell--non-numeric">{{ gettext('Name') }}</th>
+        <th class="mdl-data-table__cell--non-numeric">{{ gettext('Surname') }}</th>
+        <th class="mdl-data-table__cell--non-numeric">{{ gettext('Team') }}</th>
+        <th class="mdl-data-table__cell--non-numeric">{{ gettext('Title') }}</th>
+        <th class="mdl-data-table__cell--non-numeric">{{ gettext('VCard') }}</th>
       </tr>
     </thead>
     <tbody>
@@ -60,7 +60,7 @@
         <td class="mdl-data-table__cell--non-numeric">{{ person.surname }}</td>
         <td class="mdl-data-table__cell--non-numeric">{{ person.team.name }}</td>
         <td class="mdl-data-table__cell--non-numeric">{{ person.job }}</td>
-        <td class="mdl-data-table__cell--non-numeric"><a href="/person/vcard/vcard-{{ person.login }}.vcf" download><button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">VCard</button></a></td>
+        <td class="mdl-data-table__cell--non-numeric"><a href="/person/vcard/vcard-{{ person.login }}.vcf" download><button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">{{ gettext('VCard') }}</button></a></td>
       </tr>
       {% endfor %}
     </tbody>

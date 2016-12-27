@@ -10,6 +10,7 @@ import time
 import datetime
 from flask import render_template, request, url_for
 from sqlalchemy import or_
+from flask.ext.babel import gettext
 
 from app import db, app
 from models import Person, Team, Trivia
@@ -39,7 +40,7 @@ def main():
 def show_all():
     """Show a list of all persons in the trombi."""
     person_filter = request.args.get('filter')
-    title = "Trombi"
+    title = gettext(u'Trombi')
 
     if (person_filter is not None):
         last_month_timestamp = time.time() - 2592000
@@ -50,11 +51,10 @@ def show_all():
             ).order_by(
                 Person.surname
             ).all()
-        print(len(persons))
-        message = "{} newbies".format(len(persons))
+        message = gettext(u'%(number)s newbies', number=len(persons))
     else:
         persons = Person.query.order_by(Person.surname).all()
-        message = "{} people".format(len(persons))
+        message = gettext(u'%(number)s people', number=len(persons))
     return render_template(
         'all.j2',
         persons=persons,
@@ -71,7 +71,7 @@ def show_person(login=None):
     """Display information about a specific person."""
     person = Person.query.filter_by(login=login).first()
     if (person is None):
-        title = login + ' doesn\'t exists.'
+        title = gettext(u'%(login)s doesn\'t exists.', login=login)
         return render_template('person_error.j2', person=person, title=title)
     else:
         title = person.name + ' ' + person.surname
@@ -83,7 +83,7 @@ def show_trivia():
     """Display various information stored in the database."""
     trivia = db.session.query(Trivia).first()
     if (trivia is None):
-        text = u'Nothing here yet.'
+        text = gettext(u'Nothing here yet.')
     else:
         text = trivia.text
     return render_template('trivia.j2', text=text)
@@ -99,8 +99,11 @@ def show_person_vcard(login=None):
 @app.route("/search/<query>")
 def show_search(query=None):
     """The search screen."""
-    title = "Search"
-    message = "{} result(s) for \"" + query + "\" :"
+    title = gettext(u'Search')
+    message = gettext(
+        u'%(number)s result(s) for \"%(query)s\" :', number='{}',
+        query=query
+    )
 
     # Maybe re-do this part of the code in a more pytonic way
     hash_persons = {}
@@ -140,7 +143,7 @@ def search():
 @app.route("/calendar")
 def show_calendar():
     """The calendar screen."""
-    title = "Calendar"
+    title = gettext(u'Calendar')
     persons = Person.query.all()
 
     events_list = []
@@ -157,9 +160,10 @@ def show_calendar():
                 arr_date = person.arrival
                 # TODO : don't harcode the current year
                 if (year - arr_date.year <= 0):
-                    arrival_text = 'arrival'
+                    arrival_text = gettext(u'arrival')
                 else:
-                    arrival_text = u'{} years'.format(year - arr_date.year)
+                    format_date = year - arr_date.year
+                    arrival_text = gettext(u'%(number)s years', number=format_date)
 
                 arrival_events += u'{{title: "{}", start: "{}", url: "/person/{}"}},'.format(
                         u'{} {} ({})'.format(
@@ -199,7 +203,7 @@ def show_all_teams():
 def show_team(team=None):
     """Show a graph for a specific team."""
     team = Team.query.filter_by(name=team).first()
-    title = "Team " + team.name
+    title = gettext(u'Team %(team_name)s', team_name=team.name)
 
     # If the team has sub-teams, we display them.
     # Otherwise we list the persons inside

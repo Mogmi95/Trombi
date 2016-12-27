@@ -1,10 +1,10 @@
 {% extends "index.j2" %}
-{% block title %}Page not found{% endblock %}
+{% block title %}{{ gettext('Page not found') }}{% endblock %}
 
 {% block body %}
 
 <div class="centered-message">
-    <h1>Page not found</h1>
+    <h1>{{ gettext('Page not found') }}</h1>
 </div>
 
 {% endblock %}

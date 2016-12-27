@@ -5,9 +5,9 @@
 
     <div>
         {% if current_user.is_authenticated %}
-        <h1>Success</h1>
+        <h1>{{ gettext('Success') }}</h1>
         <p class="lead">
-            You are now logged in.
+            {{ gettext('You are now logged in.') }}
         </p>
         {% else %}
         <form method="POST" action="">
@@ -25,7 +25,7 @@
             {% endif %}
             </div>
             {% endfor %}
-            <button class="btn" type="submit">Submit</button>
+            <button class="btn" type="submit">{{ gettext('Submit') }}</button>
         </form>
         {{ link | safe }}
         {% endif %}
