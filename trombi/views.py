@@ -164,17 +164,28 @@ def show_calendar():
         for person in persons:
             if (person.birthday != ''):
                 birth_date = person.birthday
-                birthday_events += u'{{title: "{} {}", start: "{}", url: "/person/{}"}},'.format(person.name, person.surname, u'{}-{}-{}'.format(year, str(birth_date.month).zfill(2), str(birth_date.day).zfill(2)), person.login)
+                birthday_events += (u'{{title: "{} {}", start: "{}",' +
+                                    ' url: "/person/{}"}},').format(
+                    person.name,
+                    person.surname,
+                    u'{}-{}-{}'.format(
+                        year,
+                        str(birth_date.month).zfill(2),
+                        str(birth_date.day).zfill(2)
+                    ),
+                    person.login
+                )
             if (person.arrival != ''):
                 arr_date = person.arrival
                 # TODO : don't harcode the current year
                 if (year - arr_date.year <= 0):
                     arrival_text = gettext(u'arrival')
                 else:
-                    format_date = year - arr_date.year
-                    arrival_text = gettext(u'%(number)s years', number=format_date)
+                    fdate = year - arr_date.year
+                    arrival_text = gettext(u'%(number)s years', number=fdate)
 
-                arrival_events += u'{{title: "{}", start: "{}", url: "/person/{}"}},'.format(
+                arrival_events += (u'{{title: "{}", start: "{}",' +
+                                   u' url: "/person/{}"}},').format(
                         u'{} {} ({})'.format(
                             person.name,
                             person.surname,
