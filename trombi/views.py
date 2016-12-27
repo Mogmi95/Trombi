@@ -12,8 +12,17 @@ from flask import render_template, request, url_for
 from sqlalchemy import or_
 from flask.ext.babel import gettext
 
-from app import db, app
+from config import LANGUAGES
+from app import db, app, babel
 from models import Person, Team, Trivia
+
+
+@babel.localeselector
+def get_locale():
+    """Get the locale to use for lang."""
+    locale = request.accept_languages.best_match(LANGUAGES.keys())
+    print('Chosen locale : ' + locale)
+    return locale
 
 
 @app.errorhandler(404)

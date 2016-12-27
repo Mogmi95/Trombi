@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """A basic config file."""
 
 import os
@@ -18,5 +19,11 @@ DATABASE_ROOMS_FILE = 'data/example-rooms.csv'
 # Admin credentials
 ADMIN_LOGIN = 'admin'
 ADMIN_PASSWORD = 'pizza'
+
+# Available languages
+LANGUAGES = {
+    'en': 'English',
+    'fr': 'Français',
+}
 
 DEBUG = True
