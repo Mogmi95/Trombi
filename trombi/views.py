@@ -134,6 +134,7 @@ def show_search(query=None):
         return show_person(persons[0].login)
     return render_template(
         'all.html',
+        is_in_search_mode=True,
         persons=persons,
         message=message.format(len(persons)),
         title=title,
