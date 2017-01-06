@@ -1,17 +1,22 @@
 """Administration panel."""
+from os import listdir, mkdir
+from os.path import isdir
+from shutil import copy
+from datetime import datetime
 
 from flask import request, url_for, redirect
 from wtforms import form, fields, validators
 from wtforms.widgets import TextArea
 from wtforms.fields import TextAreaField
 from flask_admin.contrib import sqla
-from flask_admin import helpers, expose
+from flask_admin import helpers, expose, BaseView
 import flask_admin as flask_admin
 import flask_login as login
 from werkzeug.security import check_password_hash
 
 from models import TrombiAdmin, Person, Team, Trivia
 from app import db, app
+from config import DATABASE_SAVES_DIRECTORY, DATABASE_PATH
 
 
 class LoginForm(form.Form):
@@ -114,6 +119,43 @@ class MyModelView(sqla.ModelView):
     edit_template = 'edit.html'
 
 
+# Database backup
+class DatabaseSaveView(BaseView):
+    """Expose a way to backup/load the database."""
+
+    def is_accessible(self):
+        """Check if the current user can access the view."""
+        return login.current_user.is_authenticated
+
+    @expose('/load_backuped_database', methods=['POST'])
+    def load_backuped_database(self):
+        """Load a backuped version of the database."""
+        filename = request.form.get('saves_select')
+        if (filename is not None):
+            copy(str(DATABASE_SAVES_DIRECTORY + '/' + filename), DATABASE_PATH)
+        return redirect(url_for('database.get_view'))
+
+    @expose('/create_database_backup', methods=['POST'])
+    def create_database_backup(self):
+        """Create a backup of the current database."""
+        filename = datetime.now().isoformat()
+        filename += ".backup"
+        copy(DATABASE_PATH, DATABASE_SAVES_DIRECTORY + '/' + filename)
+        return redirect(url_for('database.get_view'))
+
+    @expose('/', methods=['GET', 'POST'])
+    def get_view(self):
+        """Display the available database operations."""
+        # Getting the available database saves
+        saves = listdir(DATABASE_SAVES_DIRECTORY)
+        saves.sort()
+        saves.reverse()
+        return self.render(
+            'database.html',
+            available_saves=saves
+        )
+
+
 def init():
     """Create the administration system."""
     # Initialize flask-login
@@ -135,3 +177,9 @@ def init():
     admin.add_view(MyModelView(Person, db.session))
     admin.add_view(MyModelView(Team, db.session))
     admin.add_view(MyModelView(Trivia, db.session))
+    admin.add_view(DatabaseSaveView(name='Database', endpoint='database'))
+
+    # We create the database backup directory if it doesn't exists
+    if (not isdir(DATABASE_SAVES_DIRECTORY)):
+        mkdir(DATABASE_SAVES_DIRECTORY)
+        print('Backup directory created at ' + DATABASE_SAVES_DIRECTORY)
