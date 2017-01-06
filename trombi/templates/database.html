@@ -1,0 +1,29 @@
+{% extends 'admin/index.html' %}
+{% block body %}
+
+<h3>Create a backup of the database on the server</h3>
+
+<form class="form-inline" method="POST" action="create_database_backup">
+    <button type="submit" class="btn">
+        <i class="icon-circle-arrow-down"></i> Create database backup
+    </button>
+</form>
+
+<br />
+
+<h3>Restore a backup of the database from the server</h3>
+
+<form class="form-inline adminForm" method="POST" action="load_backuped_database">
+
+    <select name="saves_select" size="5" style="width:500px;">
+        {% for item in available_saves %}
+            <option>{{ item }}</option>
+        {% endfor %}
+    </select>
+    <br /><br />
+    <button type="submit" class="btn">
+        <i class="icon-circle-arrow-up"></i> Restore the selected database copy
+    </button>
+</form>
+
+{% endblock %}
