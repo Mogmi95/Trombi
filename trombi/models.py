@@ -38,7 +38,7 @@ class TrombiAdmin(db.Model):
 
     def __unicode__(self):
         """Required for administrative interface."""
-        return self.login
+        return str(self.login)
 
 
 class Team(db.Model):
@@ -63,7 +63,7 @@ class Team(db.Model):
 
     def __repr__(self):
         """Simple log method."""
-        return self.name
+        return str(self.name)
 
     def get_root_persons(self):
         """
@@ -107,7 +107,7 @@ class Person(db.Model):
 
     def __repr__(self):
         """Simple log method."""
-        return self.skype
+        return str(self.login)
 
     def get_arrival_date(self):
         """Get the date when the person arrived."""
@@ -147,6 +147,10 @@ class Person(db.Model):
 
 class Trivia(db.Model):
     """Represents the content of the trivia page."""
+
+    def __str__(self):
+        """Simple log method."""
+        return str(id)
 
     __tablename__ = 'trivia'
     id = db.Column(db.Integer, primary_key=True)
