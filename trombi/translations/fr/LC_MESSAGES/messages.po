@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2016-12-27 17:56+0100\n"
-"PO-Revision-Date: 2016-12-27 17:56+0100\n"
+"POT-Creation-Date: 2017-02-27 19:42+0100\n"
+"PO-Revision-Date: 2017-02-27 19:42+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: fr\n"
 "Language-Team: fr <LL@li.org>\n"
@@ -29,52 +29,52 @@ msgstr "Arrivée %(date)s"
 msgid "Born %(date)s"
 msgstr "Né %(date)s"
 
-#: trombi/templates/index.html:74 trombi/views.py:52
+#: trombi/templates/index.html:76 trombi/views.py:53
 msgid "Trombi"
 msgstr "Trombi"
 
-#: trombi/views.py:63
+#: trombi/views.py:64
 #, python-format
 msgid "%(number)s newbies"
 msgstr "%(number)s nouveaux"
 
-#: trombi/views.py:66
+#: trombi/views.py:67
 #, python-format
 msgid "%(number)s people"
 msgstr "%(number)s personnes"
 
-#: trombi/views.py:83
+#: trombi/views.py:84
 #, python-format
 msgid "%(login)s doesn't exists."
 msgstr "%(login)s n'existe pas."
 
-#: trombi/views.py:95
+#: trombi/views.py:96
 msgid "Nothing here yet."
 msgstr "Rien pour l'instant."
 
-#: trombi/templates/index.html:53 trombi/views.py:111
+#: trombi/templates/index.html:54 trombi/views.py:112
 msgid "Search"
 msgstr "Recherche"
 
-#: trombi/views.py:112
+#: trombi/views.py:113
 #, python-format
 msgid "%(number)s result(s) for \"%(query)s\" :"
 msgstr "%(number)s resultat(s) pour \"%(query)s\" :"
 
-#: trombi/views.py:155
+#: trombi/views.py:157
 msgid "Calendar"
 msgstr "Calendrier"
 
-#: trombi/views.py:172
+#: trombi/views.py:184
 msgid "arrival"
 msgstr "arrivée"
 
-#: trombi/views.py:175
+#: trombi/views.py:187
 #, python-format
 msgid "%(number)s years"
 msgstr "%(number)s années"
 
-#: trombi/views.py:215
+#: trombi/views.py:228
 #, python-format
 msgid "Team %(team_name)s"
 msgstr "Equipe %(team_name)s"
@@ -83,35 +83,35 @@ msgstr "Equipe %(team_name)s"
 msgid "Trombinoscope"
 msgstr "Trombinoscope"
 
-#: trombi/templates/all.html:11 trombi/templates/all.html:12
+#: trombi/templates/all.html:12 trombi/templates/all.html:13
 msgid "Show only newbies"
 msgstr "Voir les nouveaux"
 
-#: trombi/templates/all.html:15 trombi/templates/all.html:16
+#: trombi/templates/all.html:16 trombi/templates/all.html:17
 msgid "Show everyone"
 msgstr "Voir tout le monde"
 
-#: trombi/templates/all.html:47 trombi/templates/team.html:48
+#: trombi/templates/all.html:49 trombi/templates/team.html:48
 msgid "Picture"
 msgstr "Photo"
 
-#: trombi/templates/all.html:48 trombi/templates/team.html:50
+#: trombi/templates/all.html:50 trombi/templates/team.html:50
 msgid "Name"
 msgstr "Nom"
 
-#: trombi/templates/all.html:49 trombi/templates/team.html:51
+#: trombi/templates/all.html:51 trombi/templates/team.html:51
 msgid "Surname"
 msgstr "Prénom"
 
-#: trombi/templates/all.html:50 trombi/templates/team.html:52
+#: trombi/templates/all.html:52 trombi/templates/team.html:52
 msgid "Team"
 msgstr "Equipe"
 
-#: trombi/templates/all.html:51
+#: trombi/templates/all.html:53
 msgid "Title"
 msgstr "Titre"
 
-#: trombi/templates/all.html:52 trombi/templates/all.html:63
+#: trombi/templates/all.html:54 trombi/templates/all.html:65
 #: trombi/templates/team.html:54
 msgid "VCard"
 msgstr "VCard"
@@ -128,23 +128,27 @@ msgstr "Netatversaire"
 msgid "Eventatmo"
 msgstr "Eventatmo"
 
-#: trombi/templates/index.html:42 trombi/templates/index.html:62
+#: trombi/templates/index.html:42 trombi/templates/index.html:63
 msgid "People"
 msgstr "Gens"
 
-#: trombi/templates/index.html:43 trombi/templates/index.html:63
+#: trombi/templates/index.html:43 trombi/templates/index.html:64
 msgid "Teams"
 msgstr "Equipes"
 
-#: trombi/templates/index.html:44 trombi/templates/index.html:64
+#: trombi/templates/index.html:44 trombi/templates/index.html:65
 msgid "Events"
 msgstr "Evènements"
 
-#: trombi/templates/index.html:45 trombi/templates/index.html:65
+#: trombi/templates/index.html:45 trombi/templates/index.html:66
 msgid "Trivia"
 msgstr "Trivia"
 
-#: trombi/templates/index.html:76
+#: trombi/templates/index.html:46 trombi/templates/index.html:67
+msgid "Game"
+msgstr "Jeu"
+
+#: trombi/templates/index.html:78
 msgid "Source code available on Github"
 msgstr "Code source disponible sur Github"
 
@@ -176,15 +180,15 @@ msgstr "Utilisateur"
 msgid "Skype"
 msgstr "Skype"
 
-#: trombi/templates/admin/index.html:8
+#: trombi/templates/admin/index.html:9
 msgid "Success"
 msgstr "Succès"
 
-#: trombi/templates/admin/index.html:10
+#: trombi/templates/admin/index.html:11
 msgid "You are now logged in."
 msgstr "Vous êtes maintenant connecté."
 
-#: trombi/templates/admin/index.html:28
+#: trombi/templates/admin/index.html:29
 msgid "Submit"
 msgstr "Valider"
 
