@@ -8,6 +8,7 @@ Should write something nice here.
 
 import time
 import datetime
+import random
 from flask import render_template, request, url_for
 from sqlalchemy import or_
 from flask.ext.babel import gettext
@@ -303,3 +304,28 @@ def get_node_person(person, parent):
         </div>\
     </a></div>'}, '" + parent + "', '" + person.name + " " + \
         person.surname + "'],"
+
+# Game
+
+
+@app.route('/game', methods=['GET', 'POST'])
+def show_game():
+    """"Display a game to learn who's who in the company."""
+    # We create another person to find
+
+    all = Person.query.all()
+    random.shuffle(all)
+    person = all[0]
+    persons = []
+
+    for i in range(8):
+        persons.append(all[i])
+
+    random.shuffle(persons)
+
+    return render_template(
+        'game.html',
+        title='Game',
+        person=person,
+        persons=persons,
+    )

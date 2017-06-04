@@ -118,7 +118,7 @@ a {
 /* Trivia */
 .triviaCard {
   position: relative;
-  width: 50%;
+  width: 1000px;
   background: #fcfcfc;
   margin-left: auto;
   margin-right: auto;
@@ -398,4 +398,40 @@ a {
   top: -2px;
   left: -2px;
   color: #fff;
+}
+
+/* GAME */
+
+.gameQuestion {
+    font-size: 20px;
+}
+
+.gameRadioItem {
+  display: none !important;
+}
+
+.gameLabelItem {
+}
+
+.gameRadioItem:checked + label {
+}
+
+#gameResultBad {
+    display: none;
+    color: red;
+}
+
+#gameResultGood {
+    display: none;
+    color: green;
+}
+
+label {
+  cursor: pointer;
+}
+
+.gamePersonImage {
+    display: block;
+    height: 250px;
+    width: 250px;
 }
