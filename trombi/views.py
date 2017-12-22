@@ -9,13 +9,13 @@ Should write something nice here.
 import time
 import datetime
 import random
-from flask import render_template, request, url_for
+from flask import render_template, request, url_for, redirect
 from sqlalchemy import or_
 from flask.ext.babel import gettext
 
 from config import LANGUAGES
 from app import db, app, babel
-from models import Person, Team, Trivia
+from models import Person, PersonComment, Team, Trivia
 
 
 @babel.localeselector
@@ -72,20 +72,39 @@ def show_all():
         list_mode=get_list_mode(request),
         person_filter=person_filter,
         list_url='',
-        message=message
+        message=message,
         )
 
 
 @app.route("/person/<login>")
 def show_person(login=None):
     """Display information about a specific person."""
+    commented = request.args.get('commented')
     person = Person.query.filter_by(login=login).first()
     if (person is None):
         title = gettext(u'%(login)s doesn\'t exists.', login=login)
         return render_template('person_error.html', person=person, title=title)
     else:
         title = person.name + ' ' + person.surname
-        return render_template('person.html', person=person, title=title)
+        return render_template(
+            'person.html',
+            person=person,
+            title=title,
+            commented=commented,
+        )
+
+
+@app.route('/person/comment', methods=['POST'])
+def person_comment(login=None):
+    """Add a comment on a person."""
+    comment = request.form.get('comment')
+    login = request.form.get('login')
+    person = Person.query.filter_by(login=login).first()
+    person_comment = PersonComment()
+    person_comment.message = comment.replace('<', '(').replace('>', ')')
+    person.comments.append(person_comment)
+    db.session.commit()
+    return redirect(url_for('show_person', login="mbidon", commented=True))
 
 
 @app.route("/trivia")

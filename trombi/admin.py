@@ -14,7 +14,7 @@ import flask_admin as flask_admin
 import flask_login as login
 from werkzeug.security import check_password_hash
 
-from models import TrombiAdmin, Person, Team, Trivia
+from models import TrombiAdmin, Person, PersonComment, Team, Trivia
 from app import db, app
 from config import DATABASE_SAVES_DIRECTORY, DATABASE_PATH
 
@@ -156,6 +156,33 @@ class DatabaseSaveView(BaseView):
         )
 
 
+# Report information errors
+class CommentsView(BaseView):
+    """List the comments written by the users."""
+
+    def is_accessible(self):
+        """Check if the current user can access the view."""
+        return login.current_user.is_authenticated
+
+    @expose('/', methods=['GET', 'POST'])
+    def get_view(self):
+        """Display the available comments."""
+        comments = PersonComment.query.all()
+        print('lolzcomments : ' + str(comments))
+        return self.render(
+            'comments.html',
+            comments=comments
+        )
+
+    @expose('/delete/<comment_id>', methods=['GET', 'POST'])
+    def delete_comment(self, comment_id=None):
+        """Delete a comment."""
+        comment = PersonComment.query.filter_by(id=comment_id).first()
+        db.session.delete(comment)
+        db.session.commit()
+        return redirect(url_for('comments.get_view'))
+
+
 def init():
     """Create the administration system."""
     # Initialize flask-login
@@ -178,6 +205,7 @@ def init():
     admin.add_view(MyModelView(Team, db.session))
     admin.add_view(MyModelView(Trivia, db.session))
     admin.add_view(DatabaseSaveView(name='Database', endpoint='database'))
+    admin.add_view(CommentsView(name='Comments', endpoint='comments'))
 
     # We create the database backup directory if it doesn't exists
     if (not isdir(DATABASE_SAVES_DIRECTORY)):

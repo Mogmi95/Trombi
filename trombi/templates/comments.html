@@ -1,0 +1,21 @@
+{% extends 'admin/index.html' %}
+{% block body %}
+
+<h3>Comments</h3>
+
+<table class="table table-striped table-bordered table-hover model-list">
+    <tr>
+        <th>Login</th>
+        <th>Comment</th>
+        <th>Delete</th>
+    </tr>
+{% for comment in comments %}
+    <tr>
+        <td>{{ comment.person }}</td>
+        <td>{{ comment.message|replace("\n", "<br />")|safe }}</td>
+        <td><a href="delete/{{ comment.id }}"><i class="fa fa-trash icon-trash"></i></a></td>
+    </tr>
+{% endfor %}
+</table>
+
+{% endblock %}
