@@ -286,6 +286,30 @@ a {
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
 }
 
+#personCommentSection {
+    width: 100%;
+    padding: 10px 0;
+    display: none;
+    text-align: center;
+}
+
+#personCommentText {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+}
+
+#personCommentThanks {
+    width: 100%;
+    background: #07b32d;
+    text-align: center;
+    color: #f1f1f1;
+    font-family: 'Roboto';
+    font-size: 100px;
+    font-weight: 400;
+}
+
 /* Calendar */
 
 .calendar_legend {

@@ -79,6 +79,16 @@ class Team(db.Model):
         return root_persons
 
 
+class PersonComment(db.Model):
+    """Comment on a person information."""
+
+    __tablename__ = 'personcomment'
+    id = db.Column(db.Integer, primary_key=True)
+    message = db.Column(db.String(512), unique=False)
+
+    person_id = Column(Integer, ForeignKey('person.id'))
+
+
 class Person(db.Model):
     """Represents a person in the trombi."""
 
@@ -104,6 +114,8 @@ class Person(db.Model):
     )
 
     team_id = Column(Integer, ForeignKey('team.id'))
+
+    comments = relationship("PersonComment", backref="person")
 
     def __repr__(self):
         """Simple log method."""
