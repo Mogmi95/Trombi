@@ -104,7 +104,7 @@ def person_comment(login=None):
     person_comment.message = comment.replace('<', '(').replace('>', ')')
     person.comments.append(person_comment)
     db.session.commit()
-    return redirect(url_for('show_person', login="mbidon", commented=True))
+    return redirect(url_for('show_person', login=login, commented=True))
 
 
 @app.route("/trivia")
