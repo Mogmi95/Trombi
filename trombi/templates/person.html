@@ -3,7 +3,7 @@
 {% block body %}
 
 <div class="personCard">
-
+<!--
 {% if person.manager is not none %}
 <a href="/person/{{ person.manager.login }}">
   <div class="personCardManagerContainer">
@@ -13,86 +13,123 @@
   </div>
 </a>
 {% endif %}
-
+-->
 
   <div class="personCardHeader">
     <div class="personCardHeaderAvatar" style="background: url({{ url_for('static', filename='images/photos/' + person.login + '.jpg') }}) center / cover;"></div>
-    {% if person.team is not none %}
-      <a href="/team/{{ person.team.name }}"><div class="personCardHeaderTeamIndicator">{{ person.team.name }}</div></a>
-    {% endif %}
-    <div class="personCardHeaderName">{{ person.name }}<br /><br />{{ person.surname.upper() }}</div>
+    <div class="personCardHeaderName">{{ person.name }} {{ person.surname.upper() }}</div>
     <div class="personCardHeaderDescription">{{ person.job }}</div>
   </div>
 
   <div class="mdl-card__supporting-text">
-    <!--<div class="mdl-card__actions mdl-card--border"></div>-->
-    <ul class="demo-list-icon mdl-list">
-      {% if person.birthday != '' %}
-      <li class="mdl-list__item">
-        <span class="mdl-list__item-primary-content">
-          <i class="material-icons mdl-list__item-icon">cake</i>
-          {{ person.get_pretty_birthday_date() }}
-        </span>
-      </li>
+      {% if person.manager is not none %}
+      <ul class="mdl-list">
+          <!-- TEAM -->
+          <li onclick="location.href='/team/{{ person.team.name }}'" class="mdl-list__item mdl-list__item--two-line mdl-js-ripple-effect">
+            <span class="rippleContainer mdl-list__item-primary-content">
+             <span class="mdl-ripple"></span>
+              <i class="material-icons mdl-list__item-icon">group_work</i>
+              {{ person.team.name }}
+              <span class="mdl-list__item-sub-title">Team</span>
+            </span>
+          </li>
+          <!-- MANAGER -->
+          {% if person.manager is not none %}
+          <li onclick="location.href='/person/{{ person.manager.login }}'" class="mdl-list__item mdl-list__item--two-line mdl-js-ripple-effect">
+            <span class="rippleContainer mdl-list__item-primary-content">
+                <span class="mdl-ripple"></span>
+              <i class="material-icons mdl-list__item-icon">supervisor_account</i>
+              {{ person.manager.name }} {{ person.manager.surname }}
+              <span class="mdl-list__item-sub-title">Manager</span>
+            </span>
+          </li>
+          {% endif %}
+      </ul>
+      <div class="horizontalSeparationLine"></div>
       {% endif %}
-      {% if person.arrival != '' %}
-      <li class="mdl-list__item">
-        <span class="mdl-list__item-primary-content">
-          <i class="material-icons mdl-list__item-icon">person_add</i>
-          {{ person.get_pretty_arrival_date() }}
-        </span>
-      </li>
-      {% endif %}
-      {% if person.email != '' %}
-      <li class="mdl-list__item">
-        <span class="mdl-list__item-primary-content">
-          <i class="material-icons mdl-list__item-icon">mail</i>
-          <a href="mailto:{{ person.email }}">{{ person.email }}</a>
-        </span>
-      </li>
-      {% endif %}
-      {% if person.mobile != '' %}
-      <li class="mdl-list__item">
-        <span class="mdl-list__item-primary-content">
-          <i class="material-icons mdl-list__item-icon">call</i>
-          <span><a href="tel:{{ person.mobile }}">{{ person.mobile }}</a> ({{ gettext('mobile') }})</span>
-        </span>
-      </li>
-      {% endif %}
-      {% if person.fixe != '' %}
-      <li class="mdl-list__item">
-        <span class="mdl-list__item-primary-content">
-          <i class="material-icons mdl-list__item-icon">call</i>
-          <span><a href="tel:{{ person.fixe }}">{{ person.fixe }}</a> ({{ gettext('fixe') }})</span>
-        </span>
-      </li>
-      {% endif %}
-      {% if person.skype != '' %}
-      <li class="mdl-list__item">
-        <span class="mdl-list__item-primary-content">
-          <img class="mdl-list__item-icon" src="{{ url_for('static', filename='images/skype.png') }}" />
-          <span><a href="skype:{{ person.skype }}?add">{{ person.skype }} </a></span>
-        </span>
-      </li>
-      {% endif %}
-    </ul>
+      <ul class="mdl-list">
+          <!-- EMAIL -->
+          {% if person.email != '' %}
+          <li onclick="copyToClipboard('{{ person.email }}')" class="mdl-list__item mdl-list__item--two-line mdl-js-ripple-effect">
+            <span class="rippleContainer mdl-list__item-primary-content">
+             <span class="mdl-ripple"></span>
+              <i class="material-icons mdl-list__item-icon">email</i>
+              {{ person.email }}
+              <span class="mdl-list__item-sub-title">Mail</span>
+            </span>
+          </li>
+          {% endif %}
+          <!-- SKYPE -->
+          {% if person.skype != '' %}
+          <li onclick="copyToClipboard('{{ person.skype }}')" class="mdl-list__item mdl-list__item--two-line mdl-js-ripple-effect">
+            <span class="rippleContainer mdl-list__item-primary-content">
+                <span class="mdl-ripple"></span>
+              <i class="material-icons mdl-list__item-icon">phone</i>
+              {{ person.skype }}
+              <span class="mdl-list__item-sub-title">Skype</span>
+            </span>
+          </li>
+          {% endif %}
+          <!-- PHONE -->
+          {% if person.fixe != '' %}
+          <li onclick="copyToClipboard('{{ person.fixe }}')" class="mdl-list__item mdl-list__item--two-line mdl-js-ripple-effect">
+            <span class="rippleContainer mdl-list__item-primary-content">
+             <span class="mdl-ripple"></span>
+              <i class="material-icons mdl-list__item-icon">phone</i>
+              {{ person.fixe }}
+              <span class="mdl-list__item-sub-title">Phone</span>
+            </span>
+          </li>
+          {% endif %}
+          <!-- MOBILE PHONE -->
+          {% if person.mobile != '' %}
+          <li onclick="copyToClipboard('{{ person.mobile }}')" class="mdl-list__item mdl-list__item--two-line mdl-js-ripple-effect">
+            <span class="rippleContainer mdl-list__item-primary-content">
+                <span class="mdl-ripple"></span>
+              <i class="material-icons mdl-list__item-icon">phone</i>
+              {{ person.mobile }}
+              <span class="mdl-list__item-sub-title">Phone (mobile)</span>
+            </span>
+          </li>
+          {% endif %}
+      </ul>
+      <div class="horizontalSeparationLine"></div>
+      <ul class="mdl-list">
+          <!-- BIRTHDAY -->
+          {% if person.birthday != '' %}
+          <li onclick="copyToClipboard('{{ person.birthday }}')" class="mdl-list__item mdl-list__item--two-line mdl-js-ripple-effect">
+            <span class="rippleContainer mdl-list__item-primary-content">
+             <span class="mdl-ripple"></span>
+              <i class="material-icons mdl-list__item-icon">cake</i>
+              {{ person.get_pretty_birthday_date() }}
+              <span class="mdl-list__item-sub-title">Birthday</span>
+            </span>
+          </li>
+          {% endif %}
+          <!-- ARRIVAL -->
+          {% if person.arrival != '' %}
+          <li onclick="copyToClipboard('{{ person.arrival }}')" class="mdl-list__item mdl-list__item--two-line mdl-js-ripple-effect">
+            <span class="rippleContainer mdl-list__item-primary-content">
+                <span class="mdl-ripple"></span>
+              <i class="material-icons mdl-list__item-icon">person_add</i>
+              {{ person.get_pretty_arrival_date() }}
+              <span class="mdl-list__item-sub-title">Arrival</span>
+            </span>
+          </li>
+          {% endif %}
+      </ul>
 
-    <div class="personCardDownloadContainer">
-    <a href="/person/vcard/vcard-{{ person.login }}.vcf" download>
-      <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-        {{ gettext('Download V-Card') }}
-      </button>
-    </a>
+    <div class="mdl-card__actions mdl-card--border">
+        <a href="/person/vcard/vcard-{{ person.login }}.vcf" download class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
+            Get V-Card
+        </a>
+
+        <a id="showcomment"
+            onclick="myFunction()"
+            class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
+            Report error
+        </a>
     </div>
-
-    <br />
-
-    <a
-        id="showcomment"
-        onclick="myFunction()"
-        >
-      Missing or wrong information?
-  </a>
 
     <div id="personCommentSection">
         <form class="form-inline" method="POST" action="comment">
@@ -111,12 +148,66 @@
   {% endif %}
 </div>
 
+<div id="snackbar-root" class="mdl-js-snackbar mdl-snackbar">
+  <div class="mdl-snackbar__text"></div>
+  <button class="mdl-snackbar__action" type="button"></button>
+</div>
+
 <script>
 function myFunction() {
-    var button = document.getElementById("showcomment");
     var section = document.getElementById("personCommentSection");
-    button.style.display = "none";
     section.style.display = "block";
+}
+
+function showSnackbar(text) {
+    var snackbarContainer = document.querySelector('#snackbar-root');
+    var data = {
+      message: text,
+      timeout: 2000,
+    };
+    snackbarContainer.MaterialSnackbar.showSnackbar(data);
+}
+
+function copyToClipboard(value) {
+    'use strict';
+    var textArea = document.createElement("textarea");
+    // Place in top-left corner of screen regardless of scroll position.
+    textArea.style.position = 'fixed';
+    textArea.style.top = 0;
+    textArea.style.left = 0;
+
+    // Ensure it has a small width and height. Setting to 1px / 1em
+    // doesn't work as this gives a negative w/h on some browsers.
+    textArea.style.width = '2em';
+    textArea.style.height = '2em';
+
+    // We don't need padding, reducing the size if it does flash render.
+    textArea.style.padding = 0;
+
+    // Clean up any borders.
+    textArea.style.border = 'none';
+    textArea.style.outline = 'none';
+    textArea.style.boxShadow = 'none';
+
+    // Avoid flash of white box if rendered for any reason.
+    textArea.style.background = 'transparent';
+
+
+    textArea.value = value;
+
+    document.body.appendChild(textArea);
+
+    textArea.select();
+
+    try {
+      var successful = document.execCommand('copy');
+      var msg = successful ? 'successful' : 'unsuccessful';
+      showSnackbar('"' + value + '"' + ' stored to clipboard');
+    } catch (err) {
+        showSnackbar('Copy to clipboard failed');
+    }
+
+    document.body.removeChild(textArea);
 }
 </script>
 

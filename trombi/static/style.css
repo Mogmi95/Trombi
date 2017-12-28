@@ -134,11 +134,11 @@ a {
 
 .personCard {
   position: relative;
-  width: 500px;
+  width: 33%;
+  min-width: 400px;
   background: #fcfcfc;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 32px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 }
 
@@ -148,90 +148,26 @@ a {
     text-align: center;
 }
 
-.personCardManagerContainer {
-  position: absolute;
-  width: 132px;
-  height: 212px;
-  top: 0px;
-  left: -200px;
-  background: #fcfcfc;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-  transition: all 0.2s ease-in-out;
-}
-
-.personCardManagerContainer:hover {
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.21), 0 6px 6px rgba(0, 0, 0, 0.27);
-}
-
-.personCardManagerPicture {
-  position: absolute;
-  background: #fcfcfc;
-  width: 132px;
-  height: 132px;
-  top: 32px;
-}
-
-.personCardManagerTitle {
-  position: absolute;
-  background: #e36356;
-  width: 132px;
-  height: 32px;
-  color: #fcfcfc;
-  font-family: 'Roboto';
-  padding-top: 8px;
-  text-align: center;
-}
-
-.personCardManagerName {
-  position: absolute;
-  background: #fcfcfc;
-  width: 132px;
-  height: 48px;
-  color: black;
-  font-family: 'Roboto';
-  bottom: 0px;
-  padding-top: 8px;
-  text-align: center;
-}
-
 .personCardHeader {
-  height: 200px;
-  /*background: url('/static/images/person_header.png') center / cover;*/
-  margin-bottom: 40px;
-  background: #e36356;
-}
-
-.personCardHeaderTeamIndicator {
-  position: absolute;
-  color: #368cbf;
-  width: 250px;
-  height: 44px;
+  background: linear-gradient( rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4) ), url('https://www.hdwallpaperhub.com/wp-content/uploads/Material/4/HD%20Material%20Design%20Wallpaper%200154-950x594.jpg') center / cover;
+  padding: 8px;
+  /*background: #e36356;*/
   text-align: center;
-  top: 212px;
-  left: 233px;
-  padding: 4px;
-  font-family: 'Roboto';
-  font-size: 15px;
-  font-weight: 500;
+  padding: 16px;
 }
 
 .personCardHeaderName {
-  position: absolute;
+  display: block;
   color: #fcfcfc;
-  width: 234px;
-  top: 32px;
-  left: 250px;
   font-family: 'Roboto';
-  font-size: 24px;
+  font-size: 26px;
   font-weight: 500;
+  margin: 16px;
 }
 
 .personCardHeaderDescription {
-  position: absolute;
+  display: block;
   color: #fcfcfc;
-  width: 234px;
-  top: 120px;
-  left: 250px;
   font-family: 'Roboto';
   font-size: 18px;
   font-weight: 400;
@@ -239,26 +175,32 @@ a {
 }
 
 .personCardHeaderAvatar {
-  position: absolute;
-  height: 200px;
+  display: block;
   width: 200px;
   height: 240px;
-  top: 16px;
-  left: 16px;
-  border: solid 8px #fcfcfc;
-  /*box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);*/
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 25px;
 }
 
-.personCardDownloadContainer {
-  text-align: right;
+.horizontalSeparationLine {
+    width: 100%;
+    height: 1px;
+    background-color: rgba(0,0,0,.1);
+}
+
+.rippleContainer {
+    position: relative;
+    cursor:pointer;
+}
+
+.mdl-list {
+    margin: 0;
+    padding: 0;
 }
 
 .demo-card-wide.mdl-card {
   position: relative;
-  margin-top: 32px;
-  margin-left: auto;
-  margin-right: auto;
-  width: 500px;
 }
 .demo-card-wide > .mdl-card__title {
   color: #fff;

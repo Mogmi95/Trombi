@@ -128,12 +128,12 @@ class Person(db.Model):
     def get_pretty_arrival_date(self):
         """Get a printable version of the arrival date."""
         custom_date = self.arrival.strftime(u'%B, %d %Y')
-        return gettext(u'Arrived %(date)s', date=custom_date)
+        return gettext(u'%(date)s', date=custom_date)
 
     def get_pretty_birthday_date(self):
         """Get a printable version of the birthday date."""
         custom_date = self.birthday.strftime(u'%B, %d')
-        return gettext(u'Born %(date)s', date=custom_date)
+        return gettext(u'%(date)s', date=custom_date)
 
     def create_vcard(self):
         """Create a VCard for a person."""
