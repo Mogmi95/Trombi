@@ -3,17 +3,6 @@
 {% block body %}
 
 <div class="personCard">
-<!--
-{% if person.manager is not none %}
-<a href="/person/{{ person.manager.login }}">
-  <div class="personCardManagerContainer">
-    <div class="personCardManagerTitle">{{ gettext('Manager') }}</div>
-    <div class="personCardManagerPicture" style="background: url({{ url_for('static', filename='images/photos/' + person.manager.login + '.jpg') }}) center / cover;"></div>
-    <div class="personCardManagerName">{{ person.manager.name }}<br/>{{ person.manager.surname }}</div>
-  </div>
-</a>
-{% endif %}
--->
 
   <div class="personCardHeader">
     <div class="personCardHeaderAvatar" style="background: url({{ url_for('static', filename='images/photos/' + person.login + '.jpg') }}) center / cover;"></div>

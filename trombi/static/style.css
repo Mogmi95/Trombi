@@ -364,8 +364,19 @@ a {
 
 /* Tree */
 
+.titleTeamNameContainer {
+    width: 20%;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    margin-bottom: 8px;
+}
+
 .titleTeamName {
-  float: left;
+    padding: 16px;
+    color: #ffffff;
+    background: #e36356;
+    font-weight: bold;
 }
 
 .tree {
@@ -375,14 +386,14 @@ a {
 
 .rootTreeNodeElement {
   position: relative;
-  width: 128px;
-  height: 164px;
+  width: 108px;
+  height: 144px;
 }
 
 .rootTreeNodeElementFiller {
   position: absolute;
-  width: 132px;
-  height: 168px;
+  width: 112px;
+  height: 148px;
   left: -2px;
   top: -2px;
   color: #fcfcfc;
@@ -396,20 +407,27 @@ a {
   display: table;
   position: absolute;
   background: #e74c3c;
-  width: 133px;
-  height: 169px;
+  width: 113px;
+  height: 149px;
   left: -1px;
   top: -1px;
 }
 
 .rootTreeNodeLinkCenterChild {
-  display: table-cell;
+  /*display: table-cell;*/
   vertical-align: middle;
+  overflow-wrap: break-word;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  width: 112px;
+  height: 148px;
+  font-size: 13px;
 }
 
 .verticalLine {
   position: absolute;
-  height: 169px;
+  height: 149px;
   border-left: 1px solid #3388dd;
   top: -3px;
   left: 50%;
@@ -421,8 +439,8 @@ a {
 
 .treeNodeTextContainer {
   position: relative;
-  width: 132px;
-  height: 42px;
+  width: 112px;
+  height: 22px;
   top: 124px;
   left: -2px;
   background-color: rgba(0, 0, 0, 0.5);
