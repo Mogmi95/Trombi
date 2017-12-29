@@ -52,27 +52,50 @@ def show_all():
     person_filter = request.args.get('filter')
     title = gettext(u'Trombi')
 
-    if (person_filter is not None):
-        last_month_timestamp = time.time() - 2592000
-        last_month_date = datetime.datetime.fromtimestamp(last_month_timestamp)
-        print(last_month_date)
-        persons = Person.query.filter(
-                Person.arrival > last_month_date
-            ).order_by(
-                Person.surname
-            ).all()
-        message = gettext(u'%(number)s newbies', number=len(persons))
+    # Calculating newbies
+    last_month_timestamp = time.time() - 2592000
+    last_month_date = datetime.datetime.fromtimestamp(last_month_timestamp)
+    newbies = Person.query.filter(
+            Person.arrival > last_month_date
+        ).order_by(
+            Person.surname
+        ).all()
+
+    # Calculating persons
+    persons = Person.query.order_by(Person.surname).all()
+
+    persons_to_display = []
+
+    if (person_filter in ["newbies"]):
+        persons_to_display = newbies
     else:
-        persons = Person.query.order_by(Person.surname).all()
-        message = gettext(u'%(number)s people', number=len(persons))
+        persons_to_display = persons
+
+    choices = []
+    choices.append(
+        {
+            "selected": person_filter in [None, "all"],
+            "value": "all",
+            "text": u'Everyone (%s people)' % str(len(persons))
+        }
+    )
+
+    choices.append(
+        {
+            "selected": person_filter in ["newbies"],
+            "value": "newbies",
+            "text": u'Newbies (%s people)' % str(len(newbies))
+        }
+    )
+
     return render_template(
         'all.html',
-        persons=persons,
+        persons=persons_to_display,
         title=title,
         list_mode=get_list_mode(request),
         person_filter=person_filter,
         list_url='',
-        message=message,
+        choices=choices,
         )
 
 

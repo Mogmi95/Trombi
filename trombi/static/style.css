@@ -93,23 +93,35 @@ a {
 
 .allPersonsHeader {
   position: relative;
-  width: 1166px;
-  height: 60px;
+  max-width: 1200px;
+  height: 48px;
   margin-left: auto;
   margin-right: auto;
-  padding: 8px;
+  margin-bottom: 16px;
 }
 
-.allPersonsHeaderMessage {
-  line-height: 60px;
-  font-family: 'Roboto';
-  font-size: 20px;
-  font-weight: 400;
-  font-style: italic;
+.allPersonsHeaderContent {
+  position: relative;
+  max-width: 1200px;
+  height: 48px;
+  margin: 8px;
+  background: #ffffff;
+  text-align: left;
+}
+
+.allPersonsSelect {
+    background: transparent;
+    border: 0px;
+    height: 48px;
+    line-height: 48px;
+    font-family: 'Roboto';
+    font-size: 16px;
+    color: #212121;
+    padding: 2px 10px;
 }
 
 .viewModeContainer {
-  height: 60px;
+  height: 48px;
   position: absolute;
   right:0px;
   top: 8px;
