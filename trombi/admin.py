@@ -14,7 +14,7 @@ import flask_admin as flask_admin
 import flask_login as login
 from werkzeug.security import check_password_hash
 
-from models import TrombiAdmin, Person, PersonComment, Team, Trivia
+from models import TrombiAdmin, Person, PersonComment, Team, Infos
 from app import db, app
 from config import DATABASE_SAVES_DIRECTORY, DATABASE_PATH
 
@@ -203,7 +203,7 @@ def init():
 
     admin.add_view(MyModelView(Person, db.session))
     admin.add_view(MyModelView(Team, db.session))
-    admin.add_view(MyModelView(Trivia, db.session))
+    admin.add_view(MyModelView(Infos, db.session))
     admin.add_view(DatabaseSaveView(name='Database', endpoint='database'))
     admin.add_view(CommentsView(name='Comments', endpoint='comments'))
 

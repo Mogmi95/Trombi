@@ -157,13 +157,13 @@ class Person(db.Model):
         return vcard
 
 
-class Trivia(db.Model):
-    """Represents the content of the trivia page."""
+class Infos(db.Model):
+    """Represents the content of the infos page."""
 
     def __str__(self):
         """Simple log method."""
         return str(id)
 
-    __tablename__ = 'trivia'
+    __tablename__ = 'infos'
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.Text(), unique=False, default=u'Hello World!')

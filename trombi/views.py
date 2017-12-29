@@ -15,7 +15,7 @@ from flask.ext.babel import gettext
 
 from config import LANGUAGES
 from app import db, app, babel
-from models import Person, PersonComment, Team, Trivia
+from models import Person, PersonComment, Team, Infos
 
 
 @babel.localeselector
@@ -52,10 +52,10 @@ def show_all():
     person_filter = request.args.get('filter')
     title = gettext(u'Trombi')
 
-    # Calculating newbies
+    # Calculating newcomers
     last_month_timestamp = time.time() - 2592000
     last_month_date = datetime.datetime.fromtimestamp(last_month_timestamp)
-    newbies = Person.query.filter(
+    newcomers = Person.query.filter(
             Person.arrival > last_month_date
         ).order_by(
             Person.surname
@@ -66,8 +66,8 @@ def show_all():
 
     persons_to_display = []
 
-    if (person_filter in ["newbies"]):
-        persons_to_display = newbies
+    if (person_filter in ["newcomers"]):
+        persons_to_display = newcomers
     else:
         persons_to_display = persons
 
@@ -82,9 +82,9 @@ def show_all():
 
     choices.append(
         {
-            "selected": person_filter in ["newbies"],
-            "value": "newbies",
-            "text": u'Newbies (%s people)' % str(len(newbies))
+            "selected": person_filter in ["newcomers"],
+            "value": "newcomers",
+            "text": u'Newcomers (%s people)' % str(len(newcomers))
         }
     )
 
@@ -130,15 +130,15 @@ def person_comment(login=None):
     return redirect(url_for('show_person', login=login, commented=True))
 
 
-@app.route("/trivia")
-def show_trivia():
+@app.route("/infos")
+def show_infos():
     """Display various information stored in the database."""
-    trivia = db.session.query(Trivia).first()
-    if (trivia is None):
+    infos = db.session.query(Infos).first()
+    if (infos is None):
         text = gettext(u'Nothing here yet.')
     else:
-        text = trivia.text
-    return render_template('trivia.html', text=text)
+        text = infos.text
+    return render_template('infos.html', text=text)
 
 
 @app.route("/person/vcard/vcard-<login>.vcf")
