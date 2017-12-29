@@ -230,20 +230,24 @@ a {
 }
 
 .personCardHeader {
-  background: linear-gradient( rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4) ), url('https://www.hdwallpaperhub.com/wp-content/uploads/Material/4/HD%20Material%20Design%20Wallpaper%200154-950x594.jpg') center / cover;
-  padding: 8px;
-  /*background: #e36356;*/
-  text-align: center;
-  padding: 16px;
+    background: linear-gradient(
+          to bottom,
+          #e74c3c 0%,
+          #e74c3c 75%,
+          #fcfcfc 75%,
+          #fcfcfc 100%
+    );
+    text-align: center;
+    padding-top: 16px
 }
 
 .personCardHeaderName {
   display: block;
-  color: #fcfcfc;
+  color: #212121;
   font-family: 'Roboto';
   font-size: 26px;
-  font-weight: 500;
-  margin: 16px;
+  font-weight: 400;
+  margin-top: 24px;
 }
 
 .personCardHeaderDescription {
@@ -258,10 +262,13 @@ a {
 .personCardHeaderAvatar {
   display: block;
   width: 200px;
-  height: 240px;
+  height: 200px;
   margin-left: auto;
   margin-right: auto;
-  border-radius: 25px;
+  border-radius: 100px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, .8);
+  -webkit-box-shadow: 0 0 8px rgba(0, 0, 0, .8);
+  -moz-box-shadow: 0 0 8px rgba(0, 0, 0, .8);
 }
 
 .horizontalSeparationLine {

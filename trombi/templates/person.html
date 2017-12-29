@@ -5,9 +5,9 @@
 <div class="personCard">
 
   <div class="personCardHeader">
+    <div class="personCardHeaderBackground"></div>
     <div class="personCardHeaderAvatar" style="background: url({{ url_for('static', filename='images/photos/' + person.login + '.jpg') }}) center / cover;"></div>
-    <div class="personCardHeaderName">{{ person.name }} {{ person.surname.upper() }}</div>
-    <div class="personCardHeaderDescription">{{ person.job }}</div>
+    <div class="personCardHeaderName">{{ person.name }} {{ person.surname }}</div>
   </div>
 
   <div class="mdl-card__supporting-text">
@@ -20,6 +20,15 @@
               <i class="material-icons mdl-list__item-icon">group_work</i>
               {{ person.team.name }}
               <span class="mdl-list__item-sub-title">Team</span>
+            </span>
+          </li>
+          <!-- JOB -->
+          <li onclick="copyToClipboard('{{ person.job }}')" class="mdl-list__item mdl-list__item--two-line mdl-js-ripple-effect">
+            <span class="rippleContainer mdl-list__item-primary-content">
+             <span class="mdl-ripple"></span>
+              <i class="material-icons mdl-list__item-icon">build</i>
+              {{ person.job }}
+              <span class="mdl-list__item-sub-title">Job</span>
             </span>
           </li>
           <!-- MANAGER -->
