@@ -11,9 +11,10 @@
   </div>
 
   <div class="mdl-card__supporting-text">
-      {% if person.manager is not none %}
+
       <ul class="mdl-list">
           <!-- TEAM -->
+          {% if person.manager is not none %}
           <li onclick="location.href='/team/{{ person.team.name }}'" class="mdl-list__item mdl-list__item--two-line mdl-js-ripple-effect">
             <span class="rippleContainer mdl-list__item-primary-content">
              <span class="mdl-ripple"></span>
@@ -22,6 +23,7 @@
               <span class="mdl-list__item-sub-title">Team</span>
             </span>
           </li>
+          {% endif %}
           <!-- JOB -->
           <li onclick="copyToClipboard('{{ person.job }}')" class="mdl-list__item mdl-list__item--two-line mdl-js-ripple-effect">
             <span class="rippleContainer mdl-list__item-primary-content">
@@ -43,8 +45,7 @@
           </li>
           {% endif %}
       </ul>
-      <div class="horizontalSeparationLine"></div>
-      {% endif %}
+      <div class="horizontalSeparationLine"></div
       <ul class="mdl-list">
           <!-- EMAIL -->
           {% if person.email != '' %}
