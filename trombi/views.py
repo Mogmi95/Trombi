@@ -174,7 +174,7 @@ def show_search(query=None):
         persons.append(hash_persons[person_key])
 
     if (len(persons) == 1):
-        return show_person(persons[0].login)
+        return redirect(url_for('show_person', login=persons[0]))
     return render_template(
         'all.html',
         is_in_search_mode=True,
