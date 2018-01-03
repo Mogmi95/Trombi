@@ -23,7 +23,9 @@ def get_locale():
     """Get the locale to use for lang."""
     locale = request.accept_languages.best_match(LANGUAGES.keys())
     print('Chosen locale : ' + locale)
-    return locale
+    # return locale
+    # Temporary
+    return 'en'
 
 
 @app.errorhandler(404)
