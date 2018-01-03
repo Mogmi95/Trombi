@@ -15,7 +15,7 @@ from flask.ext.babel import gettext
 
 from config import LANGUAGES
 from app import db, app, babel
-from models import Person, PersonComment, Team, Trivia
+from models import Person, PersonComment, Team, Infos
 
 
 @babel.localeselector
@@ -52,27 +52,50 @@ def show_all():
     person_filter = request.args.get('filter')
     title = gettext(u'Trombi')
 
-    if (person_filter is not None):
-        last_month_timestamp = time.time() - 2592000
-        last_month_date = datetime.datetime.fromtimestamp(last_month_timestamp)
-        print(last_month_date)
-        persons = Person.query.filter(
-                Person.arrival > last_month_date
-            ).order_by(
-                Person.surname
-            ).all()
-        message = gettext(u'%(number)s newbies', number=len(persons))
+    # Calculating newcomers
+    last_month_timestamp = time.time() - 2592000
+    last_month_date = datetime.datetime.fromtimestamp(last_month_timestamp)
+    newcomers = Person.query.filter(
+            Person.arrival > last_month_date
+        ).order_by(
+            Person.surname
+        ).all()
+
+    # Calculating persons
+    persons = Person.query.order_by(Person.surname).all()
+
+    persons_to_display = []
+
+    if (person_filter in ["newcomers"]):
+        persons_to_display = newcomers
     else:
-        persons = Person.query.order_by(Person.surname).all()
-        message = gettext(u'%(number)s people', number=len(persons))
+        persons_to_display = persons
+
+    choices = []
+    choices.append(
+        {
+            "selected": person_filter in [None, "all"],
+            "value": "all",
+            "text": u'Everyone (%s people)' % str(len(persons))
+        }
+    )
+
+    choices.append(
+        {
+            "selected": person_filter in ["newcomers"],
+            "value": "newcomers",
+            "text": u'Newcomers (%s people)' % str(len(newcomers))
+        }
+    )
+
     return render_template(
         'all.html',
-        persons=persons,
+        persons=persons_to_display,
         title=title,
         list_mode=get_list_mode(request),
         person_filter=person_filter,
         list_url='',
-        message=message,
+        choices=choices,
         )
 
 
@@ -107,15 +130,15 @@ def person_comment(login=None):
     return redirect(url_for('show_person', login=login, commented=True))
 
 
-@app.route("/trivia")
-def show_trivia():
+@app.route("/infos")
+def show_infos():
     """Display various information stored in the database."""
-    trivia = db.session.query(Trivia).first()
-    if (trivia is None):
+    infos = db.session.query(Infos).first()
+    if (infos is None):
         text = gettext(u'Nothing here yet.')
     else:
-        text = trivia.text
-    return render_template('trivia.html', text=text)
+        text = infos.text
+    return render_template('infos.html', text=text)
 
 
 @app.route("/person/vcard/vcard-<login>.vcf")
@@ -151,7 +174,7 @@ def show_search(query=None):
         persons.append(hash_persons[person_key])
 
     if (len(persons) == 1):
-        return show_person(persons[0].login)
+        return redirect(url_for('show_person', login=persons[0]))
     return render_template(
         'all.html',
         is_in_search_mode=True,
@@ -319,10 +342,9 @@ def get_node_person(person, parent):
     # TODO : make render_template
     return "[{v:'" + person.login + "', f:'<div class=\"rootTreeNodeElement\"><a href=\"/person/" + person.login + "\">\
         <div class=\"rootTreeNodeElementFiller\" style=\"background: url(/static/images/photos/" + person.login + ".jpg) center / cover;\" >\
-            <div class=\"treeNodeTextContainer\"><div class=\"treeNodeText\">" + person.name + " <br /> " + person.surname.upper() + "</div></div>\
+            <div class=\"treeNodeTextContainer\"><div class=\"treeNodeText\">" + person.name + "</div></div>\
         </div>\
-    </a></div>'}, '" + parent + "', '" + person.name + " " + \
-        person.surname + "'],"
+    </a></div>'}, '" + parent + "', '" + person.name + " " + person.surname + "'],"
 
 # Game
 

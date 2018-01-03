@@ -35,7 +35,7 @@ msgstr "Trombi"
 
 #: trombi/views.py:64
 #, python-format
-msgid "%(number)s newbies"
+msgid "%(number)s newcomers"
 msgstr "%(number)s nouveaux"
 
 #: trombi/views.py:67
@@ -84,7 +84,7 @@ msgid "Trombinoscope"
 msgstr "Trombinoscope"
 
 #: trombi/templates/all.html:12 trombi/templates/all.html:13
-msgid "Show only newbies"
+msgid "Show only newcomers"
 msgstr "Voir les nouveaux"
 
 #: trombi/templates/all.html:16 trombi/templates/all.html:17
@@ -141,8 +141,8 @@ msgid "Events"
 msgstr "Evènements"
 
 #: trombi/templates/index.html:45 trombi/templates/index.html:66
-msgid "Trivia"
-msgstr "Trivia"
+msgid "Infos"
+msgstr "Infos"
 
 #: trombi/templates/index.html:46 trombi/templates/index.html:67
 msgid "Game"

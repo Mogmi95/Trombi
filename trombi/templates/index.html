@@ -13,7 +13,7 @@
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='material.indigo-amber.min.css') }}" media="screen" />
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}" media="screen" />
 
-  <script defer src="https://code.getmdl.io/1.1.3/material.min.js"></script>
+  <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
   <script src='{{ url_for('static', filename='js/jquery.min.js') }}'></script>
 
@@ -34,26 +34,30 @@
         <!-- Title -->
         <span class="mdl-layout-title"><a href="{{ config.WEBSITE_URL }}"><img class="imgLogo" src="{{ url_for('static', filename='images/logo.png') }}" /></a></span>
 
-        <!-- Add spacer, to align navigation to the right -->
-        <div class="mdl-layout-spacer"></div>
+        <!-- Displayed on Computer and Tablet -->
+        <!-- Search -->
+        <div class="mdh-expandable-search mdl-cell--hide-phone">
+          <i class="material-icons">search</i>
+          <form method="post" action="{{ url_for('search') }}">
+            <input type="text" placeholder="Search" size="1" name="search">
+          </form>
+        </div>
+        <!-- Displayed on mobile -->
+        <div class="mdl-layout-spacer mdl-cell--hide-tablet mdl-cell--hide-desktop"></div>
+        <!-- Search button -->
+        <button class="mdh-toggle-search mdl-button mdl-js-button mdl-button--icon mdl-cell--hide-tablet mdl-cell--hide-desktop">
+          <i class="material-icons">search</i>
+        </button>
+
 
         <!-- Navigation. We hide it in small screens. -->
         <nav class="mdl-navigation mdl-layout--large-screen-only">
           <a class="mdl-navigation__link" href="/all">{{ gettext('People') }}</a>
           <a class="mdl-navigation__link" href="/team">{{ gettext('Teams') }}</a>
           <a class="mdl-navigation__link" href="/calendar">{{ gettext('Events') }}</a>
-          <a class="mdl-navigation__link" href="/trivia">{{ gettext('Trivia') }}</a>
+          <a class="mdl-navigation__link" href="/infos">{{ gettext('Infos') }}</a>
           <a class="mdl-navigation__link" href="/game">{{ gettext('Game') }}</a>
         </nav>
-
-        <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable mdl-textfield--floating-label mdl-textfield--align-right">
-          <label class="mdl-button mdl-js-button mdl-button--icon" for="fixed-header-drawer-exp">
-            <i class="material-icons">search</i>
-          </label>
-          <form method="post" action="{{ url_for('search') }}">
-            <input class="mdl-textfield__input" type="text" placeholder="{{ gettext('Search') }}" name="search" id="fixed-header-drawer-exp">
-          </form>
-        </div>
 
       </div>
     </header>
@@ -63,7 +67,7 @@
         <a class="mdl-navigation__link" href="/all">{{ gettext('People') }}</a>
         <a class="mdl-navigation__link" href="/team">{{ gettext('Teams') }}</a>
         <a class="mdl-navigation__link" href="/calendar">{{ gettext('Events') }}</a>
-        <a class="mdl-navigation__link" href="/trivia">{{ gettext('Trivia') }}</a>
+        <a class="mdl-navigation__link" href="/infos">{{ gettext('Infos') }}</a>
         <a class="mdl-navigation__link" href="/game">{{ gettext('Game') }}</a>
       </nav>
     </div>

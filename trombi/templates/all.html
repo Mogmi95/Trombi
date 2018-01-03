@@ -5,21 +5,15 @@
 
 
 <div class="allPersonsHeader">
-  <span class="allPersonsHeaderMessage">{{ message }}</span>
-  <div class="viewModeContainer">
-    {% if not is_in_search_mode %}
-        {% if person_filter is none %}
-          <a href="{{ url_for('show_all') }}?filter=newbies" title="{{ gettext('Show only newbies')}}">      <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-                {{ gettext('Show only newbies')}}
-                </button></a>
-        {% else %}
-          <a href="{{ url_for('show_all') }}" title="{{ gettext('Show everyone') }}">      <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-                  {{ gettext('Show everyone') }}
-                </button></a>
-            {% endif %}
-    {% endif %}
-    <!--<a href="{{ list_url }}?list=false" title="Toggle cards mode"><img class="{% if list_mode is none %}selectedImageIndicator{% else %}notSelectedImageIndicator{% endif %}" src="{{ url_for('static', filename='images/ic_view_module.png') }}" /></a>-->
-    <!--<a href="{{ list_url }}?list=true" title="Toggle list mode"><img class="{% if list_mode is none %}notSelectedImageIndicator{% else %}selectedImageIndicator{% endif %}" src="{{ url_for('static', filename='images/ic_view_list.png') }}" /></a>-->
+    <div class="allPersonsHeaderContent">
+        <form>
+        <select class="allPersonsSelect" name='filter' action="filter" onchange='this.form.submit()'>
+            {% for choice in choices %}
+                <option value='{{ choice["value"] }}' {% if choice["selected"] %}selected{% endif %}>{{ choice["text"] }}</option>
+            {% endfor%}
+        </select>
+        <noscript><input type="submit" value="Submit"></noscript>
+        </form>
   </div>
 </div>
 
@@ -27,8 +21,9 @@
 
 <div class="mdl-grid custom-grid">
   {% for person in persons %}
-  <div class="mdl-cell mdl-cell--2-col mdl-cell--2-col-tablet mdl-cell--2-col-phone card-style" style="background: url({{ url_for('static', filename='images/photos/' + person.login + '.jpg') }}) center / cover;">
+  <div class="mdl-cell mdl-cell--2-col mdl-cell--2-col-tablet mdl-cell--2-col-phone card-style mdl-js-ripple-effect" style="background: url({{ url_for('static', filename='images/photos/' + person.login + '.jpg') }}) center / cover;">
     <a href="/person/{{ person.login }}">
+      <span class="mdl-ripple"></span>
       <div class="cell-spacer"></div>
       <div class="cell-text-container">
         <span class="cell-text">

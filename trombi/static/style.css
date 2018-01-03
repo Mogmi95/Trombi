@@ -20,27 +20,108 @@ a {
   height: 24px;
 }
 
+/* TODO: Hover and Focus state.
+ *       Fix position of mobile search button.
+ */
+.mdh-expandable-search {
+  margin: 0 48px;
+  align-items: center;
+  justify-content: center;
+}
+
+.mdh-expandable-search,
+.mdh-expandable-search form,
+.mdh-expandable-search input {
+  /* Cross browser flex-grow */
+  -webkit-box-flex: 1;
+  -webkit-flex-grow: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+}
+
+.mdh-expandable-search,
+.mdh-expandable-search form {
+  /* Cross browser inline-flex */
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -moz-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+}
+
+/* Position search icon */
+.mdh-expandable-search .material-icons {
+  position: relative;
+  right: -40px;
+  margin-left: -24px; /* Remove the blank space left behind by the icon being relatively positioned */
+}
+
+.mdh-expandable-search input {
+  outline: none;
+  border: none;
+  font-size: 16px;
+  color: #FFFFFF;
+  background-color: #ee8176;
+  padding: 0px 35px 0px 70px;
+  height: 40px;
+  line-height: 40px; /* TODO: This was recommended for cross browser compatability of input height, check if its actually needed in modern browsers */
+
+  border-radius: 5px 5px 5px 5px;
+  -moz-border-radius: 5px 5px 5px 5px;
+  -webkit-border-radius: 5px 5px 5px 5px;
+}
+
+.mdh-expandable-search input::-webkit-input-placeholder { /* WebKit browsers */
+    color:    #FFFFFF;
+}
+.mdh-expandable-search input:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+   color:    #FFFFFF;
+   opacity:  1; /* Firefox gives the placeholder a reduced opacity so we have to increase it */
+}
+.mdh-expandable-search input::-moz-placeholder { /* Mozilla Firefox 19+ */
+   color:    #FFFFFF;
+   opacity:  1; /* Firefox gives the placeholder a reduced opacity so we have to increase it */
+}
+.mdh-expandable-search input:-ms-input-placeholder { /* Internet Explorer 10+ */
+   color:    #FFFFFF;
+}
+
+
+
+
 /* All */
 
 .allPersonsHeader {
   position: relative;
-  width: 1166px;
-  height: 60px;
+  max-width: 1200px;
+  height: 48px;
   margin-left: auto;
   margin-right: auto;
-  padding: 8px;
+  margin-bottom: 16px;
 }
 
-.allPersonsHeaderMessage {
-  line-height: 60px;
-  font-family: 'Roboto';
-  font-size: 20px;
-  font-weight: 400;
-  font-style: italic;
+.allPersonsHeaderContent {
+  position: relative;
+  max-width: 1200px;
+  height: 48px;
+  margin: 8px;
+  background: #ffffff;
+  text-align: left;
+}
+
+.allPersonsSelect {
+    background: transparent;
+    border: 0px;
+    height: 48px;
+    line-height: 48px;
+    font-family: 'Roboto';
+    font-size: 16px;
+    color: #212121;
+    padding: 2px 10px;
 }
 
 .viewModeContainer {
-  height: 60px;
+  height: 48px;
   position: absolute;
   right:0px;
   top: 8px;
@@ -115,8 +196,8 @@ a {
   height: 100px;
 }
 
-/* Trivia */
-.triviaCard {
+/* Infos */
+.infosCard {
   position: relative;
   width: 1000px;
   background: #fcfcfc;
@@ -126,7 +207,7 @@ a {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 }
 
-.triviaCardContent {
+.infosCardContent {
   padding: 48px;
 }
 
@@ -134,11 +215,11 @@ a {
 
 .personCard {
   position: relative;
-  width: 500px;
+  width: 33%;
+  min-width: 450px;
   background: #fcfcfc;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 32px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 }
 
@@ -148,90 +229,30 @@ a {
     text-align: center;
 }
 
-.personCardManagerContainer {
-  position: absolute;
-  width: 132px;
-  height: 212px;
-  top: 0px;
-  left: -200px;
-  background: #fcfcfc;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-  transition: all 0.2s ease-in-out;
-}
-
-.personCardManagerContainer:hover {
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.21), 0 6px 6px rgba(0, 0, 0, 0.27);
-}
-
-.personCardManagerPicture {
-  position: absolute;
-  background: #fcfcfc;
-  width: 132px;
-  height: 132px;
-  top: 32px;
-}
-
-.personCardManagerTitle {
-  position: absolute;
-  background: #e36356;
-  width: 132px;
-  height: 32px;
-  color: #fcfcfc;
-  font-family: 'Roboto';
-  padding-top: 8px;
-  text-align: center;
-}
-
-.personCardManagerName {
-  position: absolute;
-  background: #fcfcfc;
-  width: 132px;
-  height: 48px;
-  color: black;
-  font-family: 'Roboto';
-  bottom: 0px;
-  padding-top: 8px;
-  text-align: center;
-}
-
 .personCardHeader {
-  height: 200px;
-  /*background: url('/static/images/person_header.png') center / cover;*/
-  margin-bottom: 40px;
-  background: #e36356;
-}
-
-.personCardHeaderTeamIndicator {
-  position: absolute;
-  color: #368cbf;
-  width: 250px;
-  height: 44px;
-  text-align: center;
-  top: 212px;
-  left: 233px;
-  padding: 4px;
-  font-family: 'Roboto';
-  font-size: 15px;
-  font-weight: 500;
+    background: linear-gradient(
+          to bottom,
+          #e74c3c 0%,
+          #e74c3c 75%,
+          #fcfcfc 75%,
+          #fcfcfc 100%
+    );
+    text-align: center;
+    padding-top: 16px
 }
 
 .personCardHeaderName {
-  position: absolute;
-  color: #fcfcfc;
-  width: 234px;
-  top: 32px;
-  left: 250px;
+  display: block;
+  color: #212121;
   font-family: 'Roboto';
-  font-size: 24px;
-  font-weight: 500;
+  font-size: 26px;
+  font-weight: 400;
+  margin-top: 24px;
 }
 
 .personCardHeaderDescription {
-  position: absolute;
+  display: block;
   color: #fcfcfc;
-  width: 234px;
-  top: 120px;
-  left: 250px;
   font-family: 'Roboto';
   font-size: 18px;
   font-weight: 400;
@@ -239,26 +260,35 @@ a {
 }
 
 .personCardHeaderAvatar {
-  position: absolute;
-  height: 200px;
+  display: block;
   width: 200px;
-  height: 240px;
-  top: 16px;
-  left: 16px;
-  border: solid 8px #fcfcfc;
-  /*box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);*/
+  height: 200px;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 100px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, .8);
+  -webkit-box-shadow: 0 0 8px rgba(0, 0, 0, .8);
+  -moz-box-shadow: 0 0 8px rgba(0, 0, 0, .8);
 }
 
-.personCardDownloadContainer {
-  text-align: right;
+.horizontalSeparationLine {
+    width: 100%;
+    height: 1px;
+    background-color: rgba(0,0,0,.1);
+}
+
+.rippleContainer {
+    position: relative;
+    cursor:pointer;
+}
+
+.mdl-list {
+    margin: 0;
+    padding: 0;
 }
 
 .demo-card-wide.mdl-card {
   position: relative;
-  margin-top: 32px;
-  margin-left: auto;
-  margin-right: auto;
-  width: 500px;
 }
 .demo-card-wide > .mdl-card__title {
   color: #fff;
@@ -353,8 +383,19 @@ a {
 
 /* Tree */
 
+.titleTeamNameContainer {
+    width: 20%;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    margin-bottom: 8px;
+}
+
 .titleTeamName {
-  float: left;
+    padding: 16px;
+    color: #ffffff;
+    background: #e36356;
+    font-weight: bold;
 }
 
 .tree {
@@ -364,14 +405,14 @@ a {
 
 .rootTreeNodeElement {
   position: relative;
-  width: 128px;
-  height: 164px;
+  width: 108px;
+  height: 144px;
 }
 
 .rootTreeNodeElementFiller {
   position: absolute;
-  width: 132px;
-  height: 168px;
+  width: 112px;
+  height: 148px;
   left: -2px;
   top: -2px;
   color: #fcfcfc;
@@ -385,20 +426,27 @@ a {
   display: table;
   position: absolute;
   background: #e74c3c;
-  width: 133px;
-  height: 169px;
+  width: 113px;
+  height: 149px;
   left: -1px;
   top: -1px;
 }
 
 .rootTreeNodeLinkCenterChild {
-  display: table-cell;
+  /*display: table-cell;*/
   vertical-align: middle;
+  overflow-wrap: break-word;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  width: 112px;
+  height: 148px;
+  font-size: 13px;
 }
 
 .verticalLine {
   position: absolute;
-  height: 169px;
+  height: 149px;
   border-left: 1px solid #3388dd;
   top: -3px;
   left: 50%;
@@ -410,8 +458,8 @@ a {
 
 .treeNodeTextContainer {
   position: relative;
-  width: 132px;
-  height: 42px;
+  width: 112px;
+  height: 22px;
   top: 124px;
   left: -2px;
   background-color: rgba(0, 0, 0, 0.5);
