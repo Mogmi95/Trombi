@@ -107,7 +107,7 @@
           {% endif %}
           <!-- ARRIVAL -->
           {% if person.arrival != '' %}
-          <li onclick="copyToClipboard('{{ person.arrival }}')" class="mdl-list__item mdl-list__item--two-line mdl-js-ripple-effect">
+          <li onclick="copyToClipboard('{{ person.get_pretty_arrival_date() }}')" class="mdl-list__item mdl-list__item--two-line mdl-js-ripple-effect">
             <span class="rippleContainer mdl-list__item-primary-content">
                 <span class="mdl-ripple"></span>
               <i class="material-icons mdl-list__item-icon">person_add</i>

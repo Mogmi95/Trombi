@@ -98,8 +98,8 @@ class Person(db.Model):
     login = db.Column(db.String(80), unique=False)
     name = db.Column(db.String(80), unique=False)
     surname = db.Column(db.String(80), unique=False)
-    birthday = db.Column(db.Date, unique=False)
-    arrival = db.Column(db.Date, unique=False)
+    birthday = db.Column(db.DateTime, unique=False)
+    arrival = db.Column(db.DateTime, unique=False)
     email = db.Column(db.String(120), unique=False)
     mobile = db.Column(db.String(120), unique=False)
     fixe = db.Column(db.String(120), unique=False)
@@ -121,14 +121,22 @@ class Person(db.Model):
         """Simple log method."""
         return str(self.login)
 
-    def get_arrival_date(self):
-        """Get the date when the person arrived."""
-        return datetime.datetime.fromtimestamp(float(self.arrival))
-
     def get_pretty_arrival_date(self):
         """Get a printable version of the arrival date."""
-        custom_date = self.arrival.strftime(u'%B, %d %Y')
-        return gettext(u'%(date)s', date=custom_date)
+        delta = datetime.datetime.now() - self.arrival
+        custom_date = self.arrival.strftime(u'%Y/%m/%d')
+
+        years = delta.days / 365
+        months = delta.days % 365 / 30
+        days = delta.days % 365 % 30
+
+        return gettext(
+            u'%(date)s (%(y)s years, %(m)s months, %(d)s days)',
+            date=custom_date,
+            y=years,
+            m=months,
+            d=days,
+        )
 
     def get_pretty_birthday_date(self):
         """Get a printable version of the birthday date."""
