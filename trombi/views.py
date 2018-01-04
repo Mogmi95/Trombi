@@ -297,8 +297,9 @@ def build_tree_teams(team):
 
     for subteam in team.sub_teams:
         result += get_node_team(subteam, team.name)
-        for subsubteam in subteam.sub_teams:
-            result += get_node_team(subsubteam, subteam.name)
+        # Uncomment for more levels, only 2 now
+        # for subsubteam in subteam.sub_teams:
+        #    result += get_node_team(subsubteam, subteam.name)
 
     return result
 
