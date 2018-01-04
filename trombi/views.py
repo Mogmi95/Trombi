@@ -206,7 +206,7 @@ def show_calendar():
     # Persons events
     birthday_events = '['
     arrival_events = '['
-    for year in [2016, 2017]:
+    for year in [2018, 2019]:
         for person in persons:
             if (person.birthday != ''):
                 birth_date = person.birthday
