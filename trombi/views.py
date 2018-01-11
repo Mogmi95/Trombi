@@ -206,7 +206,7 @@ def show_calendar():
     # Persons events
     birthday_events = '['
     arrival_events = '['
-    for year in [2016, 2017]:
+    for year in [2018, 2019]:
         for person in persons:
             if (person.birthday != ''):
                 birth_date = person.birthday
@@ -297,8 +297,9 @@ def build_tree_teams(team):
 
     for subteam in team.sub_teams:
         result += get_node_team(subteam, team.name)
-        for subsubteam in subteam.sub_teams:
-            result += get_node_team(subsubteam, subteam.name)
+        # Uncomment for more levels, only 2 now
+        # for subsubteam in subteam.sub_teams:
+        #    result += get_node_team(subsubteam, subteam.name)
 
     return result
 
