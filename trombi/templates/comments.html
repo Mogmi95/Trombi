@@ -11,7 +11,7 @@
     </tr>
 {% for comment in comments %}
     <tr>
-        <td>{{ comment.person }}</td>
+        <td><a href="/admin/person/edit/?url=/admin/person&id={{ comment.person.id }}">{{ comment.person }}</a></td>
         <td>{{ comment.message|replace("\n", "<br />")|safe }}</td>
         <td><a href="delete/{{ comment.id }}"><i class="fa fa-trash icon-trash"></i></a></td>
     </tr>

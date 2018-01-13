@@ -82,6 +82,10 @@ class Team(db.Model):
 class PersonComment(db.Model):
     """Comment on a person information."""
 
+    def __repr__(self):
+        """Simple log method."""
+        return str(self.message)
+
     __tablename__ = 'personcomment'
     id = db.Column(db.Integer, primary_key=True)
     message = db.Column(db.String(512), unique=False)
