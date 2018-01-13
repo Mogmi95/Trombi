@@ -117,6 +117,17 @@ class MyModelView(sqla.ModelView):
     can_view_details = True
     create_template = 'edit.html'
     edit_template = 'edit.html'
+    column_searchable_list = ['id']
+
+class PersonView(sqla.ModelView):
+    """Create customized model view class."""
+
+    def is_accessible(self):
+        """Check if the current user can access the view."""
+        return login.current_user.is_authenticated
+    # Change edit in the admin
+    can_view_details = True
+    column_searchable_list = ['login', 'name', 'surname']
 
 
 # Database backup
@@ -201,7 +212,7 @@ def init():
     # Do we want the admin to editate this ?
     # admin.add_view(MyModelView(TrombiAdmin, db.session))
 
-    admin.add_view(MyModelView(Person, db.session))
+    admin.add_view(PersonView(Person, db.session))
     admin.add_view(MyModelView(Team, db.session))
     admin.add_view(MyModelView(Infos, db.session))
     admin.add_view(DatabaseSaveView(name='Database', endpoint='database'))
