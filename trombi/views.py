@@ -54,41 +54,22 @@ def show_all():
     person_filter = request.args.get('filter')
     title = gettext(u'Trombi')
 
-    # Calculating newcomers
-    last_month_timestamp = time.time() - 2592000
-    last_month_date = datetime.datetime.fromtimestamp(last_month_timestamp)
-    newcomers = Person.query.filter(
-            Person.arrival > last_month_date
-        ).order_by(
-            Person.surname
-        ).all()
-
-    # Calculating persons
-    persons = Person.query.order_by(Person.surname).all()
-
     persons_to_display = []
 
     if (person_filter in ["newcomers"]):
-        persons_to_display = newcomers
+        # Calculating newcomers
+        last_month_timestamp = time.time() - 2592000
+        last_month_date = datetime.datetime.fromtimestamp(last_month_timestamp)
+        persons_to_display = Person.query.filter(
+                Person.arrival > last_month_date
+            ).order_by(
+                Person.surname
+            ).all()
     else:
-        persons_to_display = persons
+        persons_to_display = Person.query.order_by(Person.surname).all()
 
-    choices = []
-    choices.append(
-        {
-            "selected": person_filter in [None, "all"],
-            "value": "all",
-            "text": u'Everyone (%s people)' % str(len(persons))
-        }
-    )
-
-    choices.append(
-        {
-            "selected": person_filter in ["newcomers"],
-            "value": "newcomers",
-            "text": u'Newcomers (%s people)' % str(len(newcomers))
-        }
-    )
+    print('pizza')
+    print(person_filter)
 
     return render_template(
         'all.html',
@@ -97,7 +78,6 @@ def show_all():
         list_mode=get_list_mode(request),
         person_filter=person_filter,
         list_url='',
-        choices=choices,
         )
 
 

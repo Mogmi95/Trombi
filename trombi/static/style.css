@@ -106,7 +106,11 @@ a {
   height: 48px;
   margin: 8px;
   background: #ffffff;
-  text-align: left;
+  text-align: right;
+}
+
+.allPersonsHeaderContent button {
+  margin: 4px;
 }
 
 .allPersonsSelect {
