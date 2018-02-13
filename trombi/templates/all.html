@@ -5,7 +5,10 @@
 
 
 <div class="allPersonsHeader">
-    <div class="allPersonsHeaderContent">
+    <div class="allPersonsHeaderContentLeft">
+      {{ persons | length }} persons
+    </div>
+    <div class="allPersonsHeaderContentRight">
         {% if person_filter in ['newcomers'] %}
           <a href="{{ url_for('show_all') }}" title="{{ gettext('Show everyone') }}">
             <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">

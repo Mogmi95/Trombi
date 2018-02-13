@@ -98,18 +98,27 @@ a {
   margin-left: auto;
   margin-right: auto;
   margin-bottom: 16px;
-}
-
-.allPersonsHeaderContent {
-  position: relative;
-  max-width: 1200px;
-  height: 48px;
-  margin: 8px;
   background: #ffffff;
-  text-align: right;
 }
 
-.allPersonsHeaderContent button {
+.allPersonsHeaderContentLeft {
+  width: 40%;
+  height: 48px;
+  float: left;
+  line-height: 48px;
+  padding-left: 16px;
+  font-family: 'Roboto';
+  font-weight: 400;
+}
+
+.allPersonsHeaderContentRight {
+  width: 40%;
+  height: 48px;
+  text-align: right;
+  float: right;
+}
+
+.allPersonsHeaderContentRight button {
   margin: 4px;
 }
 
