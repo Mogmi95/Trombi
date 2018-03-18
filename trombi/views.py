@@ -22,7 +22,6 @@ from models import Person, PersonComment, Team, Infos
 def get_locale():
     """Get the locale to use for lang."""
     locale = request.accept_languages.best_match(LANGUAGES.keys())
-    print('Chosen locale : ' + locale)
     # return locale
     # Temporary
     return 'en'
@@ -56,6 +55,9 @@ def show_all():
 
     persons_to_display = []
 
+    # We get the text to display in the top header
+    header_text = Infos.query.first().text
+
     if (person_filter in ["newcomers"]):
         # Calculating newcomers
         last_month_timestamp = time.time() - 2592000
@@ -68,9 +70,6 @@ def show_all():
     else:
         persons_to_display = Person.query.order_by(Person.surname).all()
 
-    print('pizza')
-    print(person_filter)
-
     return render_template(
         'all.html',
         persons=persons_to_display,
@@ -78,6 +77,7 @@ def show_all():
         list_mode=get_list_mode(request),
         person_filter=person_filter,
         list_url='',
+        header_text=header_text
         )
 
 
@@ -115,7 +115,8 @@ def person_comment(login=None):
 @app.route("/infos")
 def show_infos():
     """Display various information stored in the database."""
-    infos = db.session.query(Infos).first()
+    # TODO: Should not be hardcoded
+    infos = db.session.query(Infos).all()[1]
     if (infos is None):
         text = gettext(u'Nothing here yet.')
     else:
@@ -164,7 +165,8 @@ def show_search(query=None):
         message=message.format(len(persons)),
         title=title,
         list_mode=get_list_mode(request),
-        list_url=url_for('show_search', query=query)
+        list_url=url_for('show_search', query=query),
+        header_text=None
         )
 
 

@@ -3,79 +3,89 @@
 
 {% block body %}
 
+<div id="mainAllPersonsContainer">
 
-<div class="allPersonsHeader">
-    <div class="allPersonsHeaderContentLeft">
-      {{ persons | length }} persons
-    </div>
-    <div class="allPersonsHeaderContentRight">
-        {% if person_filter in ['newcomers'] %}
-          <a href="{{ url_for('show_all') }}" title="{{ gettext('Show everyone') }}">
+  {% if header_text is not none %}
+    <div class="allPersonsCardHeader">
+        <div class="allPersonsCardHeaderContent">
+          {{ header_text | safe}}
+      </div>
+  </div>
+  {% endif %}
+
+  <div class="allPersonsHeader">
+      <div class="allPersonsHeaderContentLeft">
+        {{ persons | length }} persons
+      </div>
+      <div class="allPersonsHeaderContentRight">
+          {% if person_filter in ['newcomers'] %}
+            <a href="{{ url_for('show_all') }}" title="{{ gettext('Show everyone') }}">
+              <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                {{ gettext('Show everyone') }}
+              </button>
+            </a>
+          {% else %}
+          <a href="{{ url_for('show_all', filter='newcomers') }}" title="{{ gettext('Show only newcomers')}}">
             <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-              {{ gettext('Show everyone') }}
+              {{ gettext('Show only newcomers')}}
             </button>
           </a>
-        {% else %}
-        <a href="{{ url_for('show_all', filter='newcomers') }}" title="{{ gettext('Show only newcomers')}}">
-          <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-            {{ gettext('Show only newcomers')}}
-          </button>
+      {% endif %}
+    </div>
+  </div>
+
+  {% if list_mode is none %}
+
+  <div class="mdl-grid custom-grid">
+    {% if persons|length == 0 %}
+      Nobody to display
+    {% else %}
+      {% for person in persons %}
+      <div class="mdl-cell mdl-cell--2-col mdl-cell--2-col-tablet mdl-cell--2-col-phone card-style mdl-js-ripple-effect" style="background: url({{ url_for('static', filename='images/photos/' + person.login + '.jpg') }}) center / cover;">
+        <a href="/person/{{ person.login }}">
+          <span class="mdl-ripple"></span>
+          <div class="cell-spacer"></div>
+          <div class="cell-text-container">
+            <span class="cell-text">
+              {{ person.name }} {{ person.surname.upper() }}
+            </span>
+          </div>
         </a>
+      </div>
+      {% endfor %}
     {% endif %}
   </div>
-</div>
 
-{% if list_mode is none %}
-
-<div class="mdl-grid custom-grid">
-  {% if persons|length == 0 %}
-    Nobody to display
   {% else %}
-    {% for person in persons %}
-    <div class="mdl-cell mdl-cell--2-col mdl-cell--2-col-tablet mdl-cell--2-col-phone card-style mdl-js-ripple-effect" style="background: url({{ url_for('static', filename='images/photos/' + person.login + '.jpg') }}) center / cover;">
-      <a href="/person/{{ person.login }}">
-        <span class="mdl-ripple"></span>
-        <div class="cell-spacer"></div>
-        <div class="cell-text-container">
-          <span class="cell-text">
-            {{ person.name }} {{ person.surname.upper() }}
-          </span>
-        </div>
-      </a>
-    </div>
-    {% endfor %}
+
+  <div class="list_data_table_container">
+    <table class="list_data_table mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+      <thead>
+        <tr>
+          <th class="mdl-data-table__cell--non-numeric">{{ gettext('Picture') }}</th>
+          <th class="mdl-data-table__cell--non-numeric">{{ gettext('Name') }}</th>
+          <th class="mdl-data-table__cell--non-numeric">{{ gettext('Surname') }}</th>
+          <th class="mdl-data-table__cell--non-numeric">{{ gettext('Team') }}</th>
+          <th class="mdl-data-table__cell--non-numeric">{{ gettext('Title') }}</th>
+          <th class="mdl-data-table__cell--non-numeric">{{ gettext('VCard') }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for person in persons %}
+        <tr>
+          <td class="mdl-data-table__cell--non-numeric"><a href="/person/{{ person.login }}"><div class="list_list_img" style="background: url({{ url_for('static', filename='images/photos/' + person.login + '.jpg') }}) center / cover;"></div></a></td>
+          <td class="mdl-data-table__cell--non-numeric">{{ person.name }}</td>
+          <td class="mdl-data-table__cell--non-numeric">{{ person.surname }}</td>
+          <td class="mdl-data-table__cell--non-numeric">{{ person.team.name }}</td>
+          <td class="mdl-data-table__cell--non-numeric">{{ person.job }}</td>
+          <td class="mdl-data-table__cell--non-numeric"><a href="/person/vcard/vcard-{{ person.login }}.vcf" download><button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">{{ gettext('VCard') }}</button></a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
   {% endif %}
+
 </div>
-
-{% else %}
-
-<div class="list_data_table_container">
-  <table class="list_data_table mdl-data-table mdl-js-data-table mdl-shadow--2dp">
-    <thead>
-      <tr>
-        <th class="mdl-data-table__cell--non-numeric">{{ gettext('Picture') }}</th>
-        <th class="mdl-data-table__cell--non-numeric">{{ gettext('Name') }}</th>
-        <th class="mdl-data-table__cell--non-numeric">{{ gettext('Surname') }}</th>
-        <th class="mdl-data-table__cell--non-numeric">{{ gettext('Team') }}</th>
-        <th class="mdl-data-table__cell--non-numeric">{{ gettext('Title') }}</th>
-        <th class="mdl-data-table__cell--non-numeric">{{ gettext('VCard') }}</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for person in persons %}
-      <tr>
-        <td class="mdl-data-table__cell--non-numeric"><a href="/person/{{ person.login }}"><div class="list_list_img" style="background: url({{ url_for('static', filename='images/photos/' + person.login + '.jpg') }}) center / cover;"></div></a></td>
-        <td class="mdl-data-table__cell--non-numeric">{{ person.name }}</td>
-        <td class="mdl-data-table__cell--non-numeric">{{ person.surname }}</td>
-        <td class="mdl-data-table__cell--non-numeric">{{ person.team.name }}</td>
-        <td class="mdl-data-table__cell--non-numeric">{{ person.job }}</td>
-        <td class="mdl-data-table__cell--non-numeric"><a href="/person/vcard/vcard-{{ person.login }}.vcf" download><button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">{{ gettext('VCard') }}</button></a></td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-</div>
-
-{% endif %}
-
 {% endblock %}
