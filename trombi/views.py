@@ -243,8 +243,8 @@ def show_calendar():
 @app.route("/team")
 def show_all_teams():
     """Show a graph with all teams."""
-    head_team = Team.query.filter_by(high_team=None).first()
-    return show_team(head_team.name)
+    head = Person.query.filter_by(manager=None).first()
+    return show_team(head.team.name)
 
 
 @app.route("/team/<team>")

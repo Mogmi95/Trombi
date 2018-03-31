@@ -15,52 +15,13 @@ from trombi.models import TrombiAdmin, Person, Team
 from trombi import views
 
 
-def load_teams():
-    """We create the teams from the data files."""
-    teams = []
-    teams_order = {}
-    existing_teams = {}
-
-    with io.open(config.DATABASE_TEAMS_FILE, 'r', encoding='utf8') as f:
-        for line in f:
-            if (len(line) > 1 and line[0] != '#'):
-                split = line[:-1].split(';')
-                team = split[0]
-                subteam = split[1]
-
-                if (team not in teams):
-                    teams.append(team)
-                if (subteam not in teams):
-                    teams.append(subteam)
-
-                if team in teams_order:
-                    teams_order[team].append(subteam)
-                else:
-                    teams_order[team] = [subteam]
-
-    for team_name in teams:
-        neo_team = Team(team_name)
-        existing_teams[team_name] = neo_team
-        db.session.add(neo_team)
-
-    for team_name in teams_order:
-        current_team = existing_teams[team_name]
-        for subteam in teams_order[team_name]:
-            existing_teams[subteam].high_team = current_team
-
-    db.session.commit()
-
-
-def load_persons():
+def load_csv():
     """We create the persons from the data files."""
     persons = []
     managers = {}
 
     # TEAMS
     existing_teams = {}
-    teams = Team.query.all()
-    for team in teams:
-        existing_teams[team.name] = team
 
     with io.open(config.DATABASE_PERSONS_FILE, 'r', encoding='utf8') as f:
         for line in f:
@@ -71,9 +32,11 @@ def load_persons():
                 neo.login = split[1].strip().lower()
                 neo.surname = split[2]
                 neo.name = split[3]
+                # TODO CHECK NULL
                 neo.birthday = datetime.datetime.fromtimestamp(
                     float(format_date(split[4]))
                 )
+                # TODO CHECK NULL
                 neo.arrival = datetime.datetime.fromtimestamp(
                     float(format_date(split[5]))
                 )
@@ -83,24 +46,40 @@ def load_persons():
                 neo.fixe = split[9]
                 neo.mobile = split[10]
 
+                # TEAM
                 team = split[0]
+                if not (team in existing_teams):
+                    print('Creating team ' + team + ' for ' + neo.login)
+                    neo_team = Team(team)
+                    existing_teams[team] = neo_team
+                    db.session.add(neo_team)
+                neo.team = existing_teams[team]
+
+                # MANAGER
                 manager = split[11]
                 if manager in managers:
                     managers[manager].append(neo)
                 else:
                     managers[manager] = [neo]
 
-                if (team in existing_teams):
-                    neo.team = existing_teams[team]
-                else:
-                    print('Error: Missing team ' + team + ' for ' + neo.login)
                 persons.append(neo)
+
+    # We have to commit here first to create Team links
+    db.session.commit()
 
     for person in persons:
         # We link the managers
         if person.login in managers:
             person.subordinates = managers[person.login]
+            # We create a team hierarchy
+            for subperson in person.subordinates:
+                print(person.team_id)
+                print(subperson.team_id)
+                print('------')
+                if (subperson.team_id != person.team_id):
+                    subperson.team.high_team = person.team
         db.session.add(person)
+    
     db.session.commit()
 
 
@@ -133,9 +112,6 @@ def are_config_files_present():
     if (not path.isfile(config.DATABASE_PERSONS_FILE)):
         print('Error: Missing : ' + config.DATABASE_PERSONS_FILE)
         return False
-    if (not path.isfile(config.DATABASE_TEAMS_FILE)):
-        print('Error: Missing : ' + config.DATABASE_TEAMS_FILE)
-        return False
     return True
 
 
@@ -148,8 +124,7 @@ if __name__ == "__main__":
     if (are_config_files_present()):
         persons = Person.query.all()
         if (len(persons) == 0):
-            load_teams()
-            load_persons()
+            load_csv()
 
             # We create an administrator
             superadmin = TrombiAdmin()
