@@ -68,23 +68,23 @@ def load_persons():
                 neo = Person()
 
                 split = line[:-1].split(';')
-                neo.login = split[2].strip().lower()
-                neo.surname = split[3]
-                neo.name = split[4]
+                neo.login = split[1].strip().lower()
+                neo.surname = split[2]
+                neo.name = split[3]
                 neo.birthday = datetime.datetime.fromtimestamp(
-                    float(format_date(split[5]))
+                    float(format_date(split[4]))
                 )
                 neo.arrival = datetime.datetime.fromtimestamp(
-                    float(format_date(split[6]))
+                    float(format_date(split[5]))
                 )
-                neo.job = split[7]
-                neo.email = split[8]
-                neo.skype = split[9]
-                neo.fixe = split[10]
-                neo.mobile = split[11]
+                neo.job = split[6]
+                neo.email = split[7]
+                neo.skype = split[8]
+                neo.fixe = split[9]
+                neo.mobile = split[10]
 
-                team = split[1]
-                manager = split[12]
+                team = split[0]
+                manager = split[11]
                 if manager in managers:
                     managers[manager].append(neo)
                 else:
