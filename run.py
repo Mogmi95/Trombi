@@ -28,7 +28,7 @@ def load_csv():
             if (len(line) > 1 and line[0] != '#'):
                 neo = Person()
 
-                split = line[:-1].split(';')
+                split = line[:-1].split(',')
                 neo.login = split[1].strip().lower()
                 neo.surname = split[2]
                 neo.name = split[3]
@@ -140,6 +140,6 @@ if __name__ == "__main__":
             superadmin.password = generate_password_hash(config.ADMIN_PASSWORD)
             db.session.add(superadmin)
             db.session.commit()
-        app.run(port=5000)
+        app.run(port=config.PORT)
     else:
         print("Terminated.")
