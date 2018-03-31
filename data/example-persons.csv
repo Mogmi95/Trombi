@@ -1,5 +1,11 @@
 # TEAM;LOGIN;NOM;PRENOM;NAISSANCE;ARRIVEE;FONCTION;MAIL;SKYPE;FDIXE;PORTABLE;MANAGER;ROOM
-HEAD;person1;Doe;John;17/7;3/20/2014;King;king@demo.com;king.skype;012324567;062324567;;Room1
-TEAM_1;person2;Doe2;John2;17/7;3/20/2014;King;person2@demo.com;person2.skype;012324567;062324567;person1;Room2
-TEAM_2;person3;Doe3;John3;17/7;3/20/2014;King;person3@demo.com;person3.skype;012324567;062324567;person1;Room2
-TEAM_3;person4;Doe4;John4;17/7;3/20/2014;King;person4@demo.com;person4.skype;012324567;062324567;person1;Room3
+SGC;ghammond;Hammond;George;17/7;3/20/2014;General;ghammond@sgc.com;hammond_du_texas.skype;012324567;062324567;;Room1
+SG1;joneil;O'Neil;Jack;17/7;3/20/2014;Colonel;oneil@sg1.com;jackoneil.skype;012324567;062324567;ghammond;Room2
+SG1;scarter;Carter;Samantha;17/7;3/20/2014;Major;sam@sg1.com;sam.skype;012324567;062324567;joneil;Room2
+SG1;tealc;;Teal'c;17/7;3/20/2014;Jaffa;tealc@sg1.com;tealc.skype;012324567;062324567;joneil;Room2
+SG1;djackson;Jackson;Daniel;17/7;3/20/2014;Scientist/Spirit;dany@sg1.com;dany.skype;012324567;062324567;joneil;Room2
+SG1;jquinn;Quinn;Jonas;17/7;3/20/2014;Nemec;jonas@sg1.com;sam.skype;012324567;062324567;joneil;Room2
+SG2;ckawalsky;Kawalsky;Charles;17/7;3/20/2014;Major;kawa@sg2.com;kawa.skype;012324567;062324567;ghammond;Room3
+SG2;cwarren;Warren;Carl;17/7;3/20/2014;Major;carl@sg2.com;carl.skype;012324567;062324567;ckawalsky;Room3
+SG2;casey;;Casey;17/7;3/20/2014;µSoldier;casey@sg2.com;casey.skype;012324567;062324567;ckawalsky;Room3
+Medic;jfraisier;Fraisier;Janet;17/7;3/20/2014;Medic;heal@sgc.com;jfraisier.skype;012324567;062324567;ghammond;Infirmary

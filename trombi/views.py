@@ -327,9 +327,9 @@ def get_node_person(person, parent):
     # TODO : make render_template
     return "[{v:'" + person.login + "', f:'<div class=\"rootTreeNodeElement\"><a href=\"/person/" + person.login + "\">\
         <div class=\"rootTreeNodeElementFiller\" style=\"background: url(/static/images/photos/" + person.login + ".jpg) center / cover;\" >\
-            <div class=\"treeNodeTextContainer\"><div class=\"treeNodeText\">" + person.name + "</div></div>\
+            <div class=\"treeNodeTextContainer\"><div class=\"treeNodeText\">" + person.name.replace('\'','\\\'') + "</div></div>\
         </div>\
-    </a></div>'}, '" + parent + "', '" + person.name + " " + person.surname + "'],"
+    </a></div>'}, '" + parent + "', '" + person.name.replace('\'','\\\'') + " " + person.surname.replace('\'','\\\'') + "'],"
 
 # Game
 
