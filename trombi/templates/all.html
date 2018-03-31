@@ -41,7 +41,7 @@
       Nobody to display
     {% else %}
       {% for person in persons %}
-      <div class="mdl-cell mdl-cell--2-col mdl-cell--2-col-tablet mdl-cell--2-col-phone card-style mdl-js-ripple-effect" style="background: url({{ url_for('static', filename='images/photos/' + person.login + '.jpg') }}) center / cover;">
+      <div class="mdl-cell mdl-cell--2-col mdl-cell--2-col-tablet mdl-cell--2-col-phone card-style mdl-js-ripple-effect" style="background: url({{ url_for('person_image', login=person.login) }}) center / cover;">
         <a href="/person/{{ person.login }}">
           <span class="mdl-ripple"></span>
           <div class="cell-spacer"></div>
@@ -73,7 +73,7 @@
       <tbody>
         {% for person in persons %}
         <tr>
-          <td class="mdl-data-table__cell--non-numeric"><a href="/person/{{ person.login }}"><div class="list_list_img" style="background: url({{ url_for('static', filename='images/photos/' + person.login + '.jpg') }}) center / cover;"></div></a></td>
+          <td class="mdl-data-table__cell--non-numeric"><a href="/person/{{ person.login }}"><div class="list_list_img" style="background: url({{ url_for('person_image', login=person.login) }}) center / cover;"></div></a></td>
           <td class="mdl-data-table__cell--non-numeric">{{ person.name }}</td>
           <td class="mdl-data-table__cell--non-numeric">{{ person.surname }}</td>
           <td class="mdl-data-table__cell--non-numeric">{{ person.team.name }}</td>

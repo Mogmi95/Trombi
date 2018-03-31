@@ -16,7 +16,7 @@
     <div class="mdl-grid custom-grid">
       {% for unknown in persons %}
       <div class="mdl-cell mdl-cell--3-col mdl-cell--3-col-tablet mdl-cell--3-col-phone card-style">
-          <label class="gameLabelItem" for="{{ unknown.id }}"><div class="gamePersonImage" style="background: url({{ url_for('static', filename='images/photos/' + unknown.login + '.jpg') }}) center / cover;"></div></label>
+          <label class="gameLabelItem" for="{{ unknown.id }}"><div class="gamePersonImage" style="background: url({{url_for('person_image', login=unknown.login) }}) center / cover;"></div></label>
       </div>
       {% endfor %}
     </div>

@@ -1,7 +1,7 @@
 *.pyc
 config.py
-trombi/static/images/photos
 trombi/static/images/logo.png
+photos
 data/persons.csv
 data/rooms.csv
 data/teams.csv
