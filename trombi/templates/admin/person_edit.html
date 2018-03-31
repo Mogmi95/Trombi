@@ -1,0 +1,10 @@
+{% extends 'admin/model/edit.html' %}
+
+{% block edit_form %}
+
+    <div style="width: 200px; height:200px; background: url({{ url_for('person_image', login=model.login) }}) center / cover;"></div>
+
+    <br />
+    {{ lib.render_form(form, return_url, extra(), form_opts) }}
+
+{% endblock %}

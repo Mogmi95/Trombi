@@ -12,13 +12,14 @@ from wtforms.widgets import TextArea
 from wtforms.fields import TextAreaField
 from flask_admin.contrib import sqla
 from flask_admin import helpers, expose, BaseView
+from flask_admin.form.upload import FileUploadField
 import flask_admin as flask_admin
 import flask_login as login
 from werkzeug.security import check_password_hash
 
 from models import TrombiAdmin, Person, PersonComment, Team, Infos
 from app import db, app
-from config import DATABASE_SAVES_DIRECTORY, DATABASE_PATH
+from config import DATABASE_SAVES_DIRECTORY, DATABASE_PATH, PHOTOS_FOLDER
 
 
 class LoginForm(form.Form):
@@ -123,13 +124,25 @@ class MyModelView(sqla.ModelView):
 
 class PersonView(sqla.ModelView):
     """Create customized model view class."""
+    edit_template = 'admin/person_edit.html'
+    # Change edit in the admin
+    can_view_details = True
+    column_searchable_list = ['login', 'name', 'surname']
+    form_columns = ('photo', 'login', 'name', 'surname', 'team', 'manager','birthday', 'arrival', 'email', 'mobile', 'fixe', 'job', 'skype')
 
     def is_accessible(self):
         """Check if the current user can access the view."""
         return login.current_user.is_authenticated
-    # Change edit in the admin
-    can_view_details = True
-    column_searchable_list = ['login', 'name', 'surname']
+
+    def image_name(obj, file_data):
+        return obj.login + ".jpg"
+
+    form_extra_fields = {
+        'photo': FileUploadField('Photo',
+                                base_path=PHOTOS_FOLDER,
+                                namegen=image_name,)
+    }
+
 
 
 # Database backup
@@ -209,7 +222,6 @@ class CommentsView(BaseView):
     def get_view(self):
         """Display the available comments."""
         comments = PersonComment.query.all()
-        print('lolzcomments : ' + str(comments))
         return self.render(
             'comments.html',
             comments=comments
