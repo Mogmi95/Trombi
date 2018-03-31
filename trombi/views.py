@@ -344,7 +344,7 @@ def show_game():
     person = all[0]
     persons = []
 
-    for i in range(8):
+    for i in range(min(8, len(all))):
         persons.append(all[i])
 
     random.shuffle(persons)
