@@ -2,6 +2,7 @@
 import datetime
 from sqlalchemy import Column, Integer, ForeignKey
 from sqlalchemy.orm import relationship
+from sqlalchemy.sql import func
 from flask.ext.babel import gettext
 
 from app import db
@@ -102,8 +103,8 @@ class Person(db.Model):
     login = db.Column(db.String(80), unique=False)
     name = db.Column(db.String(80), unique=False)
     surname = db.Column(db.String(80), unique=False)
-    birthday = db.Column(db.DateTime, unique=False)
-    arrival = db.Column(db.DateTime, unique=False)
+    birthday = db.Column(db.DateTime, unique=False, server_default=func.now())
+    arrival = db.Column(db.DateTime, unique=False, server_default=func.now())
     email = db.Column(db.String(120), unique=False)
     mobile = db.Column(db.String(120), unique=False)
     fixe = db.Column(db.String(120), unique=False)

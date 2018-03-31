@@ -33,11 +33,9 @@ def load_csv():
                 neo.login = row[1].strip().lower()
                 neo.surname = row[2]
                 neo.name = row[3]
-                # TODO CHECK NULL
                 neo.birthday = datetime.datetime.fromtimestamp(
                     float(format_date(row[4]))
                 )
-                # TODO CHECK NULL
                 neo.arrival = datetime.datetime.fromtimestamp(
                     float(format_date(row[5]))
                 )
