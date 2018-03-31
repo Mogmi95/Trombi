@@ -4,6 +4,7 @@ from os import path
 import io
 import time
 import datetime
+import csv
 
 from werkzeug.security import generate_password_hash
 
@@ -24,30 +25,30 @@ def load_csv():
     existing_teams = {}
 
     with io.open(config.DATABASE_PERSONS_FILE, 'r', encoding='utf8') as f:
-        for line in f:
-            if (len(line) > 1 and line[0] != '#'):
+        reader = csv.reader(f, delimiter=',', quotechar='"')
+        for row in reader:
+            if (len(row) > 1):
                 neo = Person()
 
-                split = line[:-1].split(',')
-                neo.login = split[1].strip().lower()
-                neo.surname = split[2]
-                neo.name = split[3]
+                neo.login = row[1].strip().lower()
+                neo.surname = row[2]
+                neo.name = row[3]
                 # TODO CHECK NULL
                 neo.birthday = datetime.datetime.fromtimestamp(
-                    float(format_date(split[4]))
+                    float(format_date(row[4]))
                 )
                 # TODO CHECK NULL
                 neo.arrival = datetime.datetime.fromtimestamp(
-                    float(format_date(split[5]))
+                    float(format_date(row[5]))
                 )
-                neo.job = split[6]
-                neo.email = split[7]
-                neo.skype = split[8]
-                neo.fixe = split[9]
-                neo.mobile = split[10]
+                neo.job = row[6]
+                neo.email = row[7]
+                neo.skype = row[8]
+                neo.fixe = row[9]
+                neo.mobile = row[10]
 
                 # TEAM
-                team = split[0]
+                team = row[0]
                 if not (team in existing_teams):
                     print('Creating team ' + team + ' for ' + neo.login)
                     neo_team = Team(team)
@@ -56,7 +57,7 @@ def load_csv():
                 neo.team = existing_teams[team]
 
                 # MANAGER
-                manager = split[11]
+                manager = row[11]
                 if manager in managers:
                     managers[manager].append(neo)
                 else:
