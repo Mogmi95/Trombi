@@ -3,6 +3,8 @@ from os import listdir, mkdir
 from os.path import isdir
 from shutil import copy
 from datetime import datetime
+import io
+import csv
 
 from flask import request, url_for, redirect
 from wtforms import form, fields, validators
@@ -146,13 +148,41 @@ class DatabaseSaveView(BaseView):
             copy(str(DATABASE_SAVES_DIRECTORY + '/' + filename), DATABASE_PATH)
         return redirect(url_for('database.get_view'))
 
-    @expose('/create_database_backup', methods=['POST'])
+    @expose('/trombi_database.csv', methods=['GET'])
     def create_database_backup(self):
         """Create a backup of the current database."""
         filename = datetime.now().isoformat()
-        filename += ".backup"
-        copy(DATABASE_PATH, DATABASE_SAVES_DIRECTORY + '/' + filename)
-        return redirect(url_for('database.get_view'))
+        filename += ".csv"
+
+        header = "#TEAM,LOGIN,NOM,PRENOM,NAISSANCE,ARRIVEE,FONCTION,MAIL,SKYPE,FIXE,PORTABLE,MANAGER,ROOM"
+
+        output = io.BytesIO()
+        writer = csv.writer(
+            output,
+            quoting=csv.QUOTE_ALL,
+            delimiter=',')
+        writer.writerow([header])
+
+        persons = Person.query.all()
+        for person in persons:
+            writer.writerow([
+                person.team,
+                person.login,
+                person.surname,
+                person.name,
+                person.birthday.strftime(u'%Y/%m/%d'),
+                person.arrival.strftime(u'%Y/%m/%d'),
+                person.job,
+                person.email,
+                person.skype,
+                person.fixe,
+                person.mobile,
+                person.manager,
+                "room"
+                ])
+
+
+        return output.getvalue()
 
     @expose('/', methods=['GET', 'POST'])
     def get_view(self):
