@@ -12,6 +12,7 @@ DATABASE_PATH = '/tmp/trombi_database.sqlite'
 SQLALCHEMY_DATABASE_URI = 'sqlite:///' + DATABASE_PATH
 UPLOADS_FOLDER = os.path.realpath('.') + '/static/photos/'
 WEBSITE_URL = 'http://localhost:5000'
+PORT = 5000
 
 DATABASE_PERSONS_FILE = 'data/example-persons.csv'
 DATABASE_TEAMS_FILE = 'data/example-teams.csv'
