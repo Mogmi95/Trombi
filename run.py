@@ -11,7 +11,7 @@ import config
 from trombi import admin
 from trombi.app import db, app
 
-from trombi.models import TrombiAdmin, Person, Team
+from trombi.models import TrombiAdmin, Person, Team, Infos
 from trombi import views
 
 
@@ -73,13 +73,10 @@ def load_csv():
             person.subordinates = managers[person.login]
             # We create a team hierarchy
             for subperson in person.subordinates:
-                print(person.team_id)
-                print(subperson.team_id)
-                print('------')
                 if (subperson.team_id != person.team_id):
                     subperson.team.high_team = person.team
         db.session.add(person)
-    
+
     db.session.commit()
 
 
@@ -120,9 +117,20 @@ if __name__ == "__main__":
     db.create_all()
     admin.init()
 
+    # We create basics Info if needed
+    infos = Infos.query.all()
+    if (len(infos) == 0):
+        header_text = Infos()
+        news_text = Infos()
+        db.session.add(header_text)
+        db.session.add(news_text)
+        db.session.commit()
+
+
     # We check that the config file exists
     if (are_config_files_present()):
         persons = Person.query.all()
+
         if (len(persons) == 0):
             load_csv()
 
