@@ -10,7 +10,7 @@ SECRET_KEY = 'hello-github'
 DEFAULT_FILE_STORAGE = 'filesystem'
 DATABASE_PATH = '/tmp/trombi_database.sqlite'
 SQLALCHEMY_DATABASE_URI = 'sqlite:///' + DATABASE_PATH
-UPLOADS_FOLDER = os.path.realpath('.') + '/static/photos/'
+PHOTOS_FOLDER = os.path.realpath('.') + '/photos/'
 WEBSITE_URL = 'http://localhost:5000'
 PORT = 5000
 

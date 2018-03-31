@@ -9,11 +9,12 @@ Should write something nice here.
 import time
 import datetime
 import random
-from flask import render_template, request, url_for, redirect
+import os
+from flask import render_template, request, url_for, redirect, send_file, send_from_directory
 from sqlalchemy import or_
 from flask.ext.babel import gettext
 
-from config import LANGUAGES
+from config import LANGUAGES, PHOTOS_FOLDER
 from app import db, app, babel
 from models import Person, PersonComment, Team, Infos
 
@@ -46,6 +47,15 @@ def main():
     """Root view."""
     return show_all()
 
+
+@app.route("/photo/<login>")
+def person_image(login=None):
+    """Get picture for person, or default picture."""
+    filepath = os.path.join(PHOTOS_FOLDER, login + ".jpg")
+    if (os.path.isfile(filepath)):
+        return send_from_directory(PHOTOS_FOLDER, login + ".jpg")
+    else:
+        return redirect(url_for('static', filename='images/missing_avatar.png'))
 
 @app.route("/all")
 def show_all():
@@ -326,13 +336,12 @@ def get_node_person(person, parent):
     """Default method to build a node for a given person."""
     # TODO : make render_template
     return "[{v:'" + person.login + "', f:'<div class=\"rootTreeNodeElement\"><a href=\"/person/" + person.login + "\">\
-        <div class=\"rootTreeNodeElementFiller\" style=\"background: url(/static/images/photos/" + person.login + ".jpg) center / cover;\" >\
+        <div class=\"rootTreeNodeElementFiller\" style=\"background: url(/photo/"+ person.login + ") center / cover;\" >\
             <div class=\"treeNodeTextContainer\"><div class=\"treeNodeText\">" + person.name.replace('\'','\\\'') + "</div></div>\
         </div>\
     </a></div>'}, '" + parent + "', '" + person.name.replace('\'','\\\'') + " " + person.surname.replace('\'','\\\'') + "'],"
 
 # Game
-
 
 @app.route('/game', methods=['GET', 'POST'])
 def show_game():

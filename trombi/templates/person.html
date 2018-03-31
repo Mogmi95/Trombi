@@ -6,7 +6,7 @@
 
   <div class="personCardHeader">
     <div class="personCardHeaderBackground"></div>
-    <div class="personCardHeaderAvatar" style="background: url({{ url_for('static', filename='images/photos/' + person.login + '.jpg') }}) center / cover;"></div>
+    <div class="personCardHeaderAvatar" style="background: url({{ url_for('person_image', login=person.login) }}) center / cover;"></div>
     <div class="personCardHeaderName">{{ person.name }} {{ person.surname }}</div>
   </div>
 
