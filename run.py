@@ -88,7 +88,7 @@ def format_date(date):
     try:
         if (len(date.split('/')) == 3):
             return time.mktime(
-                datetime.datetime.strptime(date, "%m/%d/%Y").timetuple()
+                datetime.datetime.strptime(date, u"%Y/%m/%d").timetuple()
                 )
         else:
             return time.mktime(
