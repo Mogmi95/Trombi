@@ -2,8 +2,10 @@
 from os import listdir, mkdir
 from os.path import isdir
 from shutil import copy
-from datetime import datetime
+import time
+import datetime
 import io
+import os
 import csv
 
 from flask import request, url_for, redirect
@@ -19,7 +21,7 @@ from werkzeug.security import check_password_hash
 
 from models import TrombiAdmin, Person, PersonComment, Team, Infos
 from app import db, app
-from config import DATABASE_SAVES_DIRECTORY, DATABASE_PATH, PHOTOS_FOLDER
+import config
 
 
 class LoginForm(form.Form):
@@ -134,12 +136,12 @@ class PersonView(sqla.ModelView):
         """Check if the current user can access the view."""
         return login.current_user.is_authenticated
 
-    def image_name(obj, file_data):
+    def image_name(self, obj, file_data):
         return obj.login + ".jpg"
 
     form_extra_fields = {
         'photo': FileUploadField('Photo',
-                                base_path=PHOTOS_FOLDER,
+                                base_path=config.PHOTOS_FOLDER,
                                 namegen=image_name,)
     }
 
@@ -158,13 +160,121 @@ class DatabaseSaveView(BaseView):
         """Load a backuped version of the database."""
         filename = request.form.get('saves_select')
         if (filename is not None):
-            copy(str(DATABASE_SAVES_DIRECTORY + '/' + filename), DATABASE_PATH)
+            copy(str(config.DATABASE_SAVES_DIRECTORY + '/' + filename), config.DATABASE_PATH)
         return redirect(url_for('database.get_view'))
+
+    @expose('/import_csv', methods=['POST'])
+    def load_csv(self):
+        """We create the persons from the data files."""
+
+        # check if the post request has the file part
+        if 'csv_file' not in request.files:
+            return redirect(url_for('database.get_view', error='Missing file'))
+        file = request.files['csv_file']
+        # if user does not select file, browser also
+        # submit a empty part without filename
+        if file.filename == '':
+            return redirect(url_for('database.get_view', error='Missing file'))
+        if file:
+            file.save(os.path.join(config.CSV_FOLDER, 'persons.csv'))
+
+        # Cleaning the existing data. This change is not registered until the parsing is ok
+        db.session.query(Person).delete()
+        db.session.query(Team).delete()
+
+        # Parsing the CSV file
+        persons = []
+        managers = {}
+        existing_teams = {}
+
+        try:
+            with io.open(os.path.join(config.CSV_FOLDER, 'persons.csv'), 'r', encoding='utf8') as f:
+                reader = csv.reader(f, delimiter=',', quotechar='"')
+                for row in reader:
+                    if (len(row) > 1):
+                        neo = Person()
+
+                        neo.login = row[1].strip().lower()
+                        neo.surname = row[2]
+                        neo.name = row[3]
+                        neo.birthday = datetime.datetime.fromtimestamp(
+                            float(self.format_date(row[4]))
+                        )
+                        neo.arrival = datetime.datetime.fromtimestamp(
+                            float(self.format_date(row[5]))
+                        )
+                        neo.job = row[6]
+                        neo.email = row[7]
+                        neo.skype = row[8]
+                        neo.fixe = row[9]
+                        neo.mobile = row[10]
+
+                        # TEAM
+                        team = row[0]
+                        if not (team in existing_teams):
+                            print('Creating team ' + team + ' for ' + neo.login)
+                            neo_team = Team(team)
+                            existing_teams[team] = neo_team
+                            db.session.add(neo_team)
+                        neo.team = existing_teams[team]
+
+                        # MANAGER
+                        manager = row[11]
+                        if manager in managers:
+                            managers[manager].append(neo)
+                        else:
+                            managers[manager] = [neo]
+
+                        persons.append(neo)
+
+            # We have to commit here first to create Team links
+            # TODO : Add check on the persons here (ex: detect loops)
+            db.session.commit()
+
+            for person in persons:
+                # We link the managers
+                if person.login in managers:
+                    person.subordinates = managers[person.login]
+                    # We create a team hierarchy
+                    for subperson in person.subordinates:
+                        if (subperson.team_id != person.team_id):
+                            subperson.team.high_team = person.team
+                db.session.add(person)
+
+            db.session.commit()
+        except csv.Error as e:
+            return redirect(url_for('database.get_view', error=e))
+        except:
+            return redirect(url_for('database.get_view', error='Error while parsing. Check logs.'))
+        
+        return redirect(url_for('database.get_view', error=None))
+
+
+    def format_date(self, date):
+        """Parse the date from the data file."""
+        if (date is None or date == ''):
+            return 0
+
+        try:
+            if (len(date.split('/')) == 3):
+                return time.mktime(
+                    datetime.datetime.strptime(date, u"%Y/%m/%d").timetuple()
+                    )
+            else:
+                return time.mktime(
+                    datetime.datetime.strptime(date, "%d/%m").timetuple()
+                    )
+        except:
+            print('Cannot convert : ' + date)
+            return 0
+
+        return ''
+
 
     @expose('/trombi_database.csv', methods=['GET'])
     def create_database_backup(self):
         """Create a backup of the current database."""
-        filename = datetime.now().isoformat()
+        filename = datetime.datetime.now().isoformat()
         filename += ".csv"
 
         header = "#TEAM,LOGIN,NOM,PRENOM,NAISSANCE,ARRIVEE,FONCTION,MAIL,SKYPE,FIXE,PORTABLE,MANAGER,ROOM"
@@ -201,7 +311,7 @@ class DatabaseSaveView(BaseView):
     def get_view(self):
         """Display the available database operations."""
         # Getting the available database saves
-        saves = listdir(DATABASE_SAVES_DIRECTORY)
+        saves = listdir(config.DATABASE_SAVES_DIRECTORY)
         saves.sort()
         saves.reverse()
         return self.render(
@@ -261,6 +371,6 @@ def init():
     admin.add_view(CommentsView(name='Comments', endpoint='comments'))
 
     # We create the database backup directory if it doesn't exists
-    if (not isdir(DATABASE_SAVES_DIRECTORY)):
-        mkdir(DATABASE_SAVES_DIRECTORY)
-        print('Backup directory created at ' + DATABASE_SAVES_DIRECTORY)
+    if (not isdir(config.DATABASE_SAVES_DIRECTORY)):
+        mkdir(config.DATABASE_SAVES_DIRECTORY)
+        print('Backup directory created at ' + config.DATABASE_SAVES_DIRECTORY)
