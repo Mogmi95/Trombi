@@ -1,5 +1,28 @@
 # Trombi
 
+This project is a light tool to help people recognise their colleagues when your company is getting bigger.
+
+## Features
+
+* List of all persons in the company
+* Display only the new persons
+* An organigram of the teams
+* A little game to learn names of your colleagues
+* A calendar with the birthdays and arrival dates of everyone
+* Some spaces to display information for the users
+* Reports on a person profile if an information is incorrect (only visible by the admin)
+* Admin interface
+
+## Screenshots
+
+![Screenshot1](https://raw.githubusercontent.com/Mogmi95/Trombi/master/screenshots/trombi_screen.png)
+![Screenshot1](https://raw.githubusercontent.com/Mogmi95/Trombi/master/screenshots/trombi_screen_2.png)
+![Screenshot1](https://raw.githubusercontent.com/Mogmi95/Trombi/master/screenshots/trombi_screen_3.png)
+
+# Installation
+
+This project is using Flask and Python 2.7.
+
 1. Clone the repository
 2. Create a virtualenv (optional, but recommended)
 3. Install pip dependencies ($ pip install -r requirements.txt)
