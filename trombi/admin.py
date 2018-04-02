@@ -136,7 +136,7 @@ class PersonView(sqla.ModelView):
         """Check if the current user can access the view."""
         return login.current_user.is_authenticated
 
-    def image_name(self, obj, file_data):
+    def image_name(obj, file_data):
         return obj.login + ".jpg"
 
     form_extra_fields = {
