@@ -120,8 +120,8 @@ class MyModelView(sqla.ModelView):
     # Change edit in the admin
     form_overrides = dict(text=CKEditorField)
     can_view_details = True
-    create_template = 'edit.html'
-    edit_template = 'edit.html'
+    create_template = 'admin/edit.html'
+    edit_template = 'admin/edit.html'
     column_searchable_list = ['id']
 
 class PersonView(sqla.ModelView):
@@ -315,7 +315,7 @@ class DatabaseSaveView(BaseView):
         saves.sort()
         saves.reverse()
         return self.render(
-            'database.html',
+            'admin/database.html',
             available_saves=saves
         )
 
@@ -333,7 +333,7 @@ class CommentsView(BaseView):
         """Display the available comments."""
         comments = PersonComment.query.all()
         return self.render(
-            'comments.html',
+            'admin/comments.html',
             comments=comments
         )
 
@@ -345,6 +345,52 @@ class CommentsView(BaseView):
         db.session.commit()
         return redirect(url_for('comments.get_view'))
 
+# Display charts
+class ChartsView(BaseView):
+    """Display an exportable version of the teams."""
+
+    def is_accessible(self):
+        """Check if the current user can access the view."""
+        return login.current_user.is_authenticated
+
+    @expose('/', methods=['GET', 'POST'])
+    def get_view(self):
+        """Get the view."""
+        selected_team = request.form.get('team_select')
+        teams = Team.query.all()
+        use_images = request.form.get('use_images') != None
+        print(use_images)
+        if selected_team is None:
+            team = teams[0]
+        else:
+            team = Team.query.filter_by(id=selected_team).first()
+
+        size = 2
+        selected_size = request.form.get('size')
+        if selected_size is not None:
+            size = int(selected_size)
+
+        leader = team.get_root_persons()[0]
+        datasource = create_chart_node_for_person(leader, size)
+
+        return self.render(
+            'admin/charts.html',
+            datasource=datasource,
+            current_team=team,
+            teams=teams,
+            size=size,
+            use_images=use_images,
+        )
+
+def create_chart_node_for_person(person, max_size):
+    size = 0
+    result = "{'name': '%s','title': '%s', 'login': '%s','children':[" % (person.name.replace('\'','\\\''), person.job.replace('\'','\\\''), person.login)
+    if (size < max_size):
+        size += 1
+        for subordinate in person.subordinates:
+            result += create_chart_node_for_person(subordinate, max_size - size) + ','
+    result += ']}'
+    return result;
 
 def init():
     """Create the administration system."""
@@ -356,7 +402,7 @@ def init():
         app,
         'Trombi admin',
         index_view=MyAdminIndexView(),
-        base_template='master.html'
+        base_template='admin/master.html'
     )
 
     # Add view
@@ -368,6 +414,7 @@ def init():
     admin.add_view(MyModelView(Team, db.session))
     admin.add_view(MyModelView(Infos, db.session))
     admin.add_view(DatabaseSaveView(name='Database', endpoint='database'))
+    admin.add_view(ChartsView(name='Charts', endpoint='charts'))
     admin.add_view(CommentsView(name='Comments', endpoint='comments'))
 
     # We create the database backup directory if it doesn't exists

@@ -1,0 +1,65 @@
+{% extends 'admin/index.html' %}
+
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='jquery.orgchart.css') }}" media="screen" />
+    <script src='{{ url_for('static', filename='js/jquery.min.js') }}'></script>
+    <script src='{{ url_for('static', filename='js/jspdf.min.js') }}'></script>
+    <script src='{{ url_for('static', filename='js/html2canvas.min.js') }}'></script>
+    <script src='{{ url_for('static', filename='js/jquery.orgchart.min.js') }}'></script>
+{% endblock %}
+
+{% block tail_js %}
+<script src="/admin/static/bootstrap/bootstrap2/js/bootstrap.min.js?v=2.3.2" type="text/javascript"></script>
+<script src="/admin/static/vendor/moment.min.js?v=2.9.0" type="text/javascript"></script>
+<script src="/admin/static/vendor/select2/select2.min.js?v=3.5.2" type="text/javascript"></script>
+{% endblock %}
+
+{% block body %}
+
+<h3>Charts</h3>
+
+<form method="POST">
+    Select a team:
+    <br />
+    <select name="team_select">
+        {% for team in teams %}
+        <option value="{{ team.id }}" {% if team == current_team %} selected {% endif %}>{{ team }}</option>
+        {% endfor %}
+    </select> 
+    <br />
+    Select a size for the tree:
+    <br />
+    <input type="number" name="size" value="{{ size }}">
+    <br />
+    <label><input type="checkbox" name="use_images" {% if use_images %} checked {% endif %}>Use images in the chart</label>
+    <br />
+    <input type="submit" value="Generate tree">
+</form>
+
+<div id="chart-container"></div>
+<script type="text/javascript">
+  $(function() {
+    
+    var datasource = {{ datasource|safe }}
+
+  $('#chart-container').orgchart({
+    'data' : datasource,
+    'nodeContent': 'title',
+    'exportButton': true,
+    'exportFilename': '{{ current_team }}',
+    'verticalLevel': 3,
+    'visibleLevel': 4,
+    {% if use_images %}
+    'createNode': function($node, data) {
+        var image = '<img src="/photo/' + data.login + '">';
+        var infos = $node.find(".content")[0];
+        console.log(infos.innerHTML);
+        infos.innerHTML = image + data.title;
+      }
+    {% endif %}
+  });
+
+});
+</script>
+
+{% endblock %}
