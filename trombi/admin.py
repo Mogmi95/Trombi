@@ -289,18 +289,18 @@ class DatabaseSaveView(BaseView):
         persons = Person.query.all()
         for person in persons:
             writer.writerow([
-                person.team,
-                person.login,
-                person.surname,
-                person.name,
-                person.birthday.strftime(u'%Y/%m/%d'),
-                person.arrival.strftime(u'%Y/%m/%d'),
-                person.job,
-                person.email,
-                person.skype,
-                person.fixe,
-                person.mobile,
-                person.manager,
+                '' if (person.team == None) else person.team.name.encode('utf-8'),
+                '' if (person.login == None) else person.login.encode('utf-8'),
+                '' if (person.surname == None) else person.surname.encode('utf-8'),
+                '' if (person.name == None) else person.name.encode('utf-8'),
+                '1990/01/01' if (person.birthday == None) else person.birthday.strftime(u'%Y/%m/%d'),
+                '1990/01/01' if (person.arrival == None) else person.arrival.strftime(u'%Y/%m/%d'),
+                '' if (person.job == None) else person.job.encode('utf-8'),
+                '' if (person.email == None) else person.email.encode('utf-8'),
+                '' if (person.skype == None) else person.skype.encode('utf-8'),
+                '' if (person.fixe == None) else person.fixe.encode('utf-8'),
+                '' if (person.mobile == None) else person.mobile.encode('utf-8'),
+                '' if (person.manager == None) else person.manager.login.encode('utf-8'),
                 "room"
                 ])
 
