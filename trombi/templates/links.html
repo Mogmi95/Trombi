@@ -1,0 +1,35 @@
+{% extends "index.html" %}
+{% block body %}
+
+{% if links is none %}
+
+<p>No links to display</p>
+
+{% else %}
+
+{% for link in links %}
+<div class="linkCard card-style mdl-js-ripple-effect">
+  <a href="{{link.url}}">
+    <div class="linkCardContent">
+      {% if link.image == "" %}
+        <div class="linksLeft" style="background: url({{ url_for('static', filename='images/default_link.png') }}) center / cover;">
+      {% else %}
+        <div class="linksLeft" style="background: url({{link.image}}) center / cover;">
+      {% endif %}
+            </div>
+            <div class="linksRight">
+                <div class="linksTitle">
+                    {{link.title}}
+                  </div>
+                  <div class="linksDescription">
+                      {{link.description}}
+                    </div>
+                </div>
+        <span class="mdl-ripple"></span>
+        
+    </div>
+  </a>
+</div>
+{% endfor %}
+{% endif %}
+{% endblock %}
