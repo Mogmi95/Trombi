@@ -180,3 +180,19 @@ class Infos(db.Model):
     __tablename__ = 'infos'
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.Text(), unique=False, default=u'Hello World!')
+
+
+class Link(db.Model):
+    """Represents an interesting link."""
+
+    def __str__(self):
+        """Simple log method."""
+        return str(id)
+
+    __tablename__ = 'links'
+    id = db.Column(db.Integer, primary_key=True)
+    order = db.Column(db.Integer, unique=False)
+    url = db.Column(db.Text(), unique=False)
+    image = db.Column(db.Text(), unique=False)
+    title = db.Column(db.Text(), unique=False, default=u'Title')
+    description = db.Column(db.Text(), unique=False, default=u'Description')

@@ -10,6 +10,7 @@ This project is a light tool to help people recognise their colleagues when your
 * A little game to learn names of your colleagues
 * A calendar with the birthdays and arrival dates of everyone
 * Some spaces to display information for the users
+* Links aggregator
 * Reports on a person profile if an information is incorrect (only visible by the admin)
 * Admin interface
 
