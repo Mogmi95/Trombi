@@ -130,7 +130,7 @@ class PersonView(sqla.ModelView):
     # Change edit in the admin
     can_view_details = True
     column_searchable_list = ['login', 'name', 'surname']
-    form_columns = ('photo', 'login', 'name', 'surname', 'team', 'manager','birthday', 'arrival', 'email', 'mobile', 'fixe', 'job', 'skype', 'subordinates')
+    form_columns = ('login', 'photo', 'name', 'surname', 'team', 'manager','birthday', 'arrival', 'email', 'mobile', 'fixe', 'job', 'skype', 'subordinates')
 
     def is_accessible(self):
         """Check if the current user can access the view."""
