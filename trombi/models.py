@@ -58,7 +58,7 @@ class Team(db.Model):
             remote_side="Team.id"
         )
 
-    def __init__(self, name):
+    def __init__(self, name=""):
         """Simple constructor."""
         self.name = name
 
