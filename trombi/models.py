@@ -128,12 +128,13 @@ class Person(db.Model):
 
     def get_pretty_arrival_date(self):
         """Get a printable version of the arrival date."""
-        delta = datetime.datetime.now() - self.arrival
+        now = datetime.datetime.now()
+        arrival = self.arrival
         custom_date = self.arrival.strftime(u'%Y/%m/%d')
 
-        years = delta.days / 365
-        months = delta.days % 365 / 30
-        days = delta.days % 365 % 30
+        years = now.year - arrival.year
+        months = (now.month - arrival.month) % 12
+        days = (now.day - arrival.day) % 31
 
         return gettext(
             u'%(date)s (%(y)s years, %(m)s months, %(d)s days)',
