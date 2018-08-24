@@ -48,7 +48,7 @@
       <div class="horizontalSeparationLine"></div
       <ul class="mdl-list">
           <!-- EMAIL -->
-          {% if person.email != '' %}
+          {% if person.email != None and person.email != '' %}
           <li onclick="copyToClipboard('{{ person.email }}')" class="mdl-list__item mdl-list__item--two-line mdl-js-ripple-effect">
             <span class="rippleContainer mdl-list__item-primary-content">
              <span class="mdl-ripple"></span>
@@ -59,7 +59,7 @@
           </li>
           {% endif %}
           <!-- SKYPE -->
-          {% if person.skype != '' %}
+          {% if person.skype != None and person.skype != '' %}
           <li onclick="copyToClipboard('{{ person.skype }}')" class="mdl-list__item mdl-list__item--two-line mdl-js-ripple-effect">
             <span class="rippleContainer mdl-list__item-primary-content">
                 <span class="mdl-ripple"></span>
@@ -70,7 +70,7 @@
           </li>
           {% endif %}
           <!-- PHONE -->
-          {% if person.fixe != '' %}
+          {% if person.fixe != None and person.fixe != '' %}
           <li onclick="copyToClipboard('{{ person.fixe }}')" class="mdl-list__item mdl-list__item--two-line mdl-js-ripple-effect">
             <span class="rippleContainer mdl-list__item-primary-content">
              <span class="mdl-ripple"></span>
@@ -81,7 +81,7 @@
           </li>
           {% endif %}
           <!-- MOBILE PHONE -->
-          {% if person.mobile != '' %}
+          {% if person.mobile != None and person.mobile != '' %}
           <li onclick="copyToClipboard('{{ person.mobile }}')" class="mdl-list__item mdl-list__item--two-line mdl-js-ripple-effect">
             <span class="rippleContainer mdl-list__item-primary-content">
                 <span class="mdl-ripple"></span>
