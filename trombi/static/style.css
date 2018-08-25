@@ -166,6 +166,8 @@ a {
 .custom-grid {
   max-width: 100%;
   margin: 0 auto;
+  -webkit-filter: grayscale(100%); /* Safari 6.0 - 9.0 */
+  filter: grayscale(100%);
 }
 .cell-spacer {
   min-height: 160px;
@@ -289,6 +291,8 @@ a {
   box-shadow: 0 0 8px rgba(0, 0, 0, .8);
   -webkit-box-shadow: 0 0 8px rgba(0, 0, 0, .8);
   -moz-box-shadow: 0 0 8px rgba(0, 0, 0, .8);
+  -webkit-filter: grayscale(100%); /* Safari 6.0 - 9.0 */
+  filter: grayscale(100%);
 }
 
 .horizontalSeparationLine {
@@ -427,6 +431,8 @@ a {
   position: relative;
   width: 108px;
   height: 144px;
+  -webkit-filter: grayscale(100%); /* Safari 6.0 - 9.0 */
+  filter: grayscale(100%);
 }
 
 .rootTreeNodeElementFiller {
