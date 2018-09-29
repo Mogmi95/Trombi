@@ -10,11 +10,12 @@ import time
 import datetime
 import random
 import os
+import json
 from flask import render_template, request, url_for, redirect, send_file, send_from_directory
 from sqlalchemy import or_
 from flask.ext.babel import gettext
 
-from config import LANGUAGES, PHOTOS_FOLDER
+from config import LANGUAGES, PHOTOS_FOLDER, WEBSITE_URL
 from app import db, app, babel
 from models import Person, PersonComment, Team, Infos, Link
 
@@ -365,6 +366,7 @@ def show_game():
         persons=persons,
     )
 
+# Links
 
 @app.route("/links")
 def show_links(login=None):
@@ -376,3 +378,79 @@ def show_links(login=None):
             'links.html',
             links=links,
         )
+
+# API
+
+@app.route("/api/persons", defaults={'login': None}, methods=["GET"])
+@app.route("/api/persons/<login>", methods=["GET"])
+def api_persons(login=None):
+    """API to get all the persons"""
+    persons = None
+    json_persons = []
+
+    if (login != None):
+        persons = Person.query.filter_by(login=login).all()
+        if (len(persons) == 0):
+            # Error, the person doesn't exist
+            return '{ error: "User doesn\'t exist" }', 404
+    else:
+        persons = Person.query.order_by(Person.login).all()
+
+    for person in persons:
+        json_person = {}
+        json_person["id"] = person.id
+        json_person["login"] = person.login
+        json_person["name"] = person.name
+        json_person["surname"] = person.surname
+        json_person["birthday"] = person.get_birthday_date_timestamp()
+        json_person["arrival"] = person.get_arrival_date_timestamp()
+        json_person["email"] = person.email
+        json_person["job"] = person.job
+        json_person["team_id"] = person.team_id
+        json_person["picture"] = url_for('person_image', login=person.login)
+        json_persons.append(json_person)
+
+    return json.dumps(json_persons)
+
+@app.route("/api/teams", defaults={'team_id': None}, methods=["GET"])
+@app.route("/api/teams/<team_id>", methods=["GET"])
+def api_teams(team_id=None):
+    """API to get all the teams"""
+    teams = None
+    json_teams = []
+
+    if (team_id != None):
+        teams = Team.query.filter_by(team_id=team_id).all()
+        if (len(teams) == 0):
+            # Error, the person doesn't exist
+            return '{ error: "Team doesn\'t exist" }', 404
+    else:
+        teams = Team.query.order_by(Team.id).all()
+
+    for team in teams:
+        json_team = {}
+        json_team["id"] = team.id
+        json_team["name"] = team.name
+        if (team.high_team != None):
+            json_team["higher_teaml_id"] = team.high_team.id
+        json_team["persons"] = [person.login for person in team.persons]
+        json_teams.append(json_team)
+
+    return json.dumps(json_teams)
+
+@app.route("/api/links", methods=["GET"])
+def api_links():
+    """API to get all the links"""
+    links = Link.query.order_by(Link.id).all()
+    json_links = []
+
+    for link in links:
+        json_link = {}
+        json_link["id"] = link.id
+        json_link["url"] = link.url
+        json_link["image_url"] = link.image
+        json_link["title"] = link.title
+        json_link["description"] = link.description
+        json_links.append(json_link)
+
+    return json.dumps(json_links)

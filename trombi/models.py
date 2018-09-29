@@ -1,5 +1,6 @@
 """Models for the trombi."""
 import datetime
+import time
 from sqlalchemy import Column, Integer, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
@@ -143,6 +144,22 @@ class Person(db.Model):
             m=months,
             d=days,
         )
+
+    def get_arrival_date_timestamp(self):
+        """Get an epoch timestamp of the arrival date"""
+        d = int(time.mktime(self.arrival.timetuple()))
+        if (d <= 0):
+            return 0
+        else:
+            return d
+
+    def get_birthday_date_timestamp(self):
+        """Get an epoch timestamp of the birthday date"""
+        d = int(time.mktime(self.birthday.timetuple()))
+        if (d <= 0):
+            return 0
+        else:
+            return d
 
     def get_pretty_birthday_date(self):
         """Get a printable version of the birthday date."""
