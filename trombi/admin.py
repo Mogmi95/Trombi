@@ -19,7 +19,7 @@ import flask_admin as flask_admin
 import flask_login as login
 from werkzeug.security import check_password_hash
 
-from models import TrombiAdmin, Person, PersonComment, Team, Infos, Link
+from models import TrombiAdmin, Person, PersonComment, Team, Infos, Link, Room, Floor
 from app import db, app
 import config
 
@@ -417,6 +417,8 @@ def init():
     admin.add_view(DatabaseSaveView(name='Database', endpoint='database'))
     admin.add_view(ChartsView(name='Charts', endpoint='charts'))
     admin.add_view(CommentsView(name='Comments', endpoint='comments'))
+    admin.add_view(MyModelView(Room, db.session))
+    admin.add_view(MyModelView(Floor, db.session))
 
     # We create the database backup directory if it doesn't exists
     if (not isdir(config.DATABASE_SAVES_DIRECTORY)):
