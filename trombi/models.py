@@ -67,6 +67,10 @@ class Team(db.Model):
         """Simple log method."""
         return str(self.name)
 
+    def as_dict(self):
+        """Dumps the data as JSON"""
+        return {c.name: unicode((getattr(self, c.name))) for c in self.__table__.columns}
+
     def get_root_persons(self):
         """
         Get the manager of the team.
@@ -97,6 +101,10 @@ class PersonComment(db.Model):
 
 class Person(db.Model):
     """Represents a person in the trombi."""
+
+    def as_dict(self):
+        """Dumps the data as JSON"""
+        return {c.name: unicode((getattr(self, c.name))) for c in self.__table__.columns}
 
     __tablename__ = 'person'
     # service;login;nom;prenom;naissance;poste;mail;skype;fixe;portable;manager
@@ -195,6 +203,11 @@ class Infos(db.Model):
         """Simple log method."""
         return str(id)
 
+    def as_dict(self):
+        """Dumps the data as JSON"""
+        return {c.name: unicode((getattr(self, c.name))) for c in self.__table__.columns}
+
+
     __tablename__ = 'infos'
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.Text(), unique=False, default=u'Hello World!')
@@ -206,6 +219,10 @@ class Link(db.Model):
     def __str__(self):
         """Simple log method."""
         return str(id)
+
+    def as_dict(self):
+        """Dumps the data as JSON"""
+        return {c.name: unicode((getattr(self, c.name))) for c in self.__table__.columns}
 
     __tablename__ = 'links'
     id = db.Column(db.Integer, primary_key=True)

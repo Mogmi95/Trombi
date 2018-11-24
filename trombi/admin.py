@@ -17,6 +17,7 @@ from flask_admin import helpers, expose, BaseView
 from flask_admin.form.upload import FileUploadField
 import flask_admin as flask_admin
 import flask_login as login
+import json
 from werkzeug.security import check_password_hash
 
 from models import TrombiAdmin, Person, PersonComment, Team, Infos, Link
@@ -136,8 +137,8 @@ class PersonView(sqla.ModelView):
         """Check if the current user can access the view."""
         return login.current_user.is_authenticated
 
-    def image_name(obj, file_data):
-        return obj.login + ".jpg"
+    def image_name(self, file_data):
+        return self.login + ".jpg"
 
     form_extra_fields = {
         'photo': FileUploadField('Photo',
@@ -270,6 +271,28 @@ class DatabaseSaveView(BaseView):
 
         return ''
 
+    @expose('/trombi_database.json', methods=['GET'])
+    def create_database_backup_json(self):
+        """Create a backup of the current database in JSON."""
+
+        TO_DUMP = [
+            (Person, 'persons'),
+            (Team, 'teams'),
+            (Infos, 'infos'),
+            (Link, 'links'),
+        ]
+
+        result = {}
+
+        for elt in TO_DUMP:
+            current_class = elt[0]
+            current_id = elt[1]
+            tmp_elts = current_class.query.all()
+            result[current_id] = []
+            for item in tmp_elts:
+                result[current_id].append(item.as_dict())
+
+        return json.dumps(result)
 
     @expose('/trombi_database.csv', methods=['GET'])
     def create_database_backup(self):
