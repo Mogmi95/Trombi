@@ -164,6 +164,97 @@ class DatabaseSaveView(BaseView):
             copy(str(config.DATABASE_SAVES_DIRECTORY + '/' + filename), config.DATABASE_PATH)
         return redirect(url_for('database.get_view'))
 
+    @expose('/import_json', methods=['POST'])
+    def load_json(self):
+        """We create the persons from a JSON file."""
+
+        # check if the post request has the file part
+        if 'json_file' not in request.files:
+            return redirect(url_for('database.get_view', error='Missing JSON file'))
+        file = request.files['json_file']
+        # if user does not select file, browser also
+        # submit a empty part without filename
+        if file.filename == '':
+            return redirect(url_for('database.get_view', error='Missing JSON file'))
+        if file:
+            file.save(os.path.join(config.JSON_FOLDER, 'database.json'))
+
+        # Cleaning the existing data. This change is not registered until the parsing is ok
+        # db.session.query(Person).delete()
+        # db.session.query(Team).delete()
+
+        #try:
+        with io.open(os.path.join(config.JSON_FOLDER, 'database.json'), 'r', encoding='utf8') as f:
+            data = json.load(f)
+
+            # TEAMS
+            print(data['teams'])
+            teams = {}
+            for team_json in data['teams']:
+                neo_team = Team()
+                team_id = team_json['id']
+                neo_team.name = team_json['name']
+                teams[team_id] = neo_team
+                db.session.add(neo_team)
+
+            # PERSONS
+            managers = {}
+            persons = {}
+            # We create all the persons and store a map with their ID
+            for person_json in data['persons']:
+                neo_person = Person()
+                person_id = person_json['id']
+                neo_person.login = person_json['login']
+                neo_person.name = person_json['name']
+                neo_person.surname = person_json['surname']
+                neo_person.birthday =  datetime.datetime.strptime(person_json['birthday'], '%Y-%m-%d %H:%M:%S')
+                neo_person.arrival =  datetime.datetime.strptime(person_json['arrival'], '%Y-%m-%d %H:%M:%S')
+                neo_person.email = person_json['email']
+                neo_person.mobile = person_json['mobile']
+                neo_person.fixe = person_json['fixe']
+                neo_person.job = person_json['job']
+                neo_person.skype = person_json['skype']
+                neo_person.team = teams[person_json['team_id']]
+                persons[person_id] = neo_person
+                # We store data about the managers
+                manager = person_json['manager_id']
+                if manager in managers:
+                    managers[manager].append(neo_person)
+                else:
+                    managers[manager] = [neo_person]
+                db.session.add(neo_person)
+
+            # We create the link between persons and managers
+            for manager_id, managed_persons in managers.iteritems():
+                if manager_id in persons:
+                    manager = persons[manager_id]
+                    for managed_person in managed_persons:
+                        managed_person.manager = manager
+                else:
+                    print('Missing a manager: ' + manager_id)
+
+            # LINKS
+            for link_json in data['links']:
+                neo_link = Link()
+                neo_link.order = link_json['order']
+                neo_link.url = link_json['url']
+                neo_link.image = link_json['image']
+                neo_link.title = link_json['title']
+                neo_link.description = link_json['description']
+                db.session.add(neo_link)
+
+            # INFOS
+            for info_json in data['infos']:
+                print(info_json)
+                neo_info = Infos()
+                neo_info.text = info_json['text']
+                db.session.add(neo_info)
+
+            db.session.commit()
+            return str(teams)
+        #except:
+            #return redirect(url_for('database.get_view', error='Error while parsing JSON. Check logs.'))
+
     @expose('/import_csv', methods=['POST'])
     def load_csv(self):
         """We create the persons from the data files."""
