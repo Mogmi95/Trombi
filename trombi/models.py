@@ -229,3 +229,34 @@ class Link(db.Model):
     image = db.Column(db.Text(), unique=False)
     title = db.Column(db.Text(), unique=False, default=u'Title')
     description = db.Column(db.Text(), unique=False, default=u'Description')
+
+
+class Room(db.Model):
+    """Represents a Room containing Persons."""
+
+    def __str__(self):
+        """Simple log method."""
+        return str(self.name)
+
+    __tablename__ = 'room'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.Text(), unique=False, default=u'Room')
+
+    floor_id = Column(Integer, ForeignKey('floor.id'))
+
+    # Not now
+    # persons = relationship("Person", backref="room")
+
+
+class Floor(db.Model):
+    """Represents a Floor containing Rooms."""
+
+    def __str__(self):
+        """Simple log method."""
+        return str(self.name)
+
+    __tablename__ = 'floor'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.Text(), unique=False, default=u'Floor')
+
+    rooms = relationship("Room", backref="floor") 
