@@ -51,7 +51,7 @@ crossorigin=""/>
         zoom: 2
     });
     // create the image
-    var imageUrl = 'http://localhost/static/images/maps/{{ selected_floor.id }}.svg',
+    var imageUrl = '/static/images/maps/{{ selected_floor.id }}.svg',
             imageBounds = [[0, 0], [100, 100]];
     L.imageOverlay(imageUrl, imageBounds).addTo(map);
     // create a red polygon from an array of LatLng points
