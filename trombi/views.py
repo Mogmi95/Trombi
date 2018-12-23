@@ -17,7 +17,7 @@ from flask.ext.babel import gettext
 
 from config import LANGUAGES, PHOTOS_FOLDER, WEBSITE_URL
 from app import db, app, babel
-from models import Person, PersonComment, Team, Infos, Link
+from models import Person, PersonComment, Team, Infos, Link, Room, Floor
 
 
 @babel.localeselector
@@ -108,6 +108,18 @@ def show_person(login=None):
             title=title,
             commented=commented,
         )
+
+@app.route("/map")
+def show_map():
+    """Display information about a specific person."""
+    rooms = Room.query.all()
+
+    title = 'Maps'
+    return render_template(
+        'maps.html',
+        rooms=rooms,
+        title=title,
+    )
 
 
 @app.route('/person/comment', methods=['POST'])
