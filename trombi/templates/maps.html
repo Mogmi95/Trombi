@@ -4,6 +4,21 @@
 
 {% block body %}
 
-Hello maps world
+<h2>Find a floor</h2>
+<select onchange="if (this.value) window.location.href=this.value">
+    <option selected>Chose a room</option>
+    {% for room in rooms %}
+    <option value="room/{{ room }}">{{ room }}</option>
+    {% endfor %}
+</select>
+
+<h2>Find a room</h2>
+<select>
+    <option selected>Chose a floor</option>
+    {% for floor in floors %}
+    <option value="floor/{{ floor }}">{{ floor }}</option>
+    {% endfor %}
+</select>
+
 
 {% endblock %}

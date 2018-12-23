@@ -111,13 +111,19 @@ def show_person(login=None):
 
 @app.route("/map")
 def show_map():
-    """Display information about a specific person."""
+    """Base screen to access information about floors and rooms."""
     rooms = Room.query.all()
+    if rooms is None:
+        rooms = []
+    floors = Floor.query.all()
+    if floors is None:
+        floors = []
 
     title = 'Maps'
     return render_template(
         'maps.html',
         rooms=rooms,
+        floors=floors,
         title=title,
     )
 
