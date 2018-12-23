@@ -218,6 +218,11 @@ a {
   height: 100px;
 }
 
+
+/* Maps */
+#mapid { height: 650px; }
+
+
 /* Infos */
 .infosCard {
   position: relative;
