@@ -18,7 +18,7 @@ crossorigin=""/>
     <select onchange="if (this.value) window.location.href=this.value">
         <option selected>Choose a room</option>
         {% for room in rooms %}
-        <option value="map/room/{{ room.id }}">{{ room }}</option>
+        <option value="/map/room/{{ room.id }}">{{ room }}</option>
         {% endfor %}
     </select>
 
@@ -26,32 +26,48 @@ crossorigin=""/>
     <select onchange="if (this.value) window.location.href=this.value">
         <option selected>Choose a floor</option>
         {% for floor in floors %}
-        <option value="map/floor/{{ floor.id }}">{{ floor }}</option>
+        <option value="/map/floor/{{ floor.id }}">{{ floor }}</option>
         {% endfor %}
     </select>
 </div>
 
+
+
+<!-- Displaying the map only if needed -->
+{% if selected_floor is not none %}
+
+{% if selected_room is not none %}
+    <h2>{{ selected_floor }} > {{ selected_room }}</h2>
+{% else %}
+    <h2>{{ selected_floor }}</h2>
+{% endif %}
+
 <div id="mapid"></div>
 
-<!-- Adding scripts for the Leaflet map -->
 <script>
-var personRoomX = 10
-var personRoomY = 10
 // create the map
-var map = L.map('mapid', {
-    center: [65, 50],
-    zoom: 2
-});
-// create the image
-var imageUrl = 'http://localhost/static/images/map.svg',
-        imageBounds = [[0, 0], [100, 100]];
-L.imageOverlay(imageUrl, imageBounds).addTo(map);
-L.marker([personRoomX, personRoomY]).addTo(map)
-// create a red polygon from an array of LatLng points
-var latlngs = [[50, 50],[50, 75],[75, 75],[75, 50]];
-var polygon = L.polygon(latlngs, {color: 'red'}).addTo(map);
-// zoom the map to the polygon
-map.fitBounds(polygon.getBounds());
+    var map = L.map('mapid', {
+        center: [65, 50],
+        zoom: 2
+    });
+    // create the image
+    var imageUrl = 'http://localhost/static/images/maps/{{ selected_floor.id }}.svg',
+            imageBounds = [[0, 0], [100, 100]];
+    L.imageOverlay(imageUrl, imageBounds).addTo(map);
+    // create a red polygon from an array of LatLng points
+    var latlngs = [[50, 50],[50, 75],[75, 75],[75, 50]];
+    var polygon = L.polygon(latlngs, {color: 'red'}).addTo(map);
+    // zoom the map to the polygon
+    map.fitBounds(polygon.getBounds());
+
+    {% if selected_room is not none %}
+        var personRoomX = {{ selected_room.coordinate_x }}
+        var personRoomY = {{ selected_room.coordinate_y }}
+        L.marker([personRoomX, personRoomY]).addTo(map)
+    {% endif %}
+
 </script>
+
+{% endif %}
 
 {% endblock %}

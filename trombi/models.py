@@ -242,6 +242,9 @@ class Room(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.Text(), unique=False, default=u'Room')
 
+    coordinate_x = db.Column(db.Integer, unique=False)
+    coordinate_y = db.Column(db.Integer, unique=False)
+
     floor_id = Column(Integer, ForeignKey('floor.id'))
 
     # Not now

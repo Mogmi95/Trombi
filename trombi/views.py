@@ -112,6 +112,21 @@ def show_person(login=None):
 @app.route("/map")
 def show_map():
     """Base screen to access information about floors and rooms."""
+    return get_map_information()
+
+@app.route("/map/room/<room_id>")
+def show_map_room(room_id=None):
+    """Display a room on a map."""
+    return get_map_information(room_id=room_id)
+
+
+@app.route("/map/floor/<floor_id>")
+def show_map_floor(floor_id=None):
+    """Display a floor on a map."""
+    return get_map_information(floor_id=floor_id)
+
+def get_map_information(room_id=None, floor_id=None):
+    """Get information to display a map"""
     rooms = Room.query.all()
     if rooms is None:
         rooms = []
@@ -119,11 +134,29 @@ def show_map():
     if floors is None:
         floors = []
 
-    title = 'Maps'
+    title="Map"
+
+    selected_floor = None
+    selected_room = None
+
+    if room_id is not None:
+        # Displaying a room
+        selected_room = Room.query.filter_by(id=room_id).first()
+        selected_floor = selected_room.floor
+    elif floor_id is not None:
+        # Displaying a floor
+        selected_floor = Floor.query.filter_by(id=floor_id).first()
+        pass
+    else:
+        # Displaying nothing
+        pass
+
     return render_template(
         'maps.html',
         rooms=rooms,
         floors=floors,
+        selected_room=selected_room,
+        selected_floor=selected_floor,
         title=title,
     )
 
