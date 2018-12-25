@@ -147,6 +147,19 @@ class PersonView(sqla.ModelView):
     }
 
 
+# Maps edition
+class MapsView(BaseView):
+    """Allow the administration of maps"""
+
+    def is_accessible(self):
+        return login.current_user.is_authenticated
+
+    @expose('/', methods=['GET', 'POST'])
+    def get_view(self):
+        """Display the available maps operations."""
+        return self.render(
+            'admin/maps.html',
+        )
 
 # Database backup
 class DatabaseSaveView(BaseView):
@@ -535,6 +548,7 @@ def init():
     admin.add_view(MyModelView(Link, db.session))
     admin.add_view(MyModelView(Room, db.session))
     admin.add_view(MyModelView(Floor, db.session))
+    admin.add_view(MapsView(name='Maps', endpoint='maps'))
     admin.add_view(DatabaseSaveView(name='Database', endpoint='database'))
     admin.add_view(ChartsView(name='Charts', endpoint='charts'))
     admin.add_view(CommentsView(name='Comments', endpoint='comments'))
