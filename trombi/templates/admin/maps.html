@@ -1,6 +1,69 @@
 {% extends 'admin/index.html' %}
+
+{% block head %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css"
+integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+crossorigin=""/>
+ <!-- Make sure you put this AFTER Leaflet's CSS -->
+ <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js"
+   integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="
+   crossorigin="">
+</script>
+{% endblock %}
+
 {% block body %}
 
-<h3>Edit maps</h3>
+<h1>Maps</h1>
+
+<h2>Floors</h2>
+
+<p>Select an existing floor</p>
+
+<select>
+    <option>Select a floor</option>
+    <option>Floor 1 (4 rooms)</option>
+    <option>Floor 2 (2 rooms)</option>
+    <option>Floor 3 (12 rooms)</option>
+</select>
+
+<p>Or create a new floor</p>
+
+<input type="text"></input><input type="button" value="Create floor"></input>
+
+<p>----------------</p>
+<h3>Currently selected: Floor 1</h3>
+<div id="floor_map" style="height: 600px;"></div>
+<p>----------------</p>
+
+<h2>Rooms</h2>
+
+<table style="border: 1px;">
+    <tr>
+        <td>Room 1</td>
+        <td><a href="">Show on map</a></td>
+        <td><a href="">Edit position</a></td>
+        <td><a href="">6 persons</a></td>
+        <td><a href="">Delete</a></td>
+    </tr>
+</table>
+
+
+<script>
+// create the map
+    var map = L.map('floor_map', {
+        center: [65, 50],
+        zoom: 2
+    });
+    // create the image
+    var imageUrl = '/static/images/maps/1.svg',
+            imageBounds = [[0, 0], [100, 100]];
+    L.imageOverlay(imageUrl, imageBounds).addTo(map);
+    // create a red polygon from an array of LatLng points
+    var latlngs = [[50, 50],[50, 75],[75, 75],[75, 50]];
+    var polygon = L.polygon(latlngs, {color: 'red'}).addTo(map);
+    // zoom the map to the polygon
+    map.fitBounds(polygon.getBounds());
+
+</script>
 
 {% endblock %}
