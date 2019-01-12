@@ -214,7 +214,12 @@ class DatabaseSaveView(BaseView):
                 neo_person.fixe = person_json['fixe']
                 neo_person.job = person_json['job']
                 neo_person.skype = person_json['skype']
-                neo_person.team = teams[person_json['team_id']]
+                
+                person_team_id = person_json['team_id']
+                if (person_team_id == 'None'):
+                    print('Warning : ' + neo_person.login + ' has no team !')
+                else:
+                    neo_person.team = teams[person_json['team_id']]
                 persons[person_id] = neo_person
                 # We store data about the managers
                 manager = person_json['manager_id']
