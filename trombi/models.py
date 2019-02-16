@@ -129,6 +129,8 @@ class Person(db.Model):
 
     team_id = Column(Integer, ForeignKey('team.id'))
 
+    room_id = Column(Integer, ForeignKey('room.id'))
+
     comments = relationship("PersonComment", backref="person")
 
     def __repr__(self):
@@ -240,6 +242,7 @@ class Room(db.Model):
 
     __tablename__ = 'room'
     id = db.Column(db.Integer, primary_key=True)
+    identifier = db.Column(db.Text(), unique=False, default=u'ID')
     name = db.Column(db.Text(), unique=False, default=u'Room')
 
     coordinate_x = db.Column(db.Integer, unique=False)
@@ -247,8 +250,7 @@ class Room(db.Model):
 
     floor_id = Column(Integer, ForeignKey('floor.id'))
 
-    # Not now
-    # persons = relationship("Person", backref="room")
+    persons = relationship("Person", backref="room")
 
 
 class Floor(db.Model):
