@@ -25,6 +25,21 @@ Error: '{{ error }}'
 
 <br />
 
+
+<h3>Import JSON file</h3>
+
+{% if error %}
+Error: '{{ error }}'
+{% endif %}
+
+<form class="form-inline" method="POST" enctype="multipart/form-data" action="import_json">
+    <input type="file" name="json_file" id="json_file"><br /><br />
+    <input type="submit" value="Import" name="submit">
+</form>
+
+<br />
+
+
 <h3>Export database as JSON</h3>
 
 <a href="/admin/database/trombi_database.json" download>

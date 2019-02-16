@@ -5,6 +5,7 @@ photos
 data/persons.csv
 data/rooms.csv
 data/teams.csv
+data/database.json
 messages.pot
 backups
 .vscode/
