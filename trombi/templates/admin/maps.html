@@ -19,51 +19,76 @@ crossorigin=""/>
 
 <p>Select an existing floor</p>
 
-<select>
-    <option>Select a floor</option>
-    <option>Floor 1 (4 rooms)</option>
-    <option>Floor 2 (2 rooms)</option>
-    <option>Floor 3 (12 rooms)</option>
-</select>
+<div>
+    <h2>Find a floor</h2>
+    <select onchange="if (this.value) window.location.href=this.value">
+        <option selected>Choose a floor</option>
+        {% for floor in floors %}
+        <option value="/admin/maps?floor={{ floor.id }}">{{ floor }}</option>
+        {% endfor %}
+    </select>
+</div>
 
-<p>Or create a new floor</p>
 
-<input type="text"></input><input type="button" value="Create floor"></input>
+<!-- Displaying the map only if needed -->
+{% if selected_floor is not none %}
 
-<p>----------------</p>
-<h3>Currently selected: Floor 1</h3>
-<div id="floor_map" style="height: 600px;"></div>
-<p>----------------</p>
+{% if selected_room is not none %}
+    <h2>{{ selected_floor }} > {{ selected_room }}</h2>
+{% else %}
+    <h2>{{ selected_floor }}</h2>
+{% endif %}
 
-<h2>Rooms</h2>
-
-<table style="border: 1px;">
-    <tr>
-        <td>Room 1</td>
-        <td><a href="">Show on map</a></td>
-        <td><a href="">Edit position</a></td>
-        <td><a href="">6 persons</a></td>
-        <td><a href="">Delete</a></td>
-    </tr>
-</table>
-
+<div id="mapid" style="height: 500px;"></div>
 
 <script>
 // create the map
-    var map = L.map('floor_map', {
-        center: [65, 50],
-        zoom: 2
+    var map = L.map('mapid', {
+        center: [0, 0],
+        zoom: 7
     });
     // create the image
-    var imageUrl = '/static/images/maps/1.svg',
-            imageBounds = [[0, 0], [100, 100]];
-    L.imageOverlay(imageUrl, imageBounds).addTo(map);
-    // create a red polygon from an array of LatLng points
-    var latlngs = [[50, 50],[50, 75],[75, 75],[75, 50]];
-    var polygon = L.polygon(latlngs, {color: 'red'}).addTo(map);
+    var imageUrl = '/static/images/maps/{{ selected_floor.id }}.svg'
+    var imageBounds = [[0, 0], [250, 250]];
+    var overlay = L.imageOverlay(imageUrl, imageBounds);
+    overlay.addTo(map);
     // zoom the map to the polygon
-    map.fitBounds(polygon.getBounds());
+    map.fitBounds(imageBounds);
+
+    // TODO : iterate over all the rooms to display them on the map
+    {% if selected_room is not none %}
+        var personRoomX = {{ selected_room.coordinate_x }}
+        var personRoomY = {{ selected_room.coordinate_y }}
+        L.marker([personRoomX, personRoomY]).addTo(map)
+    {% endif %}
+
+    // TODO : use selected_room to focus on a specific room on the map
+    var popup = L.popup();
+    function onMapClick(e) {
+        var httpContent = e.latlng.toString();
+        httpContent += "<br />";
+        httpContent += "\
+                <div>\
+            <h3>Select a room</h3>\
+            <select onchange=\"if (this.value) window.location.href=this.value\">\
+                <option selected>Choose a room</option>\
+                {% for room in selected_floor.rooms %}\
+                <option value=\"/map/room/{{ room.id }}\">{{ room }}</option>\
+                {% endfor %}\
+            </select>\
+            </div>\
+        ";
+        httpContent += "<br />";
+        httpContent += "<input type='submit'></input>";
+        popup
+            .setLatLng(e.latlng)
+            .setContent(httpContent)
+            .openOn(map);
+    };
+
+    map.on('click', onMapClick);
 
 </script>
+{% endif %}
 
 {% endblock %}

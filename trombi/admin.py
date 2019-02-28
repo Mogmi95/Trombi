@@ -157,8 +157,28 @@ class MapsView(BaseView):
     @expose('/', methods=['GET', 'POST'])
     def get_view(self):
         """Display the available maps operations."""
+
+        floors = Floor.query.all()
+        
+        selected_floor_id = request.args.get('floor')
+        selected_floor = None
+        selected_room = None
+        if (selected_floor_id is not None):
+            selected_floor_id = int(selected_floor_id)
+            for f in floors:
+                print(type(f.id))
+                print(type(selected_floor_id))
+                if f.id == selected_floor_id:
+                    print("u wot m8")
+                    selected_floor = f
+
+        
+        print(selected_floor)
         return self.render(
             'admin/maps.html',
+            floors=floors,
+            selected_floor=selected_floor,
+            selected_room=selected_room
         )
 
 # Database backup

@@ -49,11 +49,14 @@ crossorigin=""/>
     // zoom the map to the polygon
     map.fitBounds(imageBounds);
 
+    // TODO : iterate over all the rooms to display them on the map
     {% if selected_room is not none %}
         var personRoomX = {{ selected_room.coordinate_x }}
         var personRoomY = {{ selected_room.coordinate_y }}
         L.marker([personRoomX, personRoomY]).addTo(map)
     {% endif %}
+
+    // TODO : use selected_room to focus on a specific room on the map
 
 </script>
 
