@@ -154,6 +154,24 @@ class MapsView(BaseView):
     def is_accessible(self):
         return login.current_user.is_authenticated
 
+    @expose('/test', methods=['POST'])
+    def test(self):
+        selected_floor_id = request.form.get('floorId')
+        data = request.form.get('data')
+        parsedData = json.loads(data)
+
+        print(parsedData)
+        for elt in parsedData:
+            roomId = elt['id']
+            x = elt['x']
+            y = elt['y']
+            room = Room.query.filter_by(id=roomId).first()
+            room.coordinate_x = x
+            room.coordinate_y = y
+            db.session.add(room)
+        db.session.commit()
+        return str(data)
+
     @expose('/', methods=['GET', 'POST'])
     def get_view(self):
         """Display the available maps operations."""
@@ -162,23 +180,32 @@ class MapsView(BaseView):
         
         selected_floor_id = request.args.get('floor')
         selected_floor = None
-        selected_room = None
         if (selected_floor_id is not None):
             selected_floor_id = int(selected_floor_id)
             for f in floors:
-                print(type(f.id))
-                print(type(selected_floor_id))
                 if f.id == selected_floor_id:
-                    print("u wot m8")
                     selected_floor = f
 
         
-        print(selected_floor)
+        superjson = '['
+        if selected_floor is not None:
+            jsonformat = u'{{ "id": "{}", "name": "{}", "x": "{}", "y": "{}" }},'
+            for i, room in enumerate(selected_floor.rooms):
+                if (i == len(selected_floor.rooms) - 1):
+                    jsonformat = jsonformat[:-1]
+                superjson += jsonformat.format(
+                        room.id,
+                        room.name,
+                        room.coordinate_x,
+                        room.coordinate_y,
+                    )
+        superjson += ']'
+        
         return self.render(
             'admin/maps.html',
             floors=floors,
             selected_floor=selected_floor,
-            selected_room=selected_room
+            superjson=superjson
         )
 
 # Database backup

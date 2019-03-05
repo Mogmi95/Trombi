@@ -41,6 +41,8 @@ crossorigin=""/>
 
 <div id="mapid" style="height: 500px;"></div>
 
+<input type="submit" value="Save" onclick="updateFloor();"></input>
+
 <script>
 // create the map
     var map = L.map('mapid', {
@@ -48,38 +50,73 @@ crossorigin=""/>
         zoom: 7
     });
     // create the image
-    var imageUrl = '/static/images/maps/{{ selected_floor.id }}.svg'
+    //var imageUrl = '/static/images/maps/{{ selected_floor.id }}.svg'
+    var imageUrl = 'http://localhost/static/images/maps/3.png'
     var imageBounds = [[0, 0], [250, 250]];
     var overlay = L.imageOverlay(imageUrl, imageBounds);
     overlay.addTo(map);
     // zoom the map to the polygon
     map.fitBounds(imageBounds);
+    map.setZoom(2);
 
-    // TODO : iterate over all the rooms to display them on the map
-    {% if selected_room is not none %}
-        var personRoomX = {{ selected_room.coordinate_x }}
-        var personRoomY = {{ selected_room.coordinate_y }}
-        L.marker([personRoomX, personRoomY]).addTo(map)
-    {% endif %}
+    var test = JSON.parse('{{ superjson | safe }}');
+
+    var markerMap = new Map();
+
+    // We create markers from the JSON we just parsed
+    var i;
+    for (i = 0; i < test.length; i++) {
+        markerMap.set(test[i].id, {
+            marker: L.marker([test[i].x, test[i].y], { radius:20, title: test[i].name }),
+            name: test[i].name
+        });
+    }
+
+    console.log("Markers " + markerMap.size);
+
+    function createMarker(lat, lng, roomName) {
+        return L.marker([lat, lng], { radius:20, title: roomName })
+    }
+
+    function renderRooms() {
+        for (const [roomId, data] of markerMap) {
+            console.log("Creating marker for " + roomId);
+            markerMap.get(roomId).marker.addTo(map);
+        }
+    };
+
+    renderRooms();
+
+    function submitNewRoom(val) {
+        sp = val.split(";");
+        var roomId = sp[0];
+        var roomName = sp[1];
+        var lat = sp[2];
+        var lng = sp[3];
+        //alert("ID: " + roomId + " NAME: " + roomName);
+        markerMap.get(roomId).marker.removeFrom(map);
+        markerMap.set(roomId, {
+                marker: createMarker(lat, lng, roomName),
+                roomName: roomName
+            });
+        renderRooms();
+        popup.remove();
+    }
 
     // TODO : use selected_room to focus on a specific room on the map
     var popup = L.popup();
     function onMapClick(e) {
-        var httpContent = e.latlng.toString();
-        httpContent += "<br />";
-        httpContent += "\
+        httpContent = "\
                 <div>\
-            <h3>Select a room</h3>\
-            <select onchange=\"if (this.value) window.location.href=this.value\">\
-                <option selected>Choose a room</option>\
-                {% for room in selected_floor.rooms %}\
-                <option value=\"/map/room/{{ room.id }}\">{{ room }}</option>\
-                {% endfor %}\
-            </select>\
-            </div>\
+                <h3>Select a room</h3>\
+                <select onchange=\"submitNewRoom(this.value)\">\
+                    <option selected>Choose a room</option>\
+                    {% for room in selected_floor.rooms %}\
+                    <option value=\"{{ room.id }};{{ room.name }};" + e.latlng.lat + ";" + e.latlng.lng + "\">{{ room }}</option>\
+                    {% endfor %}\
+                </select>\
+                </div>\
         ";
-        httpContent += "<br />";
-        httpContent += "<input type='submit'></input>";
         popup
             .setLatLng(e.latlng)
             .setContent(httpContent)
@@ -87,6 +124,37 @@ crossorigin=""/>
     };
 
     map.on('click', onMapClick);
+
+    function mapToObject(o, m) {
+        for(let[k,v] of m) { o[k] = v }
+    }
+
+    function updateFloor() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                alert(this.responseText);
+            }
+        };
+
+        var roomdata = "[";
+        for (const [roomId, data] of markerMap) {
+            roomdata += JSON.stringify({
+                id: roomId,
+                x: data.marker.getLatLng().lat,
+                y: data.marker.getLatLng().lng
+            });
+            roomdata += ","
+        }
+        if (roomdata.length > 1) {
+            roomdata = roomdata.substring(0, roomdata.length - 1);
+        }
+        roomdata += "]"
+
+        xhttp.open("POST", "/admin/maps/test", true);
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.send("floorId={{ selected_floor.id }}&data=" + roomdata);
+    }
 
 </script>
 {% endif %}

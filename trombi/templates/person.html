@@ -167,20 +167,20 @@ crossorigin=""/>
 </div>
 
 <script>
+// create the marker
+var marker = L.marker([{{ person.room.coordinate_x }}, {{ person.room.coordinate_y }}]);
 // create the map
 var map = L.map('personmap', {
-    center: [65, 50],
-    zoom: 1
+    center: marker.getLatLng(),
+    zoom: 2
 });
 // create the image
-var imageUrl = '/static/images/maps/{{ person.room.floor.id }}.svg'
+// var imageUrl = '/static/images/maps/{{ person.room.floor.id }}.svg'
+var imageUrl = 'http://localhost/static/images/maps/3.png'
 var imageBounds = [[0, 0], [250, 250]];
 L.imageOverlay(imageUrl, imageBounds).addTo(map);
-// zoom the map to the polygon
-
-var marker = L.marker([{{ person.room.coordinate_x }}, {{ person.room.coordinate_y }}]);
+// add the marker to the map
 marker.addTo(map);
-map.setView(marker.getLatLng());
 
 
 function myFunction() {
