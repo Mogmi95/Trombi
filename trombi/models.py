@@ -240,6 +240,11 @@ class Room(db.Model):
         """Simple log method."""
         return str(self.name)
 
+    def as_dict(self):
+        """Dumps the data as JSON"""
+        return {c.name: unicode((getattr(self, c.name))) for c in self.__table__.columns}
+
+
     __tablename__ = 'room'
     id = db.Column(db.Integer, primary_key=True)
     identifier = db.Column(db.Text(), unique=False, default=u'ID')
@@ -259,6 +264,10 @@ class Floor(db.Model):
     def __str__(self):
         """Simple log method."""
         return str(self.name)
+
+    def as_dict(self):
+        """Dumps the data as JSON"""
+        return {c.name: unicode((getattr(self, c.name))) for c in self.__table__.columns}
 
     __tablename__ = 'floor'
     id = db.Column(db.Integer, primary_key=True)

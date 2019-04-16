@@ -223,7 +223,7 @@ a {
 #mapid { height: 650px; }
 
 /* Maps */
-#personmap { height: 200px; }
+#personmap { height: 400px; }
 
 
 /* Infos */
@@ -246,7 +246,7 @@ a {
 .personCard {
   position: relative;
   width: 33%;
-  min-width: 450px;
+  min-width: 650px;
   background: #fcfcfc;
   margin-left: auto;
   margin-right: auto;

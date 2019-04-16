@@ -1,0 +1,204 @@
+{% extends "index.html" %}
+
+{% block head %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css"
+integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+crossorigin=""/>
+ <!-- Make sure you put this AFTER Leaflet's CSS -->
+ <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js"
+   integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="
+   crossorigin="">
+</script>
+{% endblock %}
+
+{% block body %}
+
+<div class="personCard">
+
+  <div class="personCardHeader">
+    <div class="personCardHeaderBackground"></div>
+    <div class="personCardHeaderAvatar" style="background: url({{ url_for('person_image', login=person.login) }}) center / cover;"></div>
+    <div class="personCardHeaderName">{{ person.name }} {{ person.surname }}</div>
+  </div>
+
+  <div class="mdl-card__supporting-text">
+
+    <ul class="mdl-list">
+      <input id="input_name" type="text" name="name" value="name"></input>
+    </ul>
+    <div class="horizontalSeparationLine"></div><br/>
+    <p>Floor</p>
+    <select onchange="if (this.value) updateFloor(this.value);">
+        <option value ="-1" selected>Choose a floor</option>
+        {% for floor in floors %}
+        <option value="{{ floor.id }}">{{ floor }}</option>
+        {% endfor %}
+    </select>
+    <p>Location: {{ person.room.name }}@{{ person.room.floor.name }}</p>
+    <div id="personmap"></div>
+
+    <div class="mdl-card__actions mdl-card--border">
+        <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" onClick="submitEdit();">
+            Submit
+        </a>
+    </div>
+
+
+  </div>
+</div>
+
+
+<div id="snackbar-root" class="mdl-js-snackbar mdl-snackbar">
+  <div class="mdl-snackbar__text"></div>
+  <button class="mdl-snackbar__action" type="button"></button>
+</div>
+
+<script>
+// create the marker
+var marker = L.marker([{{ person.room.coordinate_x }}, {{ person.room.coordinate_y }}]);
+// create the map
+var map = L.map('personmap', {
+    center: marker.getLatLng(),
+    zoom: 2
+});
+
+mapOverlay = null;
+updateFloor({{ person.room.floor.id }});
+
+// add the marker to the map
+marker.addTo(map);
+
+// JSON containing floors data
+floorsData = [];
+
+// Storing the rooms rectangles
+var roomRects = [];
+
+
+// ID of the current floor
+var currentFloorId = {{ person.room.floor.id }};
+// ID of the currently selected room
+var currentRoomId = {{ person.room.id }};
+
+function createRoomRectangle(room) {
+  var roomColor = "#FF00FF";
+
+  if (room.id == currentRoomId) {
+    roomColor = "#00FF00";
+  }
+
+  // define rectangle geographical bounds
+  size = 5;
+  var bounds = [[parseInt(room.coordinate_x) + size, parseInt(room.coordinate_y) + size * 2],
+                [parseInt(room.coordinate_x) - size, parseInt(room.coordinate_y) - size * 2]];
+
+  console.log(bounds);
+
+  // create an orange rectangle
+  var rect = L.rectangle(bounds, {color: roomColor, weight: 2});
+  rect.bindTooltip(room.name);
+  rect.addTo(map);
+  rect.on("mouseover", function(event) {
+    rect.openTooltip();
+  });
+  rect.on("click", function(event) {
+    currentRoomId = room.id;
+    refreshAllRooms(currentFloorId);
+  });
+  return rect;
+}
+
+function loadMapImage(imageUrl) {
+  if (mapOverlay != null) {
+    map.removeLayer(mapOverlay);
+  }
+  var imageBounds = [[0, 0], [250, 250]];
+  var mapOverlay = L.imageOverlay(imageUrl, imageBounds);
+  mapOverlay.addTo(map);
+}
+
+function refreshFloorsData(floorId, callback) {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4) {
+      if (this.status == 200) {
+        floorsData = JSON.parse(this.responseText);
+        callback(true);
+      } else {
+        callback(false);
+      }
+    } 
+  };
+
+  xhttp.open("GET", "/api/maps", true);
+  //xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhttp.send();
+}
+
+function refreshRoomsRect() {
+  var floors = floorsData.floors;
+  for (var i = 0; i < floors.length; i++) {
+    var floorId = floors[i].id;
+    var rooms = floors[i].rooms;
+    if (floorId == floorId) {
+      for (var j = 0; j < rooms.length; j++) {
+        var rect = createRoomRectangle(rooms[j]);
+        roomRects.push(rect);
+      };
+    }
+  };
+}
+
+function refreshAllRooms(floorId) {
+    // Add a marker for each room (color the current if available)  
+  refreshFloorsData(floorId, function() {
+    // Removing the exising rects
+    for (var i = 0; i < roomRects.length; i++) {
+      roomRects[i].remove();
+    }
+    roomRects = [];
+    refreshRoomsRect();
+  });
+}
+
+function updateFloor(floorId) {
+  // alert("Updating the floor " + floorId);
+    // loadMapImage'/static/images/maps/{{ person.room.floor.id }}.svg');
+  loadMapImage('http://localhost/static/images/maps/3.png');
+  // Request map data from API
+  // Load image of the floor
+  
+  refreshAllRooms(floorId);
+}
+
+/**
+* Send the information to the back
+*/
+function submitEdit() {
+  var inputName = $("#input_name").val();
+
+  // TODO : Add checking
+
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+        alert(this.responseText);
+    }
+  };
+
+  xhttp.open("POST", "/person/{{ person.login }}/edit/confirm", true);
+  xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhttp.send("id={{ person.id }}&name=" + inputName + "&floorId=" + currentFloorId + "&roomId=" + currentRoomId);
+}
+
+function showSnackbar(text) {
+    var snackbarContainer = document.querySelector('#snackbar-root');
+    var data = {
+      message: text,
+      timeout: 2000,
+    };
+    snackbarContainer.MaterialSnackbar.showSnackbar(data);
+}
+</script>
+
+{% endblock %}

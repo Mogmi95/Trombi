@@ -109,6 +109,64 @@ def show_person(login=None):
             commented=commented,
         )
 
+@app.route('/api/maps')
+def get_maps_info():
+    """
+    Return a list of all the floors with their rooms
+    """
+    floors = Floor.query.all()
+
+    floordata = []
+    for floor in floors:
+        data = floor.as_dict()
+        data['rooms'] = [room.as_dict() for room in floor.rooms]
+        floordata.append(data)
+
+    return '{"floors": ' + str(floordata).replace("u'", "'").replace("'", "\"") + '}'
+
+@app.route('/person/<login>/edit')
+def show_person_report(login=None):
+    """Report an error on a person's profile."""
+    #person_login = request.form.get('personId')
+    person = Person.query.filter_by(login=login).first()
+    floors = Floor.query.all()
+    print(person)
+    return render_template(
+        "person_report.html",
+        person=person,
+        floors=floors,
+    )
+
+@app.route('/person/<login>/edit/confirm', methods=['POST'])
+def person_edit(login=None):
+    """Submit an edit for a person."""
+    inputId = request.form.get('id')
+    inputName = request.form.get('name')
+    inputRoom = request.form.get('roomId')
+    person = Person.query.filter_by(id=inputId).first()
+    room = Room.query.filter_by(id=inputRoom).first()
+    person.room = room
+    # person_comment = PersonComment()
+    # person_comment.message = comment.replace('<', '(').replace('>', ')')
+    # person.comments.append(person_comment)
+    db.session.add(person)
+    db.session.commit()
+    return "Edited OK " + inputName + " roomID " + inputRoom
+
+
+@app.route('/person/comment', methods=['POST'])
+def person_comment():
+    """Add a comment on a person."""
+    comment = request.form.get('comment')
+    login = request.form.get('login')
+    person = Person.query.filter_by(login=login).first()
+    person_comment = PersonComment()
+    person_comment.message = comment.replace('<', '(').replace('>', ')')
+    person.comments.append(person_comment)
+    db.session.commit()
+    return redirect(url_for('show_person', login=login, commented=True))
+
+
 @app.route("/map")
 def show_map():
     """Base screen to access information about floors and rooms."""
@@ -159,19 +217,6 @@ def get_map_information(room_id=None, floor_id=None):
         selected_floor=selected_floor,
         title=title,
     )
-
-
-@app.route('/person/comment', methods=['POST'])
-def person_comment(login=None):
-    """Add a comment on a person."""
-    comment = request.form.get('comment')
-    login = request.form.get('login')
-    person = Person.query.filter_by(login=login).first()
-    person_comment = PersonComment()
-    person_comment.message = comment.replace('<', '(').replace('>', ')')
-    person.comments.append(person_comment)
-    db.session.commit()
-    return redirect(url_for('show_person', login=login, commented=True))
 
 
 @app.route("/infos")
