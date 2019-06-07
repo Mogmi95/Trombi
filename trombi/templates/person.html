@@ -15,6 +15,11 @@ crossorigin=""/>
 
 <div class="personCard">
 
+  {% if person.comments|length > 0 %}
+  <div id="personCardWarningHeader">
+    <i class="material-icons mdl-list__item-icon" style="float:left;">warning</i>This person has pending updates
+  </div>
+  {% endif %}
   <div class="personCardHeader">
     <div class="personCardHeaderBackground"></div>
     <div class="personCardHeaderAvatar" style="background: url({{ url_for('person_image', login=person.login) }}) center / cover;"></div>

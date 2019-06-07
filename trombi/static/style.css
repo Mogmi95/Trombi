@@ -271,6 +271,15 @@ a {
     padding-top: 16px
 }
 
+#personCardWarningHeader {
+  background-color: #ffae42;
+  padding: 8px;
+  margin-bottom: 0px;
+}
+
+#personCardWarningHeader i {
+  margin-right: 8px;
+}
 .personCardHeaderName {
   display: block;
   color: #212121;
