@@ -31,10 +31,14 @@ crossorigin=""/>
     <select onchange="if (this.value) updateFloor(this.value);">
         <option value ="-1" selected>Choose a floor</option>
         {% for floor in floors %}
-        <option value="{{ floor.id }}">{{ floor }}</option>
+        <option value="{{ floor.id }}">{{ floor.id }}</option>
         {% endfor %}
     </select>
+    {% if person.room is not none %}
     <p>Location: {{ person.room.name }}@{{ person.room.floor.name }}</p>
+    {% else %}
+    <p>No map for this person yet.</p>
+    {% endif %}
     <div id="personmap"></div>
 
     <div class="mdl-card__actions mdl-card--border">
@@ -54,31 +58,43 @@ crossorigin=""/>
 </div>
 
 <script>
-// create the marker
-var marker = L.marker([{{ person.room.coordinate_x }}, {{ person.room.coordinate_y }}]);
+
+
+{% if person.room is not none %}
+var currentPersonFloorId = {{ person.room.floor.id }};
+var currentPersonRoomId = {{ person.room.id }};
+var currentPersonX = {{ person.room.coordinate_x }};
+var currentPersonY = {{ person.room.coordinate_y }};
+{% else %}
+var currentPersonFloorId = -1;
+var currentPersonRoomId = -1;
+var currentPersonX = -1;
+var currentPersonY = -1;
+{% endif %}
+
+// The map overlay
+var mapOverlay = null;
+// JSON containing floors data
+floorsData = [];
+// Storing the rooms rectangles
+var roomRects = [];
+// ID of the current floor
+var currentFloorId = currentPersonFloorId;
+// ID of the currently selected room
+var currentRoomId = currentPersonRoomId;
+
+// TODO Find a better way to center the map
+var center = [50, 50];
+if (currentPersonX >= 0 || currentPersonY >= 0) {
+  var center = [currentPersonX, currentPersonY];
+}
 // create the map
 var map = L.map('personmap', {
-    center: marker.getLatLng(),
+    center: center,
     zoom: 2
 });
 
-mapOverlay = null;
-updateFloor({{ person.room.floor.id }});
-
-// add the marker to the map
-marker.addTo(map);
-
-// JSON containing floors data
-floorsData = [];
-
-// Storing the rooms rectangles
-var roomRects = [];
-
-
-// ID of the current floor
-var currentFloorId = {{ person.room.floor.id }};
-// ID of the currently selected room
-var currentRoomId = {{ person.room.id }};
+updateFloor(currentPersonFloorId);
 
 function createRoomRectangle(room) {
   var roomColor = "#FF00FF";
@@ -91,8 +107,6 @@ function createRoomRectangle(room) {
   size = 5;
   var bounds = [[parseInt(room.coordinate_x) + size, parseInt(room.coordinate_y) + size * 2],
                 [parseInt(room.coordinate_x) - size, parseInt(room.coordinate_y) - size * 2]];
-
-  console.log(bounds);
 
   // create an orange rectangle
   var rect = L.rectangle(bounds, {color: roomColor, weight: 2});
@@ -108,12 +122,21 @@ function createRoomRectangle(room) {
   return rect;
 }
 
+function placeMarkerForCurrentPersonRoom() {
+  if (currentPersonRoomId > 0) {
+    // We place a cursor for the current position of the person if we are on the correct floor
+    var marker = L.marker([currentPersonX, currentPersonY]);
+    // add the marker to the map
+    marker.addTo(map);
+  }
+}
+
 function loadMapImage(imageUrl) {
   if (mapOverlay != null) {
     map.removeLayer(mapOverlay);
   }
   var imageBounds = [[0, 0], [250, 250]];
-  var mapOverlay = L.imageOverlay(imageUrl, imageBounds);
+  mapOverlay = L.imageOverlay(imageUrl, imageBounds);
   mapOverlay.addTo(map);
 }
 
@@ -140,7 +163,7 @@ function refreshRoomsRect() {
   for (var i = 0; i < floors.length; i++) {
     var floorId = floors[i].id;
     var rooms = floors[i].rooms;
-    if (floorId == floorId) {
+    if (floorId == currentFloorId) {
       for (var j = 0; j < rooms.length; j++) {
         var rect = createRoomRectangle(rooms[j]);
         roomRects.push(rect);
@@ -162,13 +185,21 @@ function refreshAllRooms(floorId) {
 }
 
 function updateFloor(floorId) {
-  // alert("Updating the floor " + floorId);
-    // loadMapImage'/static/images/maps/{{ person.room.floor.id }}.svg');
-  loadMapImage('http://localhost/static/images/maps/3.png');
-  // Request map data from API
-  // Load image of the floor
-  
-  refreshAllRooms(floorId);
+  alert("Updating floor " + floorId);
+  if (floorId < 0) {
+    //alert("No floor for this person yet");
+  } else {
+    // alert("Updating the floor " + floorId);
+    // TODO should use url_for here instead of this method...
+      // loadMapImage'/static/images/maps/' + floorId + '.svg');
+    currentFloorId = floorId;
+    
+    loadMapImage('http://localhost/static/images/maps/' + floorId + '.png');
+    // Request map data from API
+    // Load image of the floor
+    
+    refreshAllRooms(floorId);
+  }
 }
 
 /**
@@ -183,6 +214,7 @@ function submitEdit() {
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
         alert(this.responseText);
+        window.location.replace('{{ url_for("show_person", login=person.login) }}');
     }
   };
 
