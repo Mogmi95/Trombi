@@ -31,7 +31,7 @@ crossorigin=""/>
     <select onchange="if (this.value) updateFloor(this.value);">
         <option value ="-1" selected>Choose a floor</option>
         {% for floor in floors %}
-        <option value="{{ floor.id }}">{{ floor.id }}</option>
+        <option value="{{ floor.id }}">{{ floor.name }}</option>
         {% endfor %}
     </select>
     {% if person.room is not none %}
@@ -97,10 +97,10 @@ var map = L.map('personmap', {
 updateFloor(currentPersonFloorId);
 
 function createRoomRectangle(room) {
-  var roomColor = "#FF00FF";
+  var roomColor = "#e74c3c";
 
   if (room.id == currentRoomId) {
-    roomColor = "#00FF00";
+    roomColor = "#07b32d";
   }
 
   // define rectangle geographical bounds
@@ -185,7 +185,6 @@ function refreshAllRooms(floorId) {
 }
 
 function updateFloor(floorId) {
-  alert("Updating floor " + floorId);
   if (floorId < 0) {
     //alert("No floor for this person yet");
   } else {
@@ -213,7 +212,7 @@ function submitEdit() {
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
-        alert(this.responseText);
+        //alert(this.responseText);
         window.location.replace('{{ url_for("show_person", login=person.login) }}');
     }
   };
