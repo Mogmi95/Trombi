@@ -24,7 +24,7 @@ crossorigin=""/>
   <div class="mdl-card__supporting-text">
 
     <ul class="mdl-list">
-      <input id="input_name" type="text" name="name" value="name"></input>
+      <input id="input_comment" type="textarea" name="comment" value="comment"></input>
     </ul>
     <div class="horizontalSeparationLine"></div><br/>
     <p>Floor</p>
@@ -109,7 +109,7 @@ function createRoomRectangle(room) {
                 [parseInt(room.coordinate_x) - size, parseInt(room.coordinate_y) - size * 2]];
 
   // create an orange rectangle
-  var rect = L.rectangle(bounds, {color: roomColor, weight: 2});
+  var rect = L.rectangle(bounds, {color: roomColor, weight: 1});
   rect.bindTooltip(room.name);
   rect.addTo(map);
   rect.on("mouseover", function(event) {
@@ -206,7 +206,7 @@ function updateFloor(floorId) {
 * Send the information to the back
 */
 function submitEdit() {
-  var inputName = $("#input_name").val();
+  var inputComment = $("#input_comment").val();
 
   // TODO : Add checking
 
@@ -220,7 +220,7 @@ function submitEdit() {
 
   xhttp.open("POST", "/person/{{ person.login }}/edit/confirm", true);
   xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhttp.send("id={{ person.id }}&name=" + inputName + "&floorId=" + currentFloorId + "&roomId=" + currentRoomId);
+  xhttp.send("id={{ person.id }}&comment=" + inputComment + "&floorId=" + currentFloorId + "&roomId=" + currentRoomId);
 }
 
 function showSnackbar(text) {

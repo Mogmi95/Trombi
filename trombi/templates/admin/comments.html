@@ -7,13 +7,17 @@
     <tr>
         <th>Login</th>
         <th>Comment</th>
-        <th>Delete</th>
+        <th>Room change</th>
+        <th>Reject</th>
+        <th>Accept</th>
     </tr>
 {% for comment in comments %}
     <tr>
         <td><a href="/admin/person/edit/?url=/admin/person&id={{ comment.person.id }}">{{ comment.person }}</a></td>
         <td>{{ comment.message|replace("\n", "<br />")|safe }}</td>
+        <td>{{ comment.pending_room_id }}</td>
         <td><a href="delete/{{ comment.id }}"><i class="fa fa-trash icon-trash"></i></a></td>
+        <td><a href="accept/{{ comment.id }}"><i class="fa fa-check icon-check"></i></a></td>
     </tr>
 {% endfor %}
 </table>

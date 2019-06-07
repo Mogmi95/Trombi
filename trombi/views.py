@@ -141,17 +141,18 @@ def show_person_report(login=None):
 def person_edit(login=None):
     """Submit an edit for a person."""
     inputId = request.form.get('id')
-    inputName = request.form.get('name')
+    inputComment = request.form.get('comment')
     inputRoom = request.form.get('roomId')
     person = Person.query.filter_by(id=inputId).first()
     room = Room.query.filter_by(id=inputRoom).first()
-    person.room = room
-    # person_comment = PersonComment()
-    # person_comment.message = comment.replace('<', '(').replace('>', ')')
-    # person.comments.append(person_comment)
-    db.session.add(person)
+    # person.room = room
+    person_comment = PersonComment()
+    person_comment.message = inputComment.replace('<', '(').replace('>', ')')
+    person_comment.pending_room_id = room.id
+    person.comments.append(person_comment)
+    db.session.add(person_comment)
     db.session.commit()
-    return "Edited OK " + inputName + " roomID " + inputRoom
+    return "Added comment OK " + inputRoom
 
 
 @app.route('/person/comment', methods=['POST'])

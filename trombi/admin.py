@@ -507,7 +507,7 @@ class CommentsView(BaseView):
         """Check if the current user can access the view."""
         return login.current_user.is_authenticated
 
-    @expose('/', methods=['GET', 'POST'])
+    @expose('/', methods=['GET'])
     def get_view(self):
         """Display the available comments."""
         comments = PersonComment.query.all()
@@ -520,6 +520,21 @@ class CommentsView(BaseView):
     def delete_comment(self, comment_id=None):
         """Delete a comment."""
         comment = PersonComment.query.filter_by(id=comment_id).first()
+        db.session.delete(comment)
+        db.session.commit()
+        return redirect(url_for('comments.get_view'))
+
+
+    @expose('/accept/<comment_id>', methods=['GET', 'POST'])
+    def accept_comment(self, comment_id=None):
+        """Accept a comment."""
+        comment = PersonComment.query.filter_by(id=comment_id).first()
+
+        # If a room change has been requested, we move the rquested person to the new room
+        new_room = Room.query.filter_by(id=comment.pending_room_id).first()
+        comment.person.room = new_room
+
+        db.session.add(comment.person)
         db.session.delete(comment)
         db.session.commit()
         return redirect(url_for('comments.get_view'))

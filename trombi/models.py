@@ -95,6 +95,7 @@ class PersonComment(db.Model):
     __tablename__ = 'personcomment'
     id = db.Column(db.Integer, primary_key=True)
     message = db.Column(db.String(512), unique=False)
+    pending_room_id = db.Column(db.Integer, unique=False)
 
     person_id = Column(Integer, ForeignKey('person.id'))
 
