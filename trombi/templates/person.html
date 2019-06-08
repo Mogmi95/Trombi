@@ -74,17 +74,6 @@ crossorigin=""/>
             </span>
           </li>
           {% endif %}
-          <!-- SKYPE -->
-          {% if person.skype != None and person.skype != '' %}
-          <li onclick="copyToClipboard('{{ person.skype }}')" class="mdl-list__item mdl-list__item--two-line mdl-js-ripple-effect">
-            <span class="rippleContainer mdl-list__item-primary-content">
-                <span class="mdl-ripple"></span>
-              <i class="material-icons mdl-list__item-icon">phone</i>
-              {{ person.skype }}
-              <span class="mdl-list__item-sub-title">Skype</span>
-            </span>
-          </li>
-          {% endif %}
           <!-- PHONE -->
           {% if person.fixe != None and person.fixe != '' %}
           <li onclick="copyToClipboard('{{ person.fixe }}')" class="mdl-list__item mdl-list__item--two-line mdl-js-ripple-effect">
