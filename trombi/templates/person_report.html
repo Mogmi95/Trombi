@@ -23,8 +23,9 @@ crossorigin=""/>
 
   <div class="mdl-card__supporting-text">
 
+    <p>Modifications</p>
     <ul class="mdl-list">
-      <input id="input_comment" type="textarea" name="comment" value="comment"></input>
+      <textarea id="input_comment" rows="5" name="comment" value="comment"></textarea>
     </ul>
     <div class="horizontalSeparationLine"></div><br/>
     <p>Floor</p>
@@ -35,7 +36,7 @@ crossorigin=""/>
         {% endfor %}
     </select>
     {% if person.room is not none %}
-    <p>Location: {{ person.room.name }}@{{ person.room.floor.name }}</p>
+    <p>Current location: {{ person.room.name }}@{{ person.room.floor.name }}</p>
     {% else %}
     <p>No map for this person yet.</p>
     {% endif %}

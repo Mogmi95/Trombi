@@ -223,7 +223,7 @@ a {
 #mapid { height: 650px; }
 
 /* Maps */
-#personmap { height: 400px; }
+#personmap { height: 300px; }
 
 
 /* Infos */
@@ -272,7 +272,7 @@ a {
 }
 
 #personCardWarningHeader {
-  background-color: #ffae42;
+  background-color: #e74c3c;
   padding: 8px;
   margin-bottom: 0px;
 }
@@ -379,6 +379,12 @@ a {
     font-family: 'Roboto';
     font-size: 100px;
     font-weight: 400;
+}
+
+/* Person report */
+
+#input_comment {
+  width: 100%;
 }
 
 /* Calendar */
