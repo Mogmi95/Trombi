@@ -198,6 +198,11 @@ def get_map_information(room_id=None, floor_id=None):
     selected_floor = None
     selected_room = None
 
+    # Map of {room_id: room_html_tooltip}
+    tooltip_map = {}
+    for room in rooms:
+        tooltip_map[room.id] = render_template("map_tooltip.html", room=room).replace("\n", "").replace("u'", "'")
+
     if room_id is not None:
         # Displaying a room
         selected_room = Room.query.filter_by(id=room_id).first()
@@ -213,6 +218,7 @@ def get_map_information(room_id=None, floor_id=None):
     return render_template(
         'maps.html',
         rooms=rooms,
+        tooltip_map=json.dumps(tooltip_map),
         floors=floors,
         selected_room=selected_room,
         selected_floor=selected_floor,

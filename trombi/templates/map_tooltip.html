@@ -1,0 +1,14 @@
+<b>{{ room.name }} ({{ room.persons|length }} persons)</b><br />
+<br />
+{% if room.persons|length == 0 %}
+    Empty room
+{% else %}
+    <table>
+    {% for person in room.persons %}
+    <tr>
+        <td><img style="height:24px;" src="{{ url_for('person_image', login=person.login) }}" /></td>
+        <td>{{ person.name }} {{ person.surname.upper() }}</td>
+    </tr>
+    {% endfor %}
+    </table>
+{% endif %}
