@@ -95,7 +95,7 @@
 function updateSearch(query) {
   results = document.getElementById("searchResults");
   other = document.getElementById("otherContent");
-  if (query.length > 0) {
+  if (query.length > 1) {
     performSearch(query, function(data) {
       otherContent.style.display = "none";
       results.style.display = "block";

@@ -20,7 +20,6 @@ crossorigin=""/>
 <p>Select an existing floor</p>
 
 <div>
-    <h2>Find a floor</h2>
     <select onchange="if (this.value) window.location.href=this.value">
         <option selected>Choose a floor</option>
         {% for floor in floors %}
@@ -50,8 +49,8 @@ crossorigin=""/>
         zoom: 7
     });
     // create the image
-    //var imageUrl = '/static/images/maps/{{ selected_floor.id }}.svg'
-    var imageUrl = 'http://localhost/static/images/maps/3.png'
+    var imageUrl = '/static/images/maps/{{ selected_floor.id }}.png'
+    //var imageUrl = 'http://localhost/static/images/maps/3.png'
     var imageBounds = [[0, 0], [250, 250]];
     var overlay = L.imageOverlay(imageUrl, imageBounds);
     overlay.addTo(map);

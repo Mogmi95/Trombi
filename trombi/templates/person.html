@@ -61,6 +61,13 @@ crossorigin=""/>
           </li>
           {% endif %}
       </ul>
+      <div class="horizontalSeparationLine"></div><br/>
+      {% if person.room is not none %}
+      <p>Location: {{ person.room.name }}@{{ person.room.floor.name }}</p>
+      <div id="personmap"></div>
+      {% else %}
+      <p>No map for this person yet.</p>
+      {% endif %}
       <div class="horizontalSeparationLine"></div>
       <ul class="mdl-list">
           <!-- EMAIL -->
@@ -122,13 +129,6 @@ crossorigin=""/>
           </li>
           {% endif %}
       </ul>
-      <div class="horizontalSeparationLine"></div><br/>
-      {% if person.room is not none %}
-      <p>Location: {{ person.room.name }}@{{ person.room.floor.name }}</p>
-      <div id="personmap"></div>
-      {% else %}
-      <p>No map for this person yet.</p>
-      {% endif %}
 
     <div class="mdl-card__actions mdl-card--border">
         <a href="/person/vcard/vcard-{{ person.login }}.vcf" download class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
@@ -187,8 +187,8 @@ function showPersonMap(floorId, personX, personY) {
       zoom: 2
   });
   // create the image
-  // var imageUrl = '/static/images/maps/' + floorId + '.svg'
-  var imageUrl = 'http://localhost/static/images/maps/' + floorId + '.png'
+  // TODO Use a better way to access images, but as of now it does weird stuff with Jinja2 and JS
+  var imageUrl = '/static/images/maps/' + floorId + '.png'
   var imageBounds = [[0, 0], [250, 250]];
   L.imageOverlay(imageUrl, imageBounds).addTo(map);
   // add the marker to the map

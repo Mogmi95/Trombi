@@ -251,8 +251,8 @@ class Room(db.Model):
     identifier = db.Column(db.Text(), unique=False, default=u'ID')
     name = db.Column(db.Text(), unique=False, default=u'Room')
 
-    coordinate_x = db.Column(db.Integer, unique=False)
-    coordinate_y = db.Column(db.Integer, unique=False)
+    coordinate_x = db.Column(db.Float, unique=False)
+    coordinate_y = db.Column(db.Float, unique=False)
 
     floor_id = Column(Integer, ForeignKey('floor.id'))
 
@@ -272,6 +272,7 @@ class Floor(db.Model):
 
     __tablename__ = 'floor'
     id = db.Column(db.Integer, primary_key=True)
+    filename = db.Column(db.String(80), unique=True)
     name = db.Column(db.Text(), unique=False, default=u'Floor')
 
     rooms = relationship("Room", backref="floor") 

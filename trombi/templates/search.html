@@ -1,13 +1,11 @@
 <div id="mainAllPersonsContainer">
 
-    <h2>Search results</h2>
+    <!-- <h2>Search results</h2>
 
     {{ search_result }}
 
     <br />
-    <hr />
-
-    {% for person in search_result['persons'] %}
+    <hr /> -->
 
     <div class="mdl-grid custom-grid">
         {% if persons|length == 0 %}
@@ -28,7 +26,5 @@
         {% endfor %}
         {% endif %}
     </div>
-
-    {% endfor %}
 
 </div>

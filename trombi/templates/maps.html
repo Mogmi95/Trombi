@@ -42,7 +42,7 @@ crossorigin=""/>
         zoom: 7
     });
     // create the image
-    var imageUrl = '/static/images/maps/{{ selected_floor.id }}.svg'
+    var imageUrl = '/static/images/maps/{{ selected_floor.id }}.png'
     var imageBounds = [[0, 0], [250, 250]];
     var overlay = L.imageOverlay(imageUrl, imageBounds);
     overlay.addTo(map);
