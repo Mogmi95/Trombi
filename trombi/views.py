@@ -238,15 +238,9 @@ def show_person_vcard(login=None):
     person = Person.query.filter_by(login=login).first()
     return person.create_vcard()
 
-
-@app.route("/search/<query>")
-def show_search(query=None):
-    """The search screen."""
-    title = gettext(u'Search')
-    message = gettext(
-        u'%(number)s result(s) for \"%(query)s\" :', number='{}',
-        query=query
-    )
+def perform_search(query):
+    """Return a set containing all the matches for the query"""
+    result = {}
 
     # Maybe re-do this part of the code in a more pytonic way
     hash_persons = {}
@@ -260,14 +254,31 @@ def show_search(query=None):
         for person in persons.all():
             hash_persons[person.login] = person
 
-    persons = []
+    result['persons'] = []
     for person_key in hash_persons.keys():
-        persons.append(hash_persons[person_key])
+        result['persons'].append(hash_persons[person_key])
 
-    if (len(persons) == 1):
-        return redirect(url_for('show_person', login=persons[0]))
+    return result
+
+@app.route("/search/<query>")
+def show_search(query=None):
+    """The search screen."""
+    title = gettext(u'Search')
+    message = gettext(
+        u'%(number)s result(s) for \"%(query)s\" :', number='{}',
+        query=query
+    )
+
+    search_result = perform_search(query)
+    persons = []
+    if 'persons' in search_result:
+        persons = search_result["persons"]
+
+    #if (len(persons) == 1):
+    #    return redirect(url_for('show_person', login=persons[0]))
     return render_template(
-        'all.html',
+        'search.html',
+        search_result=search_result,
         is_in_search_mode=True,
         persons=persons,
         message=message.format(len(persons)),
@@ -277,6 +288,38 @@ def show_search(query=None):
         header_text=None
         )
 
+@app.route("/api/search")
+def api_search():
+
+    # Searching for persons
+    persons = []
+    if ('q' in request.args):
+        query = request.args['q']
+        print(query)
+        search_result = perform_search(query)
+        persons = []
+        if 'persons' in search_result:
+            persons = search_result["persons"]
+
+    person_results = []
+    curr = 0
+    for person in persons:
+        tmp = {}
+        curr += 1
+        tmp['id'] = curr
+        tmp['text'] = person.surname.capitalize() + " " + person.name.capitalize() + " - " + person.job.capitalize()
+        person_results.append(tmp)
+
+    # Putting all the results inside a single JSON
+    result = '\
+    {\
+        "results": ['\
+        + '{"text": "People", "children":' + json.dumps(person_results) + '}'\
+        '\
+    ]}\
+    '.replace("u\'", "\'").strip()
+    print(result)
+    return result
 
 @app.route('/search/', methods=['POST'])
 def search():

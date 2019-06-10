@@ -20,6 +20,10 @@ a {
   height: 24px;
 }
 
+.select2-container {
+  width: 100%;
+}
+
 /* TODO: Hover and Focus state.
  *       Fix position of mobile search button.
  */
