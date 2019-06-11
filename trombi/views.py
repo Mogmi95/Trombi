@@ -248,21 +248,26 @@ def perform_search(query):
     """Return a set containing all the matches for the query"""
     result = {}
 
+    # PERSONS
+
     # Maybe re-do this part of the code in a more pytonic way
-    hash_persons = {}
+    result['persons'] = []
     for token in query.split(' '):
         persons = Person.query.filter(or_(
             Person.login.like('%' + token + '%'),
             Person.name.like('%' + token + '%'),
             Person.job.like('%' + token + '%'),
             Person.surname.like('%' + token + '%')))
-
         for person in persons.all():
-            hash_persons[person.login] = person
+            result['persons'].append(person)
 
-    result['persons'] = []
-    for person_key in hash_persons.keys():
-        result['persons'].append(hash_persons[person_key])
+    # ROOMS
+    result['rooms'] = []
+    for token in query.split(' '):
+        rooms = Room.query.filter(or_(
+            Room.name.like('%' + token + '%')))
+        for room in rooms.all():
+            result['rooms'].append(room)
 
     return result
 
@@ -279,6 +284,9 @@ def show_search(query=None):
     persons = []
     if 'persons' in search_result:
         persons = search_result["persons"]
+    rooms = []
+    if 'rooms' in search_result:
+        rooms = search_result["rooms"]
 
     #if (len(persons) == 1):
     #    return redirect(url_for('show_person', login=persons[0]))
@@ -287,6 +295,7 @@ def show_search(query=None):
         search_result=search_result,
         is_in_search_mode=True,
         persons=persons,
+        rooms=rooms,
         message=message.format(len(persons)),
         title=title,
         list_mode=get_list_mode(request),
