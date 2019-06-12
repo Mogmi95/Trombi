@@ -144,8 +144,9 @@ class Person(db.Model):
         diff = now - self.arrival
         custom_date = self.arrival.strftime(u'%Y/%m/%d')
 
-        years = diff.days / 365
-        months = diff.days % 365 / 30
+        diff = now - arrival
+        years =  diff.days / 365
+        months = (diff.days % 365) / 30
 
         return gettext(
             u'%(date)s (%(y)s years, %(m)s months)',
@@ -250,9 +251,9 @@ class Room(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     identifier = db.Column(db.Text(), unique=False, default=u'ID')
     name = db.Column(db.Text(), unique=False, default=u'Room')
-
-    coordinate_x = db.Column(db.Float, unique=False)
-    coordinate_y = db.Column(db.Float, unique=False)
+    is_for_meetings = db.Column(db.Boolean(), unique=False, default=False)
+    coordinate_x = db.Column(db.Float, unique=False, default=0)
+    coordinate_y = db.Column(db.Float, unique=False, default=0)
 
     floor_id = Column(Integer, ForeignKey('floor.id'))
 

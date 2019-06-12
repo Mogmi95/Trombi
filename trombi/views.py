@@ -256,7 +256,6 @@ def perform_search(query):
         persons = Person.query.filter(or_(
             Person.login.like('%' + token + '%'),
             Person.name.like('%' + token + '%'),
-            Person.job.like('%' + token + '%'),
             Person.surname.like('%' + token + '%')))
         for person in persons.all():
             result['persons'].append(person)
@@ -268,6 +267,14 @@ def perform_search(query):
             Room.name.like('%' + token + '%')))
         for room in rooms.all():
             result['rooms'].append(room)
+
+    # TEAMS
+    result['teams'] = []
+    for token in query.split(' '):
+        teams = Team.query.filter(or_(
+            Team.name.like('%' + token + '%')))
+        for team in teams.all():
+            result['teams'].append(team)
 
     return result
 
@@ -287,6 +294,9 @@ def show_search(query=None):
     rooms = []
     if 'rooms' in search_result:
         rooms = search_result["rooms"]
+    teams = []
+    if 'teams' in search_result:
+        teams = search_result["teams"]
 
     #if (len(persons) == 1):
     #    return redirect(url_for('show_person', login=persons[0]))
@@ -296,6 +306,7 @@ def show_search(query=None):
         is_in_search_mode=True,
         persons=persons,
         rooms=rooms,
+        teams=teams,
         message=message.format(len(persons)),
         title=title,
         list_mode=get_list_mode(request),

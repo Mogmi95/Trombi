@@ -14,7 +14,6 @@ crossorigin=""/>
 {% block body %}
 
 <div>
-    <h2>Find a floor</h2>
     <select onchange="if (this.value) window.location.href=this.value">
         <option selected>Choose a floor</option>
         {% for floor in floors %}
@@ -46,12 +45,18 @@ var roomRects = [];
 // ID of the current floor
 var currentFloorId = {{ selected_floor.id }};
 
+{% if selected_room is not none %}
+var roomToHighlight = {{ selected_room.id }};
+{% else %}
+var roomToHighlight = -1;
+{% endif %}
+
 // TODO Find a better way to center the map
 var center = [50, 50];
 // create the map
 var map = L.map('mapid', {
     center: center,
-    zoom: 2
+    zoom: 3
 });
 
 updateFloor(currentFloorId);
@@ -59,17 +64,24 @@ updateFloor(currentFloorId);
 tooltips = {{ tooltip_map|safe }};
 
 function createRoomRectangle(room) {
-  var roomColor = "#FF00FF";
+  if (roomToHighlight > 1 && room.id == roomToHighlight) {
+    var greenIcon = new L.Icon({
+      iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+      shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      shadowSize: [41, 41]
+    });
+    var rect = L.marker([room.coordinate_x, room.coordinate_y], {icon: greenIcon});
+    // Centering the map
+    map.flyTo([room.coordinate_x, room.coordinate_y]);
+    // We reset it
+    roomToHighlight = -1;
+  } else {
+    var rect = L.marker([room.coordinate_x, room.coordinate_y]);
+  }
 
-  // define rectangle geographical bounds
-  size = 10;
-  var bounds = [[parseInt(room.coordinate_x) + size, parseInt(room.coordinate_y) + size],
-                [parseInt(room.coordinate_x), parseInt(room.coordinate_y)]];
-
-  console.log(bounds)
-
-  // create an orange rectangle
-  var rect = L.circleMarker([room.coordinate_x, room.coordinate_y], {color: roomColor, weight: 1, radius: 50});
   rect.bindTooltip(tooltips[room.id]);
   rect.addTo(map);
   rect.on("mouseover", function(event) {
