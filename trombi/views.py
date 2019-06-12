@@ -252,29 +252,26 @@ def perform_search(query):
 
     # Maybe re-do this part of the code in a more pytonic way
     result['persons'] = []
-    for token in query.split(' '):
-        persons = Person.query.filter(or_(
-            Person.login.like('%' + token + '%'),
-            Person.name.like('%' + token + '%'),
-            Person.surname.like('%' + token + '%')))
-        for person in persons.all():
-            result['persons'].append(person)
+    persons = Person.query.filter(or_(
+        Person.login.like('%' + query + '%'),
+        Person.name.like('%' + query + '%'),
+        Person.surname.like('%' + query + '%')))
+    for person in persons.all():
+        result['persons'].append(person)
 
     # ROOMS
     result['rooms'] = []
-    for token in query.split(' '):
-        rooms = Room.query.filter(or_(
-            Room.name.like('%' + token + '%')))
-        for room in rooms.all():
-            result['rooms'].append(room)
+    rooms = Room.query.filter(or_(
+        Room.name.like('%' + query + '%')))
+    for room in rooms.all():
+        result['rooms'].append(room)
 
     # TEAMS
     result['teams'] = []
-    for token in query.split(' '):
-        teams = Team.query.filter(or_(
-            Team.name.like('%' + token + '%')))
-        for team in teams.all():
-            result['teams'].append(team)
+    teams = Team.query.filter(or_(
+        Team.name.like('%' + query + '%')))
+    for team in teams.all():
+        result['teams'].append(team)
 
     return result
 
