@@ -51,17 +51,20 @@ var roomToHighlight = {{ selected_room.id }};
 var roomToHighlight = -1;
 {% endif %}
 
-// TODO Find a better way to center the map
-var center = [50, 50];
-// create the map
-var map = L.map('mapid', {
-    center: center,
-    zoom: 3
-});
-
-updateFloor(currentFloorId);
-
 tooltips = {{ tooltip_map|safe }};
+
+var map;
+
+$(window).on('load', function() {
+  // TODO Find a better way to center the map
+  var center = [50, 50];
+  // create the map
+   map = L.map('mapid', {
+      center: center,
+      zoom: 3
+  });
+  updateFloor(currentFloorId);
+});
 
 function createRoomRectangle(room) {
   if (roomToHighlight > 1 && room.id == roomToHighlight) {

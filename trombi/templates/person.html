@@ -169,20 +169,24 @@ crossorigin=""/>
 
 // We only load the map if the person has one
 {% if person.room is not none %}
-showPersonMap(
-  {{ person.room.floor.id }},
-  {{ person.room.coordinate_x }},
-  {{ person.room.coordinate_y }}
-);
+$(window).on('load', function() {
+  showPersonMap(
+    {{ person.room.floor.id }},
+    {{ person.room.coordinate_x }},
+    {{ person.room.coordinate_y }}
+  );
+});
 {% else %}
 // Not calling show map for this person
 {% endif %}
+
+var map;
 
 function showPersonMap(floorId, personX, personY) {
   // create the marker
   var marker = L.marker([personX, personY]);
   // create the map
-  var map = L.map('personmap', {
+   map = L.map('personmap', {
       center: marker.getLatLng(),
       zoom: 3
   });
