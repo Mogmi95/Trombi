@@ -20,7 +20,7 @@ import flask_login as login
 import json
 from werkzeug.security import check_password_hash
 
-from models import TrombiAdmin, Person, PersonComment, Team, Infos, Link
+from models import TrombiAdmin, Person, PersonComment, Team, Infos, Link, Room, Floor
 from app import db, app
 import config
 
@@ -131,7 +131,7 @@ class PersonView(sqla.ModelView):
     # Change edit in the admin
     can_view_details = True
     column_searchable_list = ['login', 'name', 'surname']
-    form_columns = ('login', 'photo', 'name', 'surname', 'team', 'manager','birthday', 'arrival', 'email', 'mobile', 'fixe', 'job', 'skype', 'subordinates')
+    form_columns = ('login', 'photo', 'name', 'surname', 'team', 'manager','birthday', 'arrival', 'email', 'mobile', 'fixe', 'job', 'skype', 'subordinates', 'room')
 
     def is_accessible(self):
         """Check if the current user can access the view."""
@@ -147,6 +147,66 @@ class PersonView(sqla.ModelView):
     }
 
 
+# Maps edition
+class MapsView(BaseView):
+    """Allow the administration of maps"""
+
+    def is_accessible(self):
+        return login.current_user.is_authenticated
+
+    @expose('/test', methods=['POST'])
+    def test(self):
+        selected_floor_id = request.form.get('floorId')
+        data = request.form.get('data')
+        parsedData = json.loads(data)
+
+        print(parsedData)
+        for elt in parsedData:
+            roomId = elt['id']
+            x = elt['x']
+            y = elt['y']
+            room = Room.query.filter_by(id=roomId).first()
+            room.coordinate_x = x
+            room.coordinate_y = y
+            db.session.add(room)
+        db.session.commit()
+        return str(data)
+
+    @expose('/', methods=['GET', 'POST'])
+    def get_view(self):
+        """Display the available maps operations."""
+
+        floors = Floor.query.all()
+        
+        selected_floor_id = request.args.get('floor')
+        selected_floor = None
+        if (selected_floor_id is not None):
+            selected_floor_id = int(selected_floor_id)
+            for f in floors:
+                if f.id == selected_floor_id:
+                    selected_floor = f
+
+        
+        superjson = '['
+        if selected_floor is not None:
+            jsonformat = u'{{ "id": "{}", "name": "{}", "x": "{}", "y": "{}" }},'
+            for i, room in enumerate(selected_floor.rooms):
+                if (i == len(selected_floor.rooms) - 1):
+                    jsonformat = jsonformat[:-1]
+                superjson += jsonformat.format(
+                        room.id,
+                        room.name,
+                        room.coordinate_x,
+                        room.coordinate_y,
+                    )
+        superjson += ']'
+        
+        return self.render(
+            'admin/maps.html',
+            floors=floors,
+            selected_floor=selected_floor,
+            superjson=superjson
+        )
 
 # Database backup
 class DatabaseSaveView(BaseView):
@@ -447,7 +507,7 @@ class CommentsView(BaseView):
         """Check if the current user can access the view."""
         return login.current_user.is_authenticated
 
-    @expose('/', methods=['GET', 'POST'])
+    @expose('/', methods=['GET'])
     def get_view(self):
         """Display the available comments."""
         comments = PersonComment.query.all()
@@ -460,6 +520,21 @@ class CommentsView(BaseView):
     def delete_comment(self, comment_id=None):
         """Delete a comment."""
         comment = PersonComment.query.filter_by(id=comment_id).first()
+        db.session.delete(comment)
+        db.session.commit()
+        return redirect(url_for('comments.get_view'))
+
+
+    @expose('/accept/<comment_id>', methods=['GET', 'POST'])
+    def accept_comment(self, comment_id=None):
+        """Accept a comment."""
+        comment = PersonComment.query.filter_by(id=comment_id).first()
+
+        # If a room change has been requested, we move the rquested person to the new room
+        new_room = Room.query.filter_by(id=comment.pending_room_id).first()
+        comment.person.room = new_room
+
+        db.session.add(comment.person)
         db.session.delete(comment)
         db.session.commit()
         return redirect(url_for('comments.get_view'))
@@ -533,6 +608,9 @@ def init():
     admin.add_view(MyModelView(Team, db.session))
     admin.add_view(MyModelView(Infos, db.session))
     admin.add_view(MyModelView(Link, db.session))
+    admin.add_view(MyModelView(Room, db.session))
+    admin.add_view(MyModelView(Floor, db.session))
+    admin.add_view(MapsView(name='Maps', endpoint='maps'))
     admin.add_view(DatabaseSaveView(name='Database', endpoint='database'))
     admin.add_view(ChartsView(name='Charts', endpoint='charts'))
     admin.add_view(CommentsView(name='Comments', endpoint='comments'))

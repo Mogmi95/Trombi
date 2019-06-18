@@ -95,6 +95,7 @@ class PersonComment(db.Model):
     __tablename__ = 'personcomment'
     id = db.Column(db.Integer, primary_key=True)
     message = db.Column(db.String(512), unique=False)
+    pending_room_id = db.Column(db.Integer, unique=False)
 
     person_id = Column(Integer, ForeignKey('person.id'))
 
@@ -129,6 +130,8 @@ class Person(db.Model):
 
     team_id = Column(Integer, ForeignKey('team.id'))
 
+    room_id = Column(Integer, ForeignKey('room.id'))
+
     comments = relationship("PersonComment", backref="person")
 
     def __repr__(self):
@@ -141,8 +144,9 @@ class Person(db.Model):
         diff = now - self.arrival
         custom_date = self.arrival.strftime(u'%Y/%m/%d')
 
-        years = diff.days / 365
-        months = diff.days % 365 / 30
+        diff = now - arrival
+        years =  diff.days / 365
+        months = (diff.days % 365) / 30
 
         return gettext(
             u'%(date)s (%(y)s years, %(m)s months)',
@@ -229,3 +233,47 @@ class Link(db.Model):
     image = db.Column(db.Text(), unique=False)
     title = db.Column(db.Text(), unique=False, default=u'Title')
     description = db.Column(db.Text(), unique=False, default=u'Description')
+
+
+class Room(db.Model):
+    """Represents a Room containing Persons."""
+
+    def __str__(self):
+        """Simple log method."""
+        return str(self.name)
+
+    def as_dict(self):
+        """Dumps the data as JSON"""
+        return {c.name: unicode((getattr(self, c.name))) for c in self.__table__.columns}
+
+
+    __tablename__ = 'room'
+    id = db.Column(db.Integer, primary_key=True)
+    identifier = db.Column(db.Text(), unique=False, default=u'ID')
+    name = db.Column(db.Text(), unique=False, default=u'Room')
+    is_for_meetings = db.Column(db.Boolean(), unique=False, default=False)
+    coordinate_x = db.Column(db.Float, unique=False, default=0)
+    coordinate_y = db.Column(db.Float, unique=False, default=0)
+
+    floor_id = Column(Integer, ForeignKey('floor.id'))
+
+    persons = relationship("Person", backref="room")
+
+
+class Floor(db.Model):
+    """Represents a Floor containing Rooms."""
+
+    def __str__(self):
+        """Simple log method."""
+        return str(self.name)
+
+    def as_dict(self):
+        """Dumps the data as JSON"""
+        return {c.name: unicode((getattr(self, c.name))) for c in self.__table__.columns}
+
+    __tablename__ = 'floor'
+    id = db.Column(db.Integer, primary_key=True)
+    filename = db.Column(db.String(80), unique=True)
+    name = db.Column(db.Text(), unique=False, default=u'Floor')
+
+    rooms = relationship("Room", backref="floor") 

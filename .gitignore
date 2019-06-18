@@ -1,6 +1,7 @@
 *.pyc
 config.py
 trombi/static/images/logo.png
+trombi/static/images/maps
 photos
 data/persons.csv
 data/rooms.csv
