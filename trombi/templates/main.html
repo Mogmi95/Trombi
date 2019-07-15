@@ -1,0 +1,28 @@
+{% extends "index.html" %}
+{% block title %}Trombi{% endblock %}
+
+{% block head %}
+{% endblock %}
+
+{% block body %}
+
+<div class="mdl-grid demo-content">
+    <div class="mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-grid">
+        <p>{{ info.text|safe }}</p>
+    </div>
+</div>
+
+
+<div class="mdl-grid demo-content">
+    <div class="mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--6-col">
+        <p>Newcomers</p>
+    </div>
+</div>
+
+
+<div class="mdl-grid demo-content">
+    <div class="mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--6-col">
+        <p>Numbers!</p>
+    </div>
+</div>
+{% endblock %}

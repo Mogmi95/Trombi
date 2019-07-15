@@ -1,192 +1,101 @@
-/* by Mogmi */
+/* Trombi V2 by Mogmi */
 
-body {
-  background-color: #efefef;
-  font-family: 'Roboto';
-  font-style: normal;
+/* Material design base */
+
+html, body {
+  font-family: 'Roboto', 'Helvetica', sans-serif;
 }
-
-a {
-  text-decoration: none;
-  color: #368cbf;
+.demo-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 24px;
 }
-
-.page-content {
-  padding: 16px;
-  min-height:100%;
+.demo-layout .mdl-layout__header .mdl-layout__drawer-button {
+  color: rgba(0, 0, 0, 0.54);
 }
-
-.imgLogo {
-  height: 24px;
+.mdl-layout__drawer .avatar {
+  margin-bottom: 16px;
 }
-
-.select2-container {
-  width: 100%;
-}
-
-/* TODO: Hover and Focus state.
- *       Fix position of mobile search button.
- */
-.mdh-expandable-search {
-  margin: 0 48px;
-  align-items: center;
-  justify-content: center;
-}
-
-.mdh-expandable-search,
-.mdh-expandable-search form,
-.mdh-expandable-search input {
-  /* Cross browser flex-grow */
-  -webkit-box-flex: 1;
-  -webkit-flex-grow: 1;
-  -ms-flex-positive: 1;
-  flex-grow: 1;
-}
-
-.mdh-expandable-search,
-.mdh-expandable-search form {
-  /* Cross browser inline-flex */
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -moz-inline-box;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-}
-
-/* Position search icon */
-.mdh-expandable-search .material-icons {
-  position: relative;
-  right: -40px;
-  margin-left: -24px; /* Remove the blank space left behind by the icon being relatively positioned */
-}
-
-.mdh-expandable-search input {
-  outline: none;
+.demo-drawer {
   border: none;
-  font-size: 16px;
-  color: #FFFFFF;
-  background-color: #ee8176;
-  padding: 0px 35px 0px 70px;
-  height: 40px;
-  line-height: 40px; /* TODO: This was recommended for cross browser compatability of input height, check if its actually needed in modern browsers */
-
-  border-radius: 5px 5px 5px 5px;
-  -moz-border-radius: 5px 5px 5px 5px;
-  -webkit-border-radius: 5px 5px 5px 5px;
 }
-
-.mdh-expandable-search input::-webkit-input-placeholder { /* WebKit browsers */
-    color:    #FFFFFF;
+/* iOS Safari specific workaround */
+.demo-drawer .mdl-menu__container {
+  z-index: -1;
 }
-.mdh-expandable-search input:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
-   color:    #FFFFFF;
-   opacity:  1; /* Firefox gives the placeholder a reduced opacity so we have to increase it */
+.demo-drawer .demo-navigation {
+  z-index: -2;
 }
-.mdh-expandable-search input::-moz-placeholder { /* Mozilla Firefox 19+ */
-   color:    #FFFFFF;
-   opacity:  1; /* Firefox gives the placeholder a reduced opacity so we have to increase it */
+/* END iOS Safari specific workaround */
+.demo-drawer .mdl-menu .mdl-menu__item {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
-.mdh-expandable-search input:-ms-input-placeholder { /* Internet Explorer 10+ */
-   color:    #FFFFFF;
+.demo-drawer-header {
+  box-sizing: border-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-justify-content: flex-end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+  padding: 16px;
+  height: 151px;
 }
-
-
-
-
-/* All */
-
-#mainAllPersonsContainer {
-  max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.allPersonsCardHeader {
-  border-radius: 4px;
+.demo-avatar-dropdown {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
   position: relative;
-  background: #fcfcfc;
-  margin-top: 16px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-}
-
-.allPersonsCardHeaderTitle p {
-  margin: 0;
-  padding: 0;
-}
-.allPersonsCardHeaderTitle {
-  color: #efefef;
-  background-color: #e74c3c;
-  font-family: 'Roboto';
-  font-size: 18px;
-  font-weight: 600;
-  border-top-right-radius: 4px;
-  border-top-left-radius: 4px;
-  padding: 8px;
-}
-
-.allPersonsCardHeaderContent {
-  padding: 8px;
-}
-
-.allPersonsCardHeaderContent p {
-  margin: 0;
-  padding: 0;
-}
-
-.allPersonsCardHeaderFooter {
-  text-align: right;
-  padding: 8px;
-}
-
-.allPersonsHeader {
+  -webkit-flex-direction: row;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
   width: 100%;
-  position: relative;
-  height: 48px;
-  margin-top: 8px;
 }
 
-.allPersonsHeaderContentLeft {
-  width: 50%;
-  height: 48px;
-  float: left;
-  line-height: 48px;
-  padding-left: 16px;
-  font-family: 'Roboto';
-  font-weight: 400;
+.demo-navigation {
+  -webkit-flex-grow: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+}
+.demo-layout .demo-navigation .mdl-navigation__link {
+  display: -webkit-flex !important;
+  display: -ms-flexbox !important;
+  display: flex !important;
+  -webkit-flex-direction: row;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  color: rgba(255, 255, 255, 0.56);
+  font-weight: 500;
+}
+.demo-layout .demo-navigation .mdl-navigation__link:hover {
+  background-color: #00BCD4;
+  color: #37474F;
+}
+.demo-navigation .mdl-navigation__link .material-icons {
+  font-size: 24px;
+  color: rgba(255, 255, 255, 0.56);
+  margin-right: 32px;
 }
 
-.allPersonsHeaderContentRight {
-  width: 40%;
-  height: 48px;
-  padding-right: 10px;
-  text-align: right;
-  float: right;
+.demo-content {
+  max-width: 1080px;
 }
 
-.allPersonsHeaderContentRight button {
-  margin: 6px;
-}
-
-.viewModeContainer {
-  height: 48px;
-  position: absolute;
-  right:0px;
-  top: 8px;
-}
-
-.centered-message {
-    width: 100%;
-    background-color: #ffffff;
-    text-align: center;
-}
-
-.selectedImageIndicator {
-  border-bottom: solid 5px #e74c3c;
-}
-
-.notSelectedImageIndicator {
-  border-bottom: solid 5px rgba(0, 0, 0, 0);
-}
+/* Display all persons */
 
 .custom-grid {
   max-width: 100%;
@@ -194,6 +103,16 @@ a {
   -webkit-filter: grayscale(100%); /* Safari 6.0 - 9.0 */
   filter: grayscale(100%);
 }
+
+.allPersonsHeader {
+  padding-top: 8px;
+  padding-left: 12px;
+}
+
+.custom-grid a {
+  text-decoration: none;
+}
+
 .cell-spacer {
   min-height: 160px;
 }
@@ -227,8 +146,6 @@ a {
   background-color: rgba(0, 0, 0, 0.5);
 }
 
-/* All list */
-
 .list_data_table_container {
   width: 100%;
   margin-top: 16px;
@@ -243,388 +160,4 @@ a {
   height: 100px;
 }
 
-
-/* Maps */
-#mapid { height: 650px; }
-
-/* Maps */
-#personmap { height: 300px; }
-
-
-/* Infos */
-.infosCard {
-  position: relative;
-  width: 1000px;
-  background: #fcfcfc;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 32px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-}
-
-.infosCardContent {
-  padding: 48px;
-}
-
-/* Person */
-
-.personCard {
-  position: relative;
-  width: 33%;
-  min-width: 650px;
-  background: #fcfcfc;
-  margin-left: auto;
-  margin-right: auto;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-}
-
-.personCardMissing {
-    padding: 48px;
-    font-size: 48px;
-    text-align: center;
-}
-
-.personCardHeader {
-    background: linear-gradient(
-          to bottom,
-          #e74c3c 0%,
-          #e74c3c 75%,
-          #fcfcfc 75%,
-          #fcfcfc 100%
-    );
-    text-align: center;
-    padding-top: 16px
-}
-
-#personCardWarningHeader {
-  background-color: #ffae42;
-  padding: 8px;
-  margin-bottom: 0px;
-}
-
-#personCardWarningHeader i {
-  margin-right: 8px;
-}
-.personCardHeaderName {
-  display: block;
-  color: #212121;
-  font-family: 'Roboto';
-  font-size: 26px;
-  font-weight: 400;
-  margin-top: 24px;
-}
-
-.personCardHeaderDescription {
-  display: block;
-  color: #fcfcfc;
-  font-family: 'Roboto';
-  font-size: 18px;
-  font-weight: 400;
-  font-style: italic;
-}
-
-.personCardHeaderAvatar {
-  display: block;
-  width: 200px;
-  height: 200px;
-  margin-left: auto;
-  margin-right: auto;
-  border-radius: 100px;
-  box-shadow: 0 0 8px rgba(0, 0, 0, .8);
-  -webkit-box-shadow: 0 0 8px rgba(0, 0, 0, .8);
-  -moz-box-shadow: 0 0 8px rgba(0, 0, 0, .8);
-  -webkit-filter: grayscale(100%); /* Safari 6.0 - 9.0 */
-  filter: grayscale(100%);
-}
-
-.horizontalSeparationLine {
-    width: 100%;
-    height: 1px;
-    background-color: rgba(0,0,0,.1);
-}
-
-.rippleContainer {
-    position: relative;
-    cursor:pointer;
-}
-
-.mdl-list {
-    margin: 0;
-    padding: 0;
-}
-
-.demo-card-wide.mdl-card {
-  position: relative;
-}
-.demo-card-wide > .mdl-card__title {
-  color: #fff;
-  height: 256px;
-}
-.demo-card-wide > .mdl-card__menu {
-  color: #fff;
-}
-
-.mdl-card__title-text-container {
-  height: 240px;
-  width: 550px;
-  position: absolute;
-  left: 234px;
-  top: 16px;
-  color: #000;
-}
-
-.person_avatar {
-  position: absolute;
-  left: 16px;
-  top: 16px;
-  width: 200px;
-  height: 240px;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
-}
-
-#personCommentSection {
-    width: 100%;
-    padding: 10px 0;
-    display: none;
-    text-align: center;
-}
-
-#personCommentText {
-    width: 100%;
-    padding: 12px 20px;
-    margin: 8px 0;
-    box-sizing: border-box;
-}
-
-#personCommentThanks {
-    width: 100%;
-    background: #07b32d;
-    text-align: center;
-    color: #f1f1f1;
-    font-family: 'Roboto';
-    font-size: 100px;
-    font-weight: 400;
-}
-
-/* Person report */
-
-#input_comment {
-  width: 100%;
-}
-
-/* Calendar */
-
-.calendar_legend {
-  margin-bottom: 16px;
-  text-align: center;
-}
-
-.calendar_legend_birthday {
-  display: inline-block;
-  width: 100px;
-  color: #ffffff;
-  /*background: #368cbf;*/
-  background: #a9d03f;
-  padding:8px;
-}
-
-.calendar_legend_arrival {
-  display: inline-block;
-  width: 100px;
-  color: #ffffff;
-  background: #368cbf;
-  padding:8px;
-  margin-left: 8px;
-}
-
-.calendar_legend_event {
-    display: inline-block;
-    width: 100px;
-    color: #ffffff;
-    background: #db6b1a;
-    padding:8px;
-    margin-left: 8px;
-}
-
-.calendar_container {
-  width: 80%;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 32px;
-}
-
-/* Tree */
-
-.titleTeamNameContainer {
-    width: 20%;
-    margin-left: auto;
-    margin-right: auto;
-    text-align: center;
-    margin-bottom: 8px;
-}
-
-.titleTeamName {
-    padding: 16px;
-    color: #ffffff;
-    background: #e36356;
-    font-weight: bold;
-}
-
-.tree {
-  overflow: auto;
-  min-height: 830px;
-}
-
-.rootTreeNodeElement {
-  position: relative;
-  width: 108px;
-  height: 144px;
-  -webkit-filter: grayscale(100%); /* Safari 6.0 - 9.0 */
-  filter: grayscale(100%);
-}
-
-.rootTreeNodeElementFiller {
-  position: absolute;
-  width: 112px;
-  height: 148px;
-  left: -2px;
-  top: -2px;
-  color: #fcfcfc;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-  transition: all 0.2s ease-in-out;
-  font-family: 'Roboto';
-  font-weight: 400;
-}
-
-.rootTreeNodeLinkCenter {
-  display: table;
-  position: absolute;
-  background: #e74c3c;
-  width: 113px;
-  height: 149px;
-  left: -1px;
-  top: -1px;
-}
-
-.rootTreeNodeLinkCenterChild {
-  /*display: table-cell;*/
-  vertical-align: middle;
-  overflow-wrap: break-word;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  width: 112px;
-  height: 148px;
-  font-size: 13px;
-}
-
-.verticalLine {
-  position: absolute;
-  height: 149px;
-  border-left: 1px solid #3388dd;
-  top: -3px;
-  left: 50%;
-}
-
-.rootTreeNodeElementFiller:hover {
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.21), 0 6px 6px rgba(0, 0, 0, 0.27);
-}
-
-.treeNodeTextContainer {
-  position: relative;
-  width: 112px;
-  height: 22px;
-  top: 124px;
-  left: -2px;
-  background-color: rgba(0, 0, 0, 0.5);
-}
-
-.treeNodeText {
-  position: relative;
-  top: -2px;
-  left: -2px;
-  color: #fff;
-}
-
-/* GAME */
-
-.gameQuestion {
-    font-size: 20px;
-}
-
-.gameRadioItem {
-  display: none !important;
-}
-
-.gameLabelItem {
-}
-
-.gameRadioItem:checked + label {
-}
-
-#gameResultBad {
-    display: none;
-    color: red;
-}
-
-#gameResultGood {
-    display: none;
-    color: green;
-}
-
-label {
-  cursor: pointer;
-}
-
-.gamePersonImage {
-    display: block;
-    height: 250px;
-    width: 250px;
-}
-
-
-/* LINKS */
-
-#linkContainer {
-  max-width: 900px;
-  margin: auto;
-}
-
-.linkCard {
-  position: relative;
-  width: 1000px;
-  background: #fcfcfc;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 32px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-}
-
-.linkCardContent {
-}
-
-.linksLeft {
-  width: 20%;
-  min-height: 140px;
-  float: left;
-}
-.linksRight {
-  width: 80%;
-  min-height: 120px;
-  float: left;
-}
-
-.linksTitle {
-  min-height: 20px;
-  font-size: 18px;
-  padding: 8px;
-  margin-top: 8px;
-  color: #212121;
-}
-
-.linksDescription {
-  min-height: 80px;
-  padding: 8px;
-  color: #000;
-  font-weight: 400;
-}
+/* Display one person */

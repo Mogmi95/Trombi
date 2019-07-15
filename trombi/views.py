@@ -46,8 +46,14 @@ def get_list_mode(request):
 @app.route("/")
 def main():
     """Root view."""
-    return show_all()
+    return index()
 
+def index():
+    infos = Infos.query.first()
+    return render_template(
+        'main.html',
+        info=infos
+        )
 
 @app.route("/photo/<login>")
 def person_image(login=None):

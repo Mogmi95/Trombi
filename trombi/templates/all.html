@@ -5,39 +5,18 @@
 
 <div id="mainAllPersonsContainer">
 
-  {% if header_text is not none %}
-    <div class="allPersonsCardHeader">
-      <div class="allPersonsCardHeaderTitle">
-        Message
-      </div>
-      <div class="allPersonsCardHeaderContent">
-        {{ header_text | safe}}
-      </div>
-      <div class="allPersonsCardHeaderFooter">
-        <a href="/news">Check older news</a>
-      </div>
-  </div>
-  {% endif %}
-
   <div class="allPersonsHeader">
-      <div class="allPersonsHeaderContentLeft">
-        {{ persons | length }} persons
-      </div>
-      <div class="allPersonsHeaderContentRight">
-          {% if person_filter in ['newcomers'] %}
-            <a href="{{ url_for('show_all') }}" title="{{ gettext('Show everyone') }}">
-              <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-                {{ gettext('Show everyone') }}
-              </button>
-            </a>
-          {% else %}
-          <a href="{{ url_for('show_all', filter='newcomers') }}" title="{{ gettext('Show only newcomers')}}">
-            <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-              {{ gettext('Show only newcomers')}}
-            </button>
+          {% if list_mode is none %}
+          <a class="mdl-navigation__link" href="{{ url_for('show_all') }}?list=true" title="Show as list">
+            <i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">view_list</i>
+            View as list
           </a>
-      {% endif %}
-    </div>
+          {% else %}
+          <a class="mdl-navigation__link" href="{{ url_for('show_all') }}" title="Show as grid">
+            <i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">view_module</i>
+            View as grid
+          </a>
+          {% endif %}
   </div>
 
   {% if list_mode is none %}
