@@ -1,4 +1,7 @@
 *.pyc
+.vscode/
+venv
+
 config.py
 trombi/static/images/logo.png
 trombi/static/images/maps
@@ -9,4 +12,3 @@ data/teams.csv
 data/database.json
 messages.pot
 backups
-.vscode/
