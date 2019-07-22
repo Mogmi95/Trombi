@@ -16,8 +16,8 @@ from sqlalchemy import or_
 from flask.ext.babel import gettext
 
 from config import LANGUAGES, PHOTOS_FOLDER, WEBSITE_URL
-from app import db, app, babel
-from models import Person, PersonComment, Team, Infos, Link, Room, Floor
+from .app import db, app, babel
+from .models import Person, PersonComment, Team, Infos, Link, Room, Floor
 
 
 @babel.localeselector

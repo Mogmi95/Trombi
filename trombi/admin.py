@@ -20,8 +20,8 @@ import flask_login as login
 import json
 from werkzeug.security import check_password_hash
 
-from models import TrombiAdmin, Person, PersonComment, Team, Infos, Link, Room, Floor
-from app import db, app
+from .models import TrombiAdmin, Person, PersonComment, Team, Infos, Link, Room, Floor
+from .app import db, app
 import config
 
 
@@ -290,7 +290,7 @@ class DatabaseSaveView(BaseView):
                 db.session.add(neo_person)
 
             # We create the link between persons and managers
-            for manager_id, managed_persons in managers.iteritems():
+            for manager_id, managed_persons in managers.items():
                 if manager_id in persons:
                     manager = persons[manager_id]
                     for managed_person in managed_persons:
