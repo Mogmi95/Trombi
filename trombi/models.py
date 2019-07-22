@@ -6,7 +6,7 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from flask.ext.babel import gettext
 
-from app import db
+from .app import db
 
 
 class TrombiAdmin(db.Model):
@@ -144,9 +144,8 @@ class Person(db.Model):
         diff = now - self.arrival
         custom_date = self.arrival.strftime(u'%Y/%m/%d')
 
-        diff = now - arrival
-        years =  diff.days / 365
-        months = (diff.days % 365) / 30
+        years =  diff.days // 365
+        months = (diff.days % 365) // 30
 
         return gettext(
             u'%(date)s (%(y)s years, %(m)s months)',
