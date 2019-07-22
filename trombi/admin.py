@@ -138,6 +138,7 @@ class PersonView(sqla.ModelView):
         return login.current_user.is_authenticated
 
     def image_name(self, file_data):
+        """Return the name of the image for a person."""
         return self.login + ".jpg"
 
     form_extra_fields = {
@@ -207,6 +208,17 @@ class MapsView(BaseView):
             selected_floor=selected_floor,
             superjson=superjson
         )
+
+
+class DatetimeEncoder(json.JSONEncoder):
+    """Custom datetime.datetime JSON encoder because it is not serializable anymore."""
+
+    def default(self, o):
+        if isinstance(o, datetime.datetime):
+            return o.isoformat()
+
+        return super().default(self, o)
+
 
 # Database backup
 class DatabaseSaveView(BaseView):
@@ -448,7 +460,7 @@ class DatabaseSaveView(BaseView):
             for item in tmp_elts:
                 result[current_id].append(item.as_dict())
 
-        return json.dumps(result)
+        return json.dumps(result, cls=DatetimeEncoder)
 
     @expose('/trombi_database.csv', methods=['GET'])
     def create_database_backup(self):

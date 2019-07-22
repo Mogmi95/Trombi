@@ -69,7 +69,7 @@ class Team(db.Model):
 
     def as_dict(self):
         """Dumps the data as JSON"""
-        return {c.name: unicode((getattr(self, c.name))) for c in self.__table__.columns}
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
     def get_root_persons(self):
         """
@@ -105,7 +105,7 @@ class Person(db.Model):
 
     def as_dict(self):
         """Dumps the data as JSON"""
-        return {c.name: unicode((getattr(self, c.name))) for c in self.__table__.columns}
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
     __tablename__ = 'person'
     # service;login;nom;prenom;naissance;poste;mail;skype;fixe;portable;manager
@@ -206,7 +206,7 @@ class Infos(db.Model):
 
     def as_dict(self):
         """Dumps the data as JSON"""
-        return {c.name: unicode((getattr(self, c.name))) for c in self.__table__.columns}
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
 
     __tablename__ = 'infos'
@@ -223,7 +223,7 @@ class Link(db.Model):
 
     def as_dict(self):
         """Dumps the data as JSON"""
-        return {c.name: unicode((getattr(self, c.name))) for c in self.__table__.columns}
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
     __tablename__ = 'links'
     id = db.Column(db.Integer, primary_key=True)
@@ -243,7 +243,7 @@ class Room(db.Model):
 
     def as_dict(self):
         """Dumps the data as JSON"""
-        return {c.name: unicode((getattr(self, c.name))) for c in self.__table__.columns}
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
 
     __tablename__ = 'room'
@@ -268,7 +268,7 @@ class Floor(db.Model):
 
     def as_dict(self):
         """Dumps the data as JSON"""
-        return {c.name: unicode((getattr(self, c.name))) for c in self.__table__.columns}
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
     __tablename__ = 'floor'
     id = db.Column(db.Integer, primary_key=True)
