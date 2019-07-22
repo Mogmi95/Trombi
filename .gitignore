@@ -2,6 +2,7 @@
 .vscode/
 venv
 
+*.sqlite
 config.py
 trombi/static/images/logo.png
 trombi/static/images/maps

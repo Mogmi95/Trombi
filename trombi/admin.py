@@ -470,7 +470,7 @@ class DatabaseSaveView(BaseView):
 
         header = "#TEAM,LOGIN,NOM,PRENOM,NAISSANCE,ARRIVEE,FONCTION,MAIL,SKYPE,FIXE,PORTABLE,MANAGER,ROOM"
 
-        output = io.BytesIO()
+        output = io.StringIO()
         writer = csv.writer(
             output,
             quoting=csv.QUOTE_ALL,
