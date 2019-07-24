@@ -4,7 +4,7 @@ import time
 from sqlalchemy import Column, Integer, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
-from flask.ext.babel import gettext
+from flask_babel import gettext
 
 from .app import db
 
@@ -144,7 +144,7 @@ class Person(db.Model):
         diff = now - self.arrival
         custom_date = self.arrival.strftime(u'%Y/%m/%d')
 
-        years =  diff.days // 365
+        years = diff.days // 365
         months = (diff.days % 365) // 30
 
         return gettext(
@@ -208,7 +208,6 @@ class Infos(db.Model):
         """Dumps the data as JSON"""
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
-
     __tablename__ = 'infos'
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.Text(), unique=False, default=u'Hello World!')
@@ -244,7 +243,6 @@ class Room(db.Model):
     def as_dict(self):
         """Dumps the data as JSON"""
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
-
 
     __tablename__ = 'room'
     id = db.Column(db.Integer, primary_key=True)
