@@ -20,7 +20,8 @@ import flask_login as login
 import json
 from werkzeug.security import check_password_hash
 
-from .models import TrombiAdmin, Person, PersonComment, Team, Infos, Link, Room, Floor
+from .models import TrombiAdmin, Person, PersonComment, Team, Infos
+from .models import Link, Room, Floor
 from .app import db, app
 import config
 
@@ -125,13 +126,18 @@ class MyModelView(sqla.ModelView):
     edit_template = 'admin/edit.html'
     column_searchable_list = ['id']
 
+
 class PersonView(sqla.ModelView):
     """Create customized model view class."""
     edit_template = 'admin/person_edit.html'
     # Change edit in the admin
     can_view_details = True
     column_searchable_list = ['login', 'name', 'surname']
-    form_columns = ('login', 'photo', 'name', 'surname', 'team', 'manager','birthday', 'arrival', 'email', 'mobile', 'fixe', 'job', 'skype', 'subordinates', 'room')
+    form_columns = (
+        'login', 'photo', 'name', 'surname', 'team', 'manager',
+        'birthday', 'arrival', 'email', 'mobile', 'fixe', 'job', 'skype',
+        'subordinates', 'room'
+    )
 
     def is_accessible(self):
         """Check if the current user can access the view."""
@@ -142,9 +148,11 @@ class PersonView(sqla.ModelView):
         return self.login + ".jpg"
 
     form_extra_fields = {
-        'photo': FileUploadField('Photo',
-                                base_path=config.PHOTOS_FOLDER,
-                                namegen=image_name,)
+        'photo': FileUploadField(
+            'Photo',
+            base_path=config.PHOTOS_FOLDER,
+            namegen=image_name,
+        )
     }
 
 
@@ -161,7 +169,6 @@ class MapsView(BaseView):
         data = request.form.get('data')
         parsedData = json.loads(data)
 
-        print(parsedData)
         for elt in parsedData:
             roomId = elt['id']
             x = elt['x']
@@ -178,7 +185,7 @@ class MapsView(BaseView):
         """Display the available maps operations."""
 
         floors = Floor.query.all()
-        
+
         selected_floor_id = request.args.get('floor')
         selected_floor = None
         if (selected_floor_id is not None):
@@ -187,7 +194,6 @@ class MapsView(BaseView):
                 if f.id == selected_floor_id:
                     selected_floor = f
 
-        
         superjson = '['
         if selected_floor is not None:
             jsonformat = u'{{ "id": "{}", "name": "{}", "x": "{}", "y": "{}" }},'
@@ -201,7 +207,7 @@ class MapsView(BaseView):
                         room.coordinate_y,
                     )
         superjson += ']'
-        
+
         return self.render(
             'admin/maps.html',
             floors=floors,
@@ -251,11 +257,12 @@ class DatabaseSaveView(BaseView):
         if file:
             file.save(os.path.join(config.JSON_FOLDER, 'database.json'))
 
-        # Cleaning the existing data. This change is not registered until the parsing is ok
+        # Cleaning the existing data. This change is not registered until the
+        # parsing is ok
         # db.session.query(Person).delete()
         # db.session.query(Team).delete()
 
-        #try:
+        # try:
         with io.open(os.path.join(config.JSON_FOLDER, 'database.json'), 'r', encoding='utf8') as f:
             data = json.load(f)
 
@@ -279,14 +286,14 @@ class DatabaseSaveView(BaseView):
                 neo_person.login = person_json['login']
                 neo_person.name = person_json['name']
                 neo_person.surname = person_json['surname']
-                neo_person.birthday =  datetime.datetime.strptime(person_json['birthday'], '%Y-%m-%d %H:%M:%S')
-                neo_person.arrival =  datetime.datetime.strptime(person_json['arrival'], '%Y-%m-%d %H:%M:%S')
+                neo_person.birthday = datetime.datetime.strptime(person_json['birthday'], '%Y-%m-%d %H:%M:%S')
+                neo_person.arrival = datetime.datetime.strptime(person_json['arrival'], '%Y-%m-%d %H:%M:%S')
                 neo_person.email = person_json['email']
                 neo_person.mobile = person_json['mobile']
                 neo_person.fixe = person_json['fixe']
                 neo_person.job = person_json['job']
                 neo_person.skype = person_json['skype']
-                
+
                 person_team_id = person_json['team_id']
                 if (person_team_id == 'None'):
                     print('Warning : ' + neo_person.login + ' has no team !')
@@ -415,9 +422,8 @@ class DatabaseSaveView(BaseView):
             return redirect(url_for('database.get_view', error=e))
         except:
             return redirect(url_for('database.get_view', error='Error while parsing. Check logs.'))
-        
-        return redirect(url_for('database.get_view', error=None))
 
+        return redirect(url_for('database.get_view', error=None))
 
     def format_date(self, date):
         """Parse the date from the data file."""
@@ -480,22 +486,20 @@ class DatabaseSaveView(BaseView):
         persons = Person.query.all()
         for person in persons:
             writer.writerow([
-                '' if (person.team == None) else person.team.name.encode('utf-8'),
-                '' if (person.login == None) else person.login.encode('utf-8'),
-                '' if (person.surname == None) else person.surname.encode('utf-8'),
-                '' if (person.name == None) else person.name.encode('utf-8'),
-                '1990/01/01' if (person.birthday == None) else person.birthday.strftime(u'%Y/%m/%d'),
-                '1990/01/01' if (person.arrival == None) else person.arrival.strftime(u'%Y/%m/%d'),
-                '' if (person.job == None) else person.job.encode('utf-8'),
-                '' if (person.email == None) else person.email.encode('utf-8'),
-                '' if (person.skype == None) else person.skype.encode('utf-8'),
-                '' if (person.fixe == None) else person.fixe.encode('utf-8'),
-                '' if (person.mobile == None) else person.mobile.encode('utf-8'),
-                '' if (person.manager == None) else person.manager.login.encode('utf-8'),
+                '' if (person.team is None) else person.team.name.encode('utf-8'),
+                '' if (person.login is None) else person.login.encode('utf-8'),
+                '' if (person.surname is None) else person.surname.encode('utf-8'),
+                '' if (person.name is None) else person.name.encode('utf-8'),
+                '1990/01/01' if (person.birthday is None) else person.birthday.strftime(u'%Y/%m/%d'),
+                '1990/01/01' if (person.arrival is None) else person.arrival.strftime(u'%Y/%m/%d'),
+                '' if (person.job is None) else person.job.encode('utf-8'),
+                '' if (person.email is None) else person.email.encode('utf-8'),
+                '' if (person.skype is None) else person.skype.encode('utf-8'),
+                '' if (person.fixe is None) else person.fixe.encode('utf-8'),
+                '' if (person.mobile is None) else person.mobile.encode('utf-8'),
+                '' if (person.manager is None) else person.manager.login.encode('utf-8'),
                 "room"
                 ])
-
-
         return output.getvalue()
 
     @expose('/', methods=['GET', 'POST'])
@@ -536,13 +540,13 @@ class CommentsView(BaseView):
         db.session.commit()
         return redirect(url_for('comments.get_view'))
 
-
     @expose('/accept/<comment_id>', methods=['GET', 'POST'])
     def accept_comment(self, comment_id=None):
         """Accept a comment."""
         comment = PersonComment.query.filter_by(id=comment_id).first()
 
-        # If a room change has been requested, we move the rquested person to the new room
+        # If a room change has been requested, we move the rquested person to
+        # the new room
         new_room = Room.query.filter_by(id=comment.pending_room_id).first()
         comment.person.room = new_room
 
@@ -550,6 +554,7 @@ class CommentsView(BaseView):
         db.session.delete(comment)
         db.session.commit()
         return redirect(url_for('comments.get_view'))
+
 
 # Display charts
 class ChartsView(BaseView):
@@ -564,7 +569,7 @@ class ChartsView(BaseView):
         """Get the view."""
         selected_team = request.form.get('team_select')
         teams = Team.query.all()
-        use_images = request.form.get('use_images') != None
+        use_images = request.form.get('use_images') is not None
         print(use_images)
         if selected_team is None:
             team = teams[0]
@@ -588,15 +593,22 @@ class ChartsView(BaseView):
             use_images=use_images,
         )
 
+
 def create_chart_node_for_person(person, max_size):
     size = 0
-    result = "{'name': '%s','title': '%s', 'login': '%s','children':[" % (person.name.replace('\'','\\\''), person.job.replace('\'','\\\''), person.login)
+    result = "{'name': '%s','title': '%s', 'login': '%s','children':[" % (
+            person.name.replace('\'', '\\\''),
+            person.job.replace('\'', '\\\''),
+            person.login
+            )
     if (size < max_size):
         size += 1
         for subordinate in person.subordinates:
-            result += create_chart_node_for_person(subordinate, max_size - size) + ','
+            result += create_chart_node_for_person(
+                subordinate, max_size - size) + ','
     result += ']}'
-    return result;
+    return result
+
 
 def init():
     """Create the administration system."""

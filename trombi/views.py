@@ -13,7 +13,7 @@ import os
 import json
 from flask import render_template, request, url_for, redirect, send_file, send_from_directory
 from sqlalchemy import or_
-from flask.ext.babel import gettext
+from flask_babel import gettext
 
 from config import LANGUAGES, PHOTOS_FOLDER, WEBSITE_URL
 from .app import db, app, babel
