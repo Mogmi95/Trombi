@@ -23,7 +23,7 @@ from .models import Person, PersonComment, Team, Infos, Link, Room, Floor
 @babel.localeselector
 def get_locale():
     """Get the locale to use for lang."""
-    locale = request.accept_languages.best_match(LANGUAGES.keys())
+    locale = request.accept_languages   .best_match(LANGUAGES.keys())
     # return locale
     # Temporary
     return 'en'
@@ -109,6 +109,23 @@ def show_person(login=None):
             commented=commented,
         )
 
+
+@app.route("/news", defaults={'id': None})
+@app.route('/news/<id>')
+def get_news(id=None):
+    """Display all the available news"""
+    news = []
+    if id is not None:
+        news = Infos.query.filter_by(id=id)
+    else:
+        news = Infos.query.all()
+    return render_template(
+        'news.html',
+        title='News',
+        news=news,
+    )
+
+
 @app.route('/api/maps')
 def get_maps_info():
     """
@@ -123,6 +140,7 @@ def get_maps_info():
         floordata.append(data)
 
     return '{"floors": ' + str(floordata).replace("u'", "'").replace("'", "\"") + '}'
+
 
 @app.route('/person/<login>/edit')
 def show_person_report(login=None):

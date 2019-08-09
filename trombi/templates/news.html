@@ -1,0 +1,23 @@
+{% extends "index.html" %}
+{% block body %}
+
+{% if news is none %}
+
+<p>No news to display</p>
+
+{% else %}
+
+{% for elt in news %}
+
+<div class="card-style mdl-shadow--2dp">
+  <div class="mdl-card__title">
+    <a href="/news/{{ elt.id }}"><h2 class="mdl-card__title-text">News</h2></a>
+  </div>
+  <div class="mdl-card__supporting-text">
+    {{ elt.text | safe}}  </div>
+</div>
+<br />
+{% endfor %}
+{% endif %}
+
+{% endblock %}
