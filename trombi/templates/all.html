@@ -7,11 +7,14 @@
 
   {% if header_text is not none %}
     <div class="allPersonsCardHeader">
-        <div class="allPersonsCardHeaderTitle">
-          Message
-        </div>
-        <div class="allPersonsCardHeaderContent">
-          {{ header_text | safe}}
+      <div class="allPersonsCardHeaderTitle">
+        Message
+      </div>
+      <div class="allPersonsCardHeaderContent">
+        {{ header_text | safe}}
+      </div>
+      <div class="allPersonsCardHeaderFooter">
+        <a href="/news">Check older news</a>
       </div>
   </div>
   {% endif %}
