@@ -1,8 +1,6 @@
 <div id="mainAllPersonsContainer">
+{% if persons|length > 0 %}
 <h4>Persons</h4>
-{% if persons|length == 0 %}
--
-{% else %}
 <div class="mdl-grid custom-grid">
         {% for person in persons %}
         <div class="mdl-cell mdl-cell--2-col mdl-cell--2-col-tablet mdl-cell--2-col-phone card-style mdl-js-ripple-effect" style="background: url({{ url_for('person_image', login=person.login) }}) center / cover;">
@@ -20,10 +18,8 @@
 </div>
 {% endif %}
 
+{% if teams|length > 0 %}
 <h4>Teams</h4>
-{% if teams|length == 0 %}
--
-{% else %}
     <div class="mdl-grid custom-grid">
         {% for team in teams %}
         <div class="mdl-cell mdl-cell--2-col mdl-cell--2-col-tabl   et mdl-cell--2-col-phone card-style mdl-js-ripple-effect" style="background: url('https://d2slcw3kip6qmk.cloudfront.net/marketing/blogs/chart/manage-your-team@2x.png') center / cover;">
@@ -41,10 +37,8 @@
     </div>
 {% endif %}
 
-<h4>Rooms</h4>
-{% if rooms|length == 0 %}
--
-{% else %}
+{% if rooms|length > 0 %}
+    <h4>Rooms</h4>
     <div class="mdl-grid custom-grid">
         {% for room in rooms %}
         <div class="mdl-cell mdl-cell--2-col mdl-cell--2-col-tablet mdl-cell--2-col-phone card-style mdl-js-ripple-effect" style="background: url('https://www.citizenm.com/cache/images/citizenm_schipol_2-0199_web_00ecec985a24cc.jpg') center / cover;">
@@ -54,6 +48,25 @@
             <div class="cell-text-container">
                 <span class="cell-text">
                 {{ room.name }}
+                </span>
+            </div>
+            </a>
+        </div>
+    {% endfor %}
+    </div>
+{% endif %}
+
+{% if links|length > 0 %}
+    <h4>Links</h4>
+    <div class="mdl-grid custom-grid">
+        {% for link in links %}
+        <div class="mdl-cell mdl-cell--2-col mdl-cell--2-col-tablet mdl-cell--2-col-phone card-style mdl-js-ripple-effect" style="background: url('{{ link.image }}') center / cover;">
+            <a href="{{ link.url }}">
+            <span class="mdl-ripple"></span>
+            <div class="cell-spacer"></div>
+            <div class="cell-text-container">
+                <span class="cell-text">
+                {{ link.title }} - {{ link.description }}
                 </span>
             </div>
             </a>

@@ -262,6 +262,7 @@ def show_person_vcard(login=None):
     person = Person.query.filter_by(login=login).first()
     return person.create_vcard()
 
+
 def perform_search(query):
     """Return a set containing all the matches for the query"""
     result = {}
@@ -291,7 +292,16 @@ def perform_search(query):
     for team in teams.all():
         result['teams'].append(team)
 
+    # LINKS
+    result['links'] = []
+    links = Link.query.filter(or_(
+        Link.title.like('%' + query + '%'),
+        Link.description.like('%' + query + '%')))
+    for link in links.all():
+        result['links'].append(link)
+
     return result
+
 
 @app.route("/search/<query>")
 def show_search(query=None):
@@ -312,6 +322,9 @@ def show_search(query=None):
     teams = []
     if 'teams' in search_result:
         teams = search_result["teams"]
+    links = []
+    if 'links' in search_result:
+        links = search_result["links"]
 
     #if (len(persons) == 1):
     #    return redirect(url_for('show_person', login=persons[0]))
@@ -322,6 +335,7 @@ def show_search(query=None):
         persons=persons,
         rooms=rooms,
         teams=teams,
+        links=links,
         message=message.format(len(persons)),
         title=title,
         list_mode=get_list_mode(request),
