@@ -571,6 +571,7 @@ def show_links(login=None):
         links = None
     return render_template(
             'links.html',
+            title="Links",
             links=links,
         )
 
