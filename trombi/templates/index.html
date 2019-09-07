@@ -38,7 +38,7 @@
         <!-- Search -->
         <div class="mdh-expandable-search mdl-cell--hide-phone">
           <i class="material-icons">search</i>
-            <input type="text" placeholder="Search (login, room, team...)" size="1" name="search" oninput="updateSearch(this.value);">
+            <input id="searchBar" type="text" placeholder="Search (login, room, team...)" size="1" name="search" oninput="updateSearch(this.value);">
         </div>
         <!-- Displayed on mobile -->
         <div class="mdl-layout-spacer mdl-cell--hide-tablet mdl-cell--hide-desktop"></div>
@@ -91,6 +91,14 @@
 
 
 <script>
+
+// Intercept the Ctrl+F to push the usage of the search bar
+window.addEventListener("keydown",function (e) {
+    if (e.keyCode === 114 || (e.ctrlKey && e.keyCode === 70)) { 
+        e.preventDefault();
+        document.getElementById("searchBar").focus();
+    }
+})
 
 function updateSearch(query) {
   results = document.getElementById("searchResults");
