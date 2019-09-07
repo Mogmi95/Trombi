@@ -213,12 +213,33 @@ class Infos(db.Model):
     text = db.Column(db.Text(), unique=False, default=u'Hello World!')
 
 
+class LinkCategory(db.Model):
+    """Represents a category of links."""
+
+    def __str__(self):
+        """Simple log method."""
+        return str(self.title)
+
+    def as_dict(self):
+        """Dumps the data as JSON"""
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
+    __tablename__ = "link_category"
+    id = db.Column(db.Integer, primary_key=True)
+    order = db.Column(db.Integer, unique=False)
+    image = db.Column(db.Text(), unique=False)
+    title = db.Column(db.Text(), unique=False, default=u'Title')
+    description = db.Column(db.Text(), unique=False, default=u'Description')
+
+    links = relationship("Link", backref="category")
+
+
 class Link(db.Model):
     """Represents an interesting link."""
 
     def __str__(self):
         """Simple log method."""
-        return str(id)
+        return str(self.title)
 
     def as_dict(self):
         """Dumps the data as JSON"""
@@ -231,6 +252,7 @@ class Link(db.Model):
     image = db.Column(db.Text(), unique=False)
     title = db.Column(db.Text(), unique=False, default=u'Title')
     description = db.Column(db.Text(), unique=False, default=u'Description')
+    category_id = Column(Integer, ForeignKey('link_category.id'))
 
 
 class Room(db.Model):

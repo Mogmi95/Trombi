@@ -1,35 +1,47 @@
 {% extends "index.html" %}
 {% block body %}
 
+<div id="linkContainer">
+
 {% if links is none %}
 
 <p>No links to display</p>
 
 {% else %}
 
-{% for link in links %}
-<div class="linkCard card-style mdl-js-ripple-effect">
-  <a href="{{link.url}}">
-    <div class="linkCardContent">
-      {% if link.image == "" %}
-        <div class="linksLeft" style="background: url({{ url_for('static', filename='images/default_link.png') }}) center / cover;">
-      {% else %}
-        <div class="linksLeft" style="background: url({{link.image}}) center / cover;">
-      {% endif %}
-            </div>
-            <div class="linksRight">
-                <div class="linksTitle">
-                    {{link.title}}
-                  </div>
-                  <div class="linksDescription">
-                      {{link.description}}
+{% for category in categories %}
+<a href="#{{ category.id }}">{{ category.title }}</a><br />
+{% endfor %}
+
+{% for category in categories %}
+  <h2><a id="{{ category.id }}">{{ category.title }}</a></h2>
+  <br />
+  <h3>{{ category.description }}</h3>
+  {% for link in category.links %}
+  <div class="linkCard card-style mdl-js-ripple-effect">
+    <a href="{{link.url}}">
+      <div class="linkCardContent">
+        {% if link.image == "" %}
+          <div class="linksLeft" style="background: url({{ url_for('static', filename='images/default_link.png') }}) center / cover;">
+        {% else %}
+          <div class="linksLeft" style="background: url({{link.image}}) center / cover;">
+        {% endif %}
+              </div>
+              <div class="linksRight">
+                  <div class="linksTitle">
+                      {{link.title}}
                     </div>
-                </div>
-        <span class="mdl-ripple"></span>
-        
-    </div>
-  </a>
-</div>
+                    <div class="linksDescription">
+                        {{link.description}}
+                      </div>
+                  </div>
+          <span class="mdl-ripple"></span>
+          
+      </div>
+    </a>
+  </div>
+{% endfor %}
 {% endfor %}
 {% endif %}
+</div>
 {% endblock %}

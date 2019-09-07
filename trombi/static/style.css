@@ -585,6 +585,11 @@ label {
 
 /* LINKS */
 
+#linkContainer {
+  max-width: 900px;
+  margin: auto;
+}
+
 .linkCard {
   position: relative;
   width: 1000px;

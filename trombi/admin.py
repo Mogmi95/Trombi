@@ -21,7 +21,7 @@ import json
 from werkzeug.security import check_password_hash
 
 from .models import TrombiAdmin, Person, PersonComment, Team, Infos
-from .models import Link, Room, Floor
+from .models import Link, LinkCategory, Room, Floor
 from .app import db, app
 import config
 
@@ -632,6 +632,7 @@ def init():
     admin.add_view(MyModelView(Team, db.session))
     admin.add_view(MyModelView(Infos, db.session))
     admin.add_view(MyModelView(Link, db.session))
+    admin.add_view(MyModelView(LinkCategory, db.session))
     admin.add_view(MyModelView(Room, db.session))
     admin.add_view(MyModelView(Floor, db.session))
     admin.add_view(MapsView(name='Maps', endpoint='maps'))
