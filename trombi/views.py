@@ -17,7 +17,7 @@ from flask_babel import gettext
 
 from config import LANGUAGES, PHOTOS_FOLDER, WEBSITE_URL
 from .app import db, app, babel
-from .models import Person, PersonComment, Team, Infos, Link, Room, Floor
+from .models import Person, PersonComment, Team, Infos, LinkCategory, Link, Room, Floor
 
 
 @babel.localeselector
@@ -566,12 +566,14 @@ def show_game():
 @app.route("/links")
 def show_links(login=None):
     """Display all links."""
+    categories = LinkCategory.query.order_by(LinkCategory.order).all()
     links = Link.query.order_by(Link.order).all()
-    if (len(links) == 0) :
+    if (len(links) == 0):
         links = None
     return render_template(
             'links.html',
             title="Links",
+            categories=categories,
             links=links,
         )
 
