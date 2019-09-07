@@ -628,17 +628,17 @@ def init():
     # Do we want the admin to editate this ?
     # admin.add_view(MyModelView(TrombiAdmin, db.session))
 
-    admin.add_view(PersonView(Person, db.session))
-    admin.add_view(MyModelView(Team, db.session))
+    admin.add_view(PersonView(Person, db.session, category="Persons"))
+    admin.add_view(MyModelView(Team, db.session, category="Persons"))
+    admin.add_view(CommentsView(name='Comments', endpoint='comments', category="Persons"))
     admin.add_view(MyModelView(Infos, db.session))
-    admin.add_view(MyModelView(Link, db.session))
-    admin.add_view(MyModelView(LinkCategory, db.session))
-    admin.add_view(MyModelView(Room, db.session))
-    admin.add_view(MyModelView(Floor, db.session))
-    admin.add_view(MapsView(name='Maps', endpoint='maps'))
+    admin.add_view(MyModelView(Link, db.session, category="Links"))
+    admin.add_view(MyModelView(LinkCategory, db.session, category="Links"))
+    admin.add_view(MyModelView(Room, db.session, category="Map"))
+    admin.add_view(MyModelView(Floor, db.session, category="Map"))
+    admin.add_view(MapsView(name='Maps', endpoint='maps', category="Map"))
     admin.add_view(DatabaseSaveView(name='Database', endpoint='database'))
     admin.add_view(ChartsView(name='Charts', endpoint='charts'))
-    admin.add_view(CommentsView(name='Comments', endpoint='comments'))
 
     # We create the database backup directory if it doesn't exists
     if (not isdir(config.DATABASE_SAVES_DIRECTORY)):
