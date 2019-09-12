@@ -139,7 +139,8 @@ def get_maps_info():
         data['rooms'] = [room.as_dict() for room in floor.rooms]
         floordata.append(data)
 
-    return '{"floors": ' + str(floordata).replace("u'", "'").replace("'", "\"") + '}'
+    print(floordata)
+    return '{"floors": ' + str(floordata).replace("u'", "'").replace("'", "\"").replace("True", "\"True\"").replace("False", "\"False\"") + '}'
 
 
 @app.route('/person/<login>/edit')
