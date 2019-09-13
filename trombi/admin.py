@@ -486,18 +486,18 @@ class DatabaseSaveView(BaseView):
         persons = Person.query.all()
         for person in persons:
             writer.writerow([
-                '' if (person.team is None) else person.team.name.encode('utf-8'),
-                '' if (person.login is None) else person.login.encode('utf-8'),
-                '' if (person.surname is None) else person.surname.encode('utf-8'),
-                '' if (person.name is None) else person.name.encode('utf-8'),
+                '' if (person.team is None) else person.team.name,
+                '' if (person.login is None) else person.login,
+                '' if (person.surname is None) else person.surname,
+                '' if (person.name is None) else person.name,
                 '1990/01/01' if (person.birthday is None) else person.birthday.strftime(u'%Y/%m/%d'),
                 '1990/01/01' if (person.arrival is None) else person.arrival.strftime(u'%Y/%m/%d'),
-                '' if (person.job is None) else person.job.encode('utf-8'),
-                '' if (person.email is None) else person.email.encode('utf-8'),
-                '' if (person.skype is None) else person.skype.encode('utf-8'),
-                '' if (person.fixe is None) else person.fixe.encode('utf-8'),
-                '' if (person.mobile is None) else person.mobile.encode('utf-8'),
-                '' if (person.manager is None) else person.manager.login.encode('utf-8'),
+                '' if (person.job is None) else person.job,
+                '' if (person.email is None) else person.email,
+                '' if (person.skype is None) else person.skype,
+                '' if (person.fixe is None) else person.fixe,
+                '' if (person.mobile is None) else person.mobile,
+                '' if (person.manager is None) else person.manager.login,
                 "room"
                 ])
         return output.getvalue()
