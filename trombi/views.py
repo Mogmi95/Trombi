@@ -12,7 +12,7 @@ import random
 import os
 import json
 from flask import render_template, request, url_for, redirect, send_file, send_from_directory
-from sqlalchemy import or_
+from sqlalchemy import or_, desc
 from flask_babel import gettext
 
 from config import LANGUAGES, PHOTOS_FOLDER, WEBSITE_URL
@@ -67,7 +67,7 @@ def show_all():
     persons_to_display = []
 
     # We get the text to display in the top header
-    header_text = Infos.query.first().text
+    header_text = Infos.query.order_by(desc(Infos.id)).first().text
 
     if (person_filter in ["newcomers"]):
         # Calculating newcomers
@@ -116,9 +116,9 @@ def get_news(id=None):
     """Display all the available news"""
     news = []
     if id is not None:
-        news = Infos.query.filter_by(id=id)
+        news = Infos.query.filter_by(id=id).order_by(desc(Infos.id))
     else:
-        news = Infos.query.all()
+        news = Infos.query.order_by(desc(Infos.id)).all()
     return render_template(
         'news.html',
         title='News',
