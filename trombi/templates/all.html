@@ -26,7 +26,7 @@
       Nobody to display
     {% else %}
       {% for person in persons %}
-      <div class="mdl-cell mdl-cell--2-col mdl-cell--2-col-tablet mdl-cell--2-col-phone card-style mdl-js-ripple-effect" style="background: url({{ url_for('person_image', login=person.login) }}) center / cover;">
+      <div class="mdl-cell mdl-cell--2-col mdl-cell--2-col-tablet mdl-cell--2-col-phone card-style" style="background: url({{ url_for('person_image', login=person.login) }}) center / cover;">
         <a href="/person/{{ person.login }}">
           <span class="mdl-ripple"></span>
           <div class="cell-spacer"></div>

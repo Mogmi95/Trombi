@@ -48,12 +48,14 @@ def main():
     """Root view."""
     return index()
 
+
 def index():
     infos = Infos.query.first()
     return render_template(
         'main.html',
         info=infos
         )
+
 
 @app.route("/photo/<login>")
 def person_image(login=None):
@@ -63,6 +65,7 @@ def person_image(login=None):
         return send_from_directory(PHOTOS_FOLDER, login + ".jpg")
     else:
         return redirect(url_for('static', filename='images/missing_avatar.png'))
+
 
 @app.route("/all")
 def show_all():
@@ -104,10 +107,10 @@ def show_person(login=None):
     commented = request.args.get('commented')
     person = Person.query.filter_by(login=login).first()
     if (person is None):
-        title = gettext(u'%(login)s doesn\'t exists.', login=login)
+        title = "gettext(u'%(login)s doesn\'t exists.', login=login)"
         return render_template('person_error.html', person=person, title=title)
     else:
-        title = person.name + ' ' + person.surname
+        title = 'Profile: ' + person.name + ' ' + person.surname
         return render_template(
             'person.html',
             person=person,

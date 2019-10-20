@@ -295,4 +295,4 @@ class Floor(db.Model):
     filename = db.Column(db.String(80), unique=True)
     name = db.Column(db.Text(), unique=False, default=u'Floor')
 
-    rooms = relationship("Room", backref="floor") 
+    rooms = relationship("Room", backref="floor")
