@@ -186,3 +186,12 @@ html, body {
 .profile-team-card {
   padding: 8px;
 }
+
+/*  Trick to prevent non-css page to be displayed
+    Must stay at the end of the file!
+*/
+
+html {
+  visibility: visible;
+  opacity: 1;
+}
