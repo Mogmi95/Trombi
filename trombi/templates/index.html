@@ -94,11 +94,12 @@
 
 // Intercept the Ctrl+F to push the usage of the search bar
 window.addEventListener("keydown",function (e) {
-    if (e.keyCode === 114 || (e.ctrlKey && e.keyCode === 70)) { 
+    if (e.keyCode === 114 || (e.ctrlKey && e.keyCode === 70)) {
         e.preventDefault();
         document.getElementById("searchBar").focus();
     }
 })
+
 
 function updateSearch(query) {
   results = document.getElementById("searchResults");
@@ -108,6 +109,7 @@ function updateSearch(query) {
       otherContent.style.display = "none";
       results.style.display = "block";
       results.innerHTML = data;
+
     })
   } else {
     otherContent.style.display = "block";
@@ -126,6 +128,18 @@ function performSearch(query, callback) {
   xhttp.open("GET", "/search/" + query, true);
   xhttp.send();
 }
+
+// Intercept the Ctrl+F to push the usage of the search bar
+window.addEventListener("keydown",function (e) {
+    if (e.keyCode === 13) {
+        e.preventDefault();
+        // Searching for the first result
+        var results = document.getElementsByClassName("search-result")
+        if (results.length > 0) {
+          window.location.replace(results[0].href);
+        }
+    }
+})
 
 </script>
 

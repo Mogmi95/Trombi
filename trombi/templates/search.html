@@ -4,7 +4,7 @@
 <div class="mdl-grid custom-grid">
         {% for person in persons %}
         <div class="mdl-cell mdl-cell--2-col mdl-cell--2-col-tablet mdl-cell--2-col-phone card-style mdl-js-ripple-effect" style="background: url({{ url_for('person_image', login=person.login) }}) center / cover;">
-            <a href="/person/{{ person.login }}">
+            <a class="search-result" href="/person/{{ person.login }}">
             <span class="mdl-ripple"></span>
             <div class="cell-spacer"></div>
             <div class="cell-text-container">
@@ -23,7 +23,7 @@
     <div class="mdl-grid custom-grid">
         {% for team in teams %}
         <div class="mdl-cell mdl-cell--2-col mdl-cell--2-col-tabl   et mdl-cell--2-col-phone card-style mdl-js-ripple-effect" style="background: url('https://d2slcw3kip6qmk.cloudfront.net/marketing/blogs/chart/manage-your-team@2x.png') center / cover;">
-            <a href="{{ url_for('show_team', team=team.name) }}">
+            <a class="search-result" href="{{ url_for('show_team', team=team.name) }}">
             <span class="mdl-ripple"></span>
             <div class="cell-spacer"></div>
             <div class="cell-text-container">
@@ -42,7 +42,7 @@
     <div class="mdl-grid custom-grid">
         {% for room in rooms %}
         <div class="mdl-cell mdl-cell--2-col mdl-cell--2-col-tablet mdl-cell--2-col-phone card-style mdl-js-ripple-effect" style="background: url('https://www.citizenm.com/cache/images/citizenm_schipol_2-0199_web_00ecec985a24cc.jpg') center / cover;">
-            <a href="{{ url_for('show_map_room', room_id=room.id) }}">
+            <a class="search-result" href="{{ url_for('show_map_room', room_id=room.id) }}">
             <span class="mdl-ripple"></span>
             <div class="cell-spacer"></div>
             <div class="cell-text-container">
@@ -61,7 +61,7 @@
     <div class="mdl-grid custom-grid">
         {% for link in links %}
         <div class="mdl-cell mdl-cell--2-col mdl-cell--2-col-tablet mdl-cell--2-col-phone card-style mdl-js-ripple-effect" style="background: url('{{ link.image }}') center / cover;">
-            <a href="{{ link.url }}">
+            <a class="search-result" href="{{ link.url }}">
             <span class="mdl-ripple"></span>
             <div class="cell-spacer"></div>
             <div class="cell-text-container">
