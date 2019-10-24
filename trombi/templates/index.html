@@ -173,6 +173,18 @@
         xhttp.send();
       }
 
+      // Intercept the Ctrl+F to push the usage of the search bar
+      window.addEventListener("keydown",function (e) {
+      if (e.keyCode === 13) {
+          e.preventDefault();
+          // Searching for the first result
+          var results = document.getElementsByClassName("search-result")
+          if (results.length > 0) {
+            window.location.replace(results[0].href);
+          }
+        }
+      })
+
       </script>
     <script src="https://code.getmdl.io/1.3.0/material.min.js"></script>
   </body>
