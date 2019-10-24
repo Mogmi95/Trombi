@@ -395,7 +395,8 @@ def show_calendar():
     # Persons events
     birthday_events = '['
     arrival_events = '['
-    for year in [2018, 2019]:
+    current_year = datetime.datetime.now().year
+    for year in [current_year - 1, current_year, current_year + 1]:
         for person in persons:
             if (person.birthday != ''):
                 birth_date = person.birthday
