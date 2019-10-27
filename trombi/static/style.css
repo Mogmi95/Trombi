@@ -167,24 +167,87 @@ html, body {
 }
 
 .profile-card {
-  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  /*box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);*/
   background-color: #fff;
 }
 
-.profile-image {
-  height: 200px;
-  width: 150px;
-  float: left;
+.profile-info-card {
+  /*background: linear-gradient(0deg, #FFFFFF 50%, rgb(230, 149, 84) 50%);*/
 }
 
-.profile-info{
-  background-color: #00BCD4;
+.profile-info-header {
+  height: 240px;
+  width: auto;
+}
+
+.profile-image {
+  float: left;
   height: 200px;
-  margin-left: 150px;
+  width: 150px;
+  margin: 16px;
+  border-radius: 8px;
+}
+
+.profile-info {
+  float: left;
+  padding-top: 32px;
+  /*background-color: #00BCD4;*/
+}
+
+.profile-info-title {
+  font-size: xx-large;
+  font-weight: 500;
+}
+
+.profile-info-subtitle {
+  font-size: x-large;
+  font-weight: 400;
+  padding-top: 16px;
+}
+
+.profile-info-subsection {
+  float: left;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-bottom: 16px;
+}
+
+.mdl-chip {
+  /*background: #00BCD4;
+  color: #FFFFFF;*/
+}
+
+.profile-info-below {
+  font-size: x-large;
+  font-weight: 300;
+  padding-top: 16px;
+}
+
+#profile-map {
+  min-height: 200px;
+  height: 100%;
+}
+
+.profile-tags-card {
+  padding: 16px;
 }
 
 .profile-team-card {
-  padding: 8px;
+  padding: 16px;
+  text-align: center;
+}
+
+.manager-image {
+  height: 120px;
+  width: 100px;
+  margin: auto;
+}
+
+.profile-contact-card {
+}
+
+.profile-date-card {
+  padding: 16px;
 }
 
 /*  Trick to prevent non-css page to be displayed

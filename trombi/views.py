@@ -110,7 +110,7 @@ def show_person(login=None):
         title = "gettext(u'%(login)s doesn\'t exists.', login=login)"
         return render_template('person_error.html', person=person, title=title)
     else:
-        title = 'Profile: ' + person.name + ' ' + person.surname
+        title = 'Person profile'
         return render_template(
             'person.html',
             person=person,
@@ -460,8 +460,12 @@ def show_calendar():
 @app.route("/team")
 def show_all_teams():
     """Show a graph with all teams."""
-    head = Person.query.filter_by(manager=None).first()
-    return show_team(head.team.name)
+    return render_template(
+        'team.html',
+        title="Orgchart",
+        )
+    # head = Person.query.filter_by(manager=None).first()
+    #return show_team(head.team.name)
 
 
 @app.route("/team/<team>")

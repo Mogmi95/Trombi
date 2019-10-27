@@ -1,34 +1,95 @@
 {% extends "index.html" %}
 
 {% block head %}
-
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css"
+integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+crossorigin=""/>
+ <!-- Make sure you put this AFTER Leaflet's CSS -->
+ <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js"
+   integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="
+   crossorigin="">
+</script>
+<script src='{{ url_for('static', filename='js/jquery.min.js') }}'></script>
 {% endblock %}
 
 {% block body %}
 
 <div class="profile-grid mdl-grid">
-  <div class="profile-card mdl-cell mdl-cell--8-col">
-    <div class="profile-image" style="background: url({{ url_for('person_image', login=person.login) }}) center / cover;"style="background: url({{ url_for('person_image', login=person.login) }}) center / cover;"></div>
+  <div class="profile-card profile-info-card mdl-cell mdl-cell--8-col">
+    <div class="profile-info-header">
+      <div class="profile-image" style="background: url({{ url_for('person_image', login=person.login) }}) center / cover;"style="background: url({{ url_for('person_image', login=person.login) }}) center / cover;"></div>
       <div class="profile-info">
-        {{ person.name }} {{ person.surname }}
+        <span class="profile-info-title">{{ person.name }} {{ person.surname }}</span>
         <br />
-        {{ person.job }}
+        <span class="profile-info-below">{{ person.job }}</span>
         <br />
-        Team: {{ person.team }}
         <br />
+        <span class="profile-info-subtitle">{{ person.team }}</span>
       </div>
-  </div>
+    </div>
+    <div class="profile-info-subsection">
+      PIZZAŒ
+    </div>
+    </div>
+
   <div class="profile-card mdl-cell mdl-cell--4-col">
-  LOCATION
+    <div id="profile-map"></div>
   </div>
-  <div class="profile-card profile-team-card mdl-cell mdl-cell--4-col">
-  MANAGED BY:<br/>
-    <span class="mdl-chip mdl-chip--contact" onclick="location.href='/person/{{ person.manager.login }}'">
-      <img class="mdl-chip__contact" src="{{ url_for('person_image', login=person.manager.login) }}"></img>
-      <span class="mdl-chip__text">{{ person.manager.name }} {{ person.manager.surname | upper }}</span>
+
+    <div class="profile-card profile-tags-card mdl-cell mdl-cell--4-col">
+    <span class="mdl-chip">
+      <span class="mdl-chip__text">Smoke Detector</span>
     </span>
-  <br/><br/>
-  MANAGES:<br/>
+    <span class="mdl-chip">
+      <span class="mdl-chip__text">Siren</span>
+    </span>
+    <span class="mdl-chip">
+      <span class="mdl-chip__text">Doortags</span>
+    </span>
+  </div>
+  <div class="profile-card profile-contact-card mdl-cell mdl-cell--4-col">
+  CONTACTS
+    <ul class="mdl-list">
+    <!-- EMAIL -->
+    {% if person.email != None and person.email != '' %}
+    <li class="mdl-list__item mdl-list__item--two-line">
+      <span class="mdl-list__item-primary-content">
+        <i class="material-icons mdl-list__item-icon">email</i>
+        {{ person.email }}
+        <span class="mdl-list__item-sub-title">Mail</span>
+      </span>
+    </li>
+    {% endif %}
+    <!-- PHONE -->
+    {% if person.fixe != None and person.fixe != '' %}
+    <li class="mdl-list__item mdl-list__item--two-line">
+      <span class=" mdl-list__item-primary-content">
+        <i class="material-icons mdl-list__item-icon">phone</i>
+        {{ person.fixe }}
+        <span class="mdl-list__item-sub-title">Phone</span>
+      </span>
+    </li>
+    {% endif %}
+    <!-- MOBILE PHONE -->
+    {% if person.mobile != None and person.mobile != '' %}
+    <li class="mdl-list__item mdl-list__item--two-line">
+      <span class="mdl-list__item-primary-content">
+        <i class="material-icons mdl-list__item-icon">phone</i>
+        {{ person.mobile }}
+        <span class="mdl-list__item-sub-title">Phone (mobile)</span>
+      </span>
+    </li>
+    {% endif %}
+  </div>
+  <div class="profile-card profile-date-card mdl-cell mdl-cell--3-col">
+  DATES
+  </div>
+  <div class="profile-card profile-team-card mdl-cell mdl-cell--2-col">
+    MANAGER<br/>
+    <div class="manager-image" style="background: url({{ url_for('person_image', login=person.manager.login) }}) center / cover;"style="background: url({{ url_for('person_image', login=person.login) }}) center / cover;"></div>
+  </div>
+  <div class="profile-card profile-team-card mdl-cell mdl-cell--10-col">
+  MANAGES<br/>
   {% for team_member in person.subordinates %}
     <span class="mdl-chip mdl-chip--contact" onclick="location.href='/person/{{ team_member.login }}'">
       <img class="mdl-chip__contact" src="{{ url_for('person_image', login=team_member.login) }}"></img>
@@ -36,12 +97,46 @@
     </span>
   {% endfor %}
   </div>
-  <div class="profile-card mdl-cell mdl-cell--4-col">
-  CONTACTS
-  </div>
-  <div class="profile-card mdl-cell mdl-cell--4-col">
-  DATES
-  </div>
-
 </div>
+
+<script>
+// We only load the map if the person has one
+{% if person.room is not none %}
+$(window).on('load', function() {
+  showPersonMap(
+    {{ person.room.floor.id }},
+    {{ person.room.coordinate_x }},
+    {{ person.room.coordinate_y }}
+  );
+});
+{% else %}
+// Not calling show map for this person
+{% endif %}
+var map;
+function showPersonMap(floorId, personX, personY) {
+  // create the marker
+  var marker = L.marker([personX, personY]);
+  // create the map
+   map = L.map('profile-map', {
+      center: marker.getLatLng(),
+      zoom: 1
+  });
+  // create the image
+  // TODO Use a better way to access images, but as of now it does weird stuff with Jinja2 and JS
+  var imageUrl = '/static/images/maps/' + floorId + '.png'
+  var imageBounds = [[0, 0], [250, 250]];
+  L.imageOverlay(imageUrl, imageBounds).addTo(map);
+  // add the marker to the map
+  marker.addTo(map);
+}
+function showSnackbar(text) {
+    var snackbarContainer = document.querySelector('#snackbar-root');
+    var data = {
+      message: text,
+      timeout: 2000,
+    };
+    snackbarContainer.MaterialSnackbar.showSnackbar(data);
+}
+</script>
+
 {% endblock %}

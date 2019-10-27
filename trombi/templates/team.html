@@ -1,76 +1,56 @@
 {% extends "index.html" %}
 
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='jquery.orgchart.css') }}" media="screen" />
+    <script src='{{ url_for('static', filename='js/jquery.min.js') }}'></script>
+    <script src='{{ url_for('static', filename='js/jspdf.min.js') }}'></script>
+    <script src='{{ url_for('static', filename='js/html2canvas.min.js') }}'></script>
+    <script src='{{ url_for('static', filename='js/jquery.orgchart.min.js') }}'></script>
+{% endblock %}
+
+
 {% block body %}
 
-<div class="titleTeamNameContainer">
-    <div class="titleTeamName">{{team.name}}</div>
-</div>
-
-<div class="viewModeContainer">
-  <!--<a href="{{ list_url }}?list=false" title="Toggle cards mode"><img class="{% if list_mode is none %}selectedImageIndicator{% else %}notSelectedImageIndicator{% endif %}" src="{{ url_for('static', filename='images/ic_view_module.png') }}" /></a>-->
-  <!--<a href="{{ list_url }}?list=true" title="Toggle list mode"><img class="{% if list_mode is none %}notSelectedImageIndicator{% else %}selectedImageIndicator{% endif %}" src="{{ url_for('static', filename='images/ic_view_list.png') }}" /></a>-->
-</div>
-
-{% if list_mode is none %}
-
-<div class="tree">
-  <div id="chart_div"></div>
-</div>
+<div id="chart-container"></div>
 <script type="text/javascript">
-google.charts.load('current', {packages:["orgchart"]});
-google.charts.setOnLoadCallback(dlistChart);
+  $(function() {
 
+    var datasource = "{
+      'id': 'rootNode', // It's a optional property which will be used as id attribute of node
+      // and data-parent attribute, which contains the id of the parent node
+      'collapsed': true, // By default, the children nodes of current node is hidden.
+      'className': 'top-level', // It's a optional property which will be used as className attribute of node.
+      'nodeTitlePro': 'Lao Lao',
+      'nodeContentPro': 'general manager',
+      'relationship': relationshipValue, // Note: when you activate ondemand loading nodes feature,
+      // you should use json datsource (local or remote) and set this property.
+      // This property implies that whether this node has parent node, siblings nodes or children nodes.
+      // relationshipValue is a string composed of three "0/1" identifier.
+      // First character stands for wether current node has parent node;
+      // Scond character stands for wether current node has siblings nodes;
+      // Third character stands for wether current node has children node.
+      'children': [ // The property stands for nested nodes.
+        { 'nodeTitlePro': 'Bo Miao', 'nodeContentPro': 'department manager', 'relationship': '110' },
+        { 'nodeTitlePro': 'Su Miao', 'nodeContentPro': 'department manager', 'relationship': '111',
+          'children': [
+            { 'nodeTitlePro': 'Tie Hua', 'nodeContentPro': 'senior engineer', 'relationship': '110' },
+            { 'nodeTitlePro': 'Hei Hei', 'nodeContentPro': 'senior engineer', 'relationship': '110' }
+          ]
+        },
+        { 'nodeTitlePro': 'Yu Jie', 'nodeContentPro': 'department manager', 'relationship': '110' }
+      ],
+      'otherPro': anyValue
+};
+"
 
-function dlistChart() {
-  var data = new google.visualization.DataTable();
-  data.addColumn('string', 'Name');
-  data.addColumn('string', 'Manager');
-  data.addColumn('string', 'ToolTip');
+  $('#chart-container').orgchart({
+    'data' : datasource,
+    'nodeContent': 'title',
+    'verticalLevel': 3,
+    'visibleLevel': 4,
+  });
 
-
-  // For each orgchart box, provide the name, manager, and tooltip to show.
-  data.addRows([
-    {{ tree | safe }}
-  ]);
-
-  // Create the chart.
-  var chart = new google.visualization.OrgChart(document.getElementById('chart_div'));
-  // Draw the chart, setting the allowHtml option to true for the tooltips.
-
-  chart.draw(data, {allowHtml:true, size:'large', nodeClass:"rootTreeNodeElement", selectedNodeClass:"rootTreeNodeElement"});
-}
+});
 </script>
-
-{% else %}
-
-<div class="list_data_table_container">
-  <table class="list_data_table mdl-data-table mdl-js-data-table mdl-shadow--2dp">
-    <thead>
-      <tr>
-        <th class="mdl-data-table__cell--non-numeric">{{ gettext('Picture') }}</th>
-        <th class="mdl-data-table__cell--non-numeric">{{ gettext('Login') }}</th>
-        <th class="mdl-data-table__cell--non-numeric">{{ gettext('Name') }}</th>
-        <th class="mdl-data-table__cell--non-numeric">{{ gettext('Surname') }}</th>
-        <th class="mdl-data-table__cell--non-numeric">{{ gettext('Team') }}</th>
-        <th class="mdl-data-table__cell--non-numeric">{{ gettext('Skype') }}</th>
-        <th class="mdl-data-table__cell--non-numeric">{{ gettext('VCard') }}</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for person in team.persons %}
-      <tr>
-        <td class="mdl-data-table__cell--non-numeric"><a href="/person/{{ person.login }}"><div class="list_list_img" style="background: url({{ url_for('person_image', login=person.login) }}) center / cover;"></div></a></td>
-        <td class="mdl-data-table__cell--non-numeric">{{ person.login }}</td>
-        <td class="mdl-data-table__cell--non-numeric">{{ person.name }}</td>
-        <td class="mdl-data-table__cell--non-numeric">{{ person.surname }}</td>
-        <td class="mdl-data-table__cell--non-numeric">{{ person.team.name }}</td>
-        <td class="mdl-data-table__cell--non-numeric">{{ person.skype }}</td>
-        <td class="mdl-data-table__cell--non-numeric"><a href="/person/vcard/vcard-{{ person.login }}.vcf" download><button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">VCard</button></a></td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-</div>
-{% endif %}
 
 {% endblock %}
