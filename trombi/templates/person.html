@@ -14,10 +14,11 @@ crossorigin=""/>
 
 {% block body %}
 
-<div class="profile-grid mdl-grid">
-  <div class="profile-card profile-info-card mdl-cell mdl-cell--8-col">
+<div class="demo-card-wide mdl-card mdl-shadow--2dp">
+  <div class="mdl-card__title">
+    <div class="profile-image" style="background: url({{ url_for('person_image', login=person.login) }}) center / cover;"style="background: url({{ url_for('person_image', login=person.login) }}) center / cover;">
+    </div>
     <div class="profile-info-header">
-      <div class="profile-image" style="background: url({{ url_for('person_image', login=person.login) }}) center / cover;"style="background: url({{ url_for('person_image', login=person.login) }}) center / cover;"></div>
       <div class="profile-info">
         <span class="profile-info-title">{{ person.name }} {{ person.surname }}</span>
         <br />
@@ -27,28 +28,15 @@ crossorigin=""/>
         <span class="profile-info-subtitle">{{ person.team }}</span>
       </div>
     </div>
-    <div class="profile-info-subsection">
-      PIZZAŒ
-    </div>
-    </div>
-
-  <div class="profile-card mdl-cell mdl-cell--4-col">
-    <div id="profile-map"></div>
   </div>
-
-    <div class="profile-card profile-tags-card mdl-cell mdl-cell--4-col">
-    <span class="mdl-chip">
-      <span class="mdl-chip__text">Smoke Detector</span>
-    </span>
-    <span class="mdl-chip">
-      <span class="mdl-chip__text">Siren</span>
-    </span>
-    <span class="mdl-chip">
-      <span class="mdl-chip__text">Doortags</span>
-    </span>
+  <div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect">
+  <div class="mdl-tabs__tab-bar">
+    <a href="#about-panel" class="mdl-tabs__tab is-active">Infos</a>
+    <a href="#members-panel" class="mdl-tabs__tab">Team</a>
+    <a href="#albums-panel" class="mdl-tabs__tab">Location</a>
+    <a href="#test" class="mdl-tabs__tab">Tags</a>
   </div>
-  <div class="profile-card profile-contact-card mdl-cell mdl-cell--4-col">
-  CONTACTS
+  <div class="mdl-tabs__panel is-active" id="about-panel">
     <ul class="mdl-list">
     <!-- EMAIL -->
     {% if person.email != None and person.email != '' %}
@@ -80,6 +68,59 @@ crossorigin=""/>
       </span>
     </li>
     {% endif %}
+    </ul>
+  </div>
+  <div class="mdl-tabs__panel" id="team-panel">
+    <p>The Beatles' members were:</p>
+    <ul>
+      <li>John Lennon (1940-1980)</li>
+      <li>Paul McCartney (1942-)</li>
+      <li>George Harrison (1943-2001)</li>
+      <li>Ringo Starr (1940-)</li>
+    </ul>
+  </div>
+  <div class="mdl-tabs__panel" id="albums-panel">
+    <div id="profile-map"></div>
+  </div>
+</div>
+  <div class="mdl-card__actions mdl-card--border">
+    <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
+      Get Started
+    </a>
+  </div>
+  <div class="mdl-card__menu">
+    <button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
+      <i class="material-icons">share</i>
+    </button>
+  </div>
+</div>
+
+<div class="profile-grid mdl-grid">
+  <div class="profile-card profile-info-card mdl-cell mdl-cell--8-col">
+
+    <div class="profile-info-subsection">
+      PIZZAŒ
+    </div>
+    </div>
+
+  <div class="profile-card mdl-cell mdl-cell--4-col">
+
+  </div>
+
+    <div class="profile-card profile-tags-card mdl-cell mdl-cell--4-col">
+    <span class="mdl-chip">
+      <span class="mdl-chip__text">Smoke Detector</span>
+    </span>
+    <span class="mdl-chip">
+      <span class="mdl-chip__text">Siren</span>
+    </span>
+    <span class="mdl-chip">
+      <span class="mdl-chip__text">Doortags</span>
+    </span>
+  </div>
+  <div class="profile-card profile-contact-card mdl-cell mdl-cell--4-col">
+  CONTACTS
+
   </div>
   <div class="profile-card profile-date-card mdl-cell mdl-cell--3-col">
   DATES
