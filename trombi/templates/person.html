@@ -14,8 +14,8 @@ crossorigin=""/>
 
 {% block body %}
 
-<div class="demo-card-wide mdl-card mdl-shadow--2dp">
-  <div class="mdl-card__title">
+<div class="mdl-card profile-card mdl-shadow--2dp">
+  <div class="mdl-card__title profile-card-header">
     <div class="profile-image" style="background: url({{ url_for('person_image', login=person.login) }}) center / cover;"style="background: url({{ url_for('person_image', login=person.login) }}) center / cover;">
     </div>
     <div class="profile-info-header">
@@ -25,18 +25,63 @@ crossorigin=""/>
         <span class="profile-info-below">{{ person.job }}</span>
         <br />
         <br />
-        <span class="profile-info-subtitle">{{ person.team }}</span>
+        <span class="profile-info-subtitle"></span>
       </div>
     </div>
   </div>
   <div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect">
   <div class="mdl-tabs__tab-bar">
-    <a href="#about-panel" class="mdl-tabs__tab is-active">Infos</a>
-    <a href="#members-panel" class="mdl-tabs__tab">Team</a>
+    <a href="#team-panel" class="mdl-tabs__tab  is-active">Team</a>
     <a href="#albums-panel" class="mdl-tabs__tab">Location</a>
     <a href="#test" class="mdl-tabs__tab">Tags</a>
+    <a href="#about-panel" class="mdl-tabs__tab">Infos</a>
   </div>
-  <div class="mdl-tabs__panel is-active" id="about-panel">
+
+  <div class="mdl-tabs__panel is-active person-panel" id="team-panel">
+    Team:
+    <br />
+    {{ person.team }}
+    <br />
+    <br />
+    Teammates:
+    <br />
+    {% for team_member in person.subordinates %}
+      <span class="mdl-chip mdl-chip--contact" onclick="location.href='/person/{{ team_member.login }}'">
+        <img class="mdl-chip__contact" src="{{ url_for('person_image', login=team_member.login) }}"></img>
+        <span class="mdl-chip__text">{{ team_member.name }} {{ team_member.surname | upper }}</span>
+      </span>
+    {% endfor %}
+  </div>
+
+
+  <div class="mdl-tabs__panel person-panel" id="about-panel">
+    <ul class="mdl-list">
+        <!-- BIRTHDAY -->
+        {% if person.birthday != '' %}
+        <li class="mdl-list__item mdl-list__item--two-line">
+          <span class="mdl-list__item-primary-content">
+            <span class="mdl-ripple"></span>
+            <i class="material-icons mdl-list__item-icon">cake</i>
+            {{ person.get_pretty_birthday_date() }}
+            <span class="mdl-list__item-sub-title">Birthday</span>
+          </span>
+        </li>
+        {% endif %}
+        <!-- ARRIVAL -->
+        {% if person.arrival != '' %}
+        <li class="mdl-list__item mdl-list__item--two-line">
+          <span class="mdl-list__item-primary-content">
+              <span class="mdl-ripple"></span>
+            <i class="material-icons mdl-list__item-icon">person_add</i>
+            {{ person.get_pretty_arrival_date() }}
+            <span class="mdl-list__item-sub-title">Arrival</span>
+          </span>
+        </li>
+        {% endif %}
+    </ul>
+
+    <div class="horizontalSeparationLine"></div>
+
     <ul class="mdl-list">
     <!-- EMAIL -->
     {% if person.email != None and person.email != '' %}
@@ -69,76 +114,35 @@ crossorigin=""/>
     </li>
     {% endif %}
     </ul>
+
   </div>
-  <div class="mdl-tabs__panel" id="team-panel">
-    <p>The Beatles' members were:</p>
-    <ul>
-      <li>John Lennon (1940-1980)</li>
-      <li>Paul McCartney (1942-)</li>
-      <li>George Harrison (1943-2001)</li>
-      <li>Ringo Starr (1940-)</li>
-    </ul>
+
+
+  <div class="mdl-tabs__panel person-panel" id="albums-panel">
+    {% if person.room is not none %}
+        <p>Location: {{ person.room.name }}@{{ person.room.floor.name }}</p>
+        <div id="profile-map"></div>
+      {% else %}
+        <p>No location for this person yet.</p>
+      {% endif %}
   </div>
-  <div class="mdl-tabs__panel" id="albums-panel">
-    <div id="profile-map"></div>
-  </div>
+
+
+
 </div>
   <div class="mdl-card__actions mdl-card--border">
+    <a href="/person/vcard/vcard-{{ person.login }}.vcf" download class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
+      V-Card
+    </a>
     <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
-      Get Started
+      Report an error
     </a>
   </div>
   <div class="mdl-card__menu">
-    <button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
-      <i class="material-icons">share</i>
-    </button>
+    NOTHING
   </div>
 </div>
 
-<div class="profile-grid mdl-grid">
-  <div class="profile-card profile-info-card mdl-cell mdl-cell--8-col">
-
-    <div class="profile-info-subsection">
-      PIZZAŒ
-    </div>
-    </div>
-
-  <div class="profile-card mdl-cell mdl-cell--4-col">
-
-  </div>
-
-    <div class="profile-card profile-tags-card mdl-cell mdl-cell--4-col">
-    <span class="mdl-chip">
-      <span class="mdl-chip__text">Smoke Detector</span>
-    </span>
-    <span class="mdl-chip">
-      <span class="mdl-chip__text">Siren</span>
-    </span>
-    <span class="mdl-chip">
-      <span class="mdl-chip__text">Doortags</span>
-    </span>
-  </div>
-  <div class="profile-card profile-contact-card mdl-cell mdl-cell--4-col">
-  CONTACTS
-
-  </div>
-  <div class="profile-card profile-date-card mdl-cell mdl-cell--3-col">
-  DATES
-  </div>
-  <div class="profile-card profile-team-card mdl-cell mdl-cell--2-col">
-    MANAGER<br/>
-    <div class="manager-image" style="background: url({{ url_for('person_image', login=person.manager.login) }}) center / cover;"style="background: url({{ url_for('person_image', login=person.login) }}) center / cover;"></div>
-  </div>
-  <div class="profile-card profile-team-card mdl-cell mdl-cell--10-col">
-  MANAGES<br/>
-  {% for team_member in person.subordinates %}
-    <span class="mdl-chip mdl-chip--contact" onclick="location.href='/person/{{ team_member.login }}'">
-      <img class="mdl-chip__contact" src="{{ url_for('person_image', login=team_member.login) }}"></img>
-      <span class="mdl-chip__text">{{ team_member.name }} {{ team_member.surname | upper }}</span>
-    </span>
-  {% endfor %}
-  </div>
-</div>
 
 <script>
 // We only load the map if the person has one
