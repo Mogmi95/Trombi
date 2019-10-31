@@ -106,6 +106,12 @@ def show_person(login=None):
     """Display information about a specific person."""
     commented = request.args.get('commented')
     person = Person.query.filter_by(login=login).first()
+
+    # Team graph
+    data = get_person_json_data(person)
+    datasource = json.dumps(data).replace("'", '"')
+    print(datasource)
+
     if (person is None):
         title = "gettext(u'%(login)s doesn\'t exists.', login=login)"
         return render_template('person_error.html', person=person, title=title)
@@ -116,6 +122,7 @@ def show_person(login=None):
             person=person,
             title=title,
             commented=commented,
+            datasource=datasource,
         )
 
 
@@ -460,12 +467,27 @@ def show_calendar():
 @app.route("/team")
 def show_all_teams():
     """Show a graph with all teams."""
+    person = Person.query.all()[0]
+    data = get_person_json_data(person)
+
+    datasource = json.dumps(data).replace("'", '"')
+    print(datasource)
+
     return render_template(
         'team.html',
+        datasource=datasource,
         title="Orgchart",
         )
     # head = Person.query.filter_by(manager=None).first()
     #return show_team(head.team.name)
+
+def get_person_json_data(person):
+    """
+    Get a JSON representing a person and all the persons below him as JSON
+    """
+    children = [get_person_json_data(p) for p in person.subordinates]
+    return { "name": person.name, "title" : person.job, "login": person.login, "children": children}
+
 
 
 @app.route("/team/<team>")

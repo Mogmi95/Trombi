@@ -233,6 +233,35 @@ html, body {
   margin: 32px;
 }
 
+.chart-card{
+  margin-top: 32px;
+  width: auto;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#chart-container {
+  position: relative;
+  display: inline-block;
+  top: 10px;
+  left: 10px;
+  height: 1080px;
+  width: calc(100% - 24px);
+  border: 2px dashed #aaa;
+  border-radius: 5px;
+  overflow: auto;
+  text-align: center;
+}
+
+.chart-photo{
+  width: 100px;
+  height: 100px;
+}
+
+/* Team Chart */
+
+
+
 /*  Trick to prevent non-css page to be displayed
     Must stay at the end of the file!
 */

@@ -10,6 +10,11 @@ crossorigin=""/>
    crossorigin="">
 </script>
 <script src='{{ url_for('static', filename='js/jquery.min.js') }}'></script>
+
+
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='jquery.orgchart.css') }}" media="screen" />
+<script src='{{ url_for('static', filename='js/jquery.min.js') }}'></script>
+<script src='{{ url_for('static', filename='js/jquery.orgchart.min.js') }}'></script>
 {% endblock %}
 
 {% block body %}
@@ -43,14 +48,9 @@ crossorigin=""/>
     {{ person.team }}
     <br />
     <br />
-    Teammates:
+    Team:
     <br />
-    {% for team_member in person.subordinates %}
-      <span class="mdl-chip mdl-chip--contact" onclick="location.href='/person/{{ team_member.login }}'">
-        <img class="mdl-chip__contact" src="{{ url_for('person_image', login=team_member.login) }}"></img>
-        <span class="mdl-chip__text">{{ team_member.name }} {{ team_member.surname | upper }}</span>
-      </span>
-    {% endfor %}
+    <div id="chart-container"></div>
   </div>
 
 
@@ -183,5 +183,29 @@ function showSnackbar(text) {
     snackbarContainer.MaterialSnackbar.showSnackbar(data);
 }
 </script>
+
+<script type="text/javascript">
+    $(function() {
+
+    var datasource = {{ datasource | safe }}
+
+    var oc = $('#chart-container').orgchart({
+      'data' : datasource,
+      'nodeContent': 'title',
+      'toggleSiblingsResp': true,
+      'pan': true,
+      'zoom': true,
+      'createNode': function($node, data) {
+        var url = "/photo/" + data.login
+        var image = '<div class="chart-photo" style="height:130px; width:118px; filter: grayscale(100%); background: url(\''+ url +'\')  center / cover;"><br /></div>';
+        var infos = $node.find(".content")[0];
+        infos.innerHTML = image + "</br>" + data.title;
+      }
+    });
+    oc.zoom(2, [20,20]);
+
+  });
+</script>
+
 
 {% endblock %}
