@@ -20,7 +20,7 @@ import flask_login as login
 import json
 from werkzeug.security import check_password_hash
 
-from .models import TrombiAdmin, Person, PersonComment, Team, Infos
+from .models import TrombiAdmin, Person, PersonComment, Team, Infos, Contact
 from .models import Link, LinkCategory, Room, Floor
 from .app import db, app
 import config
@@ -632,6 +632,7 @@ def init():
     admin.add_view(MyModelView(Team, db.session, category="Persons"))
     admin.add_view(CommentsView(name='Comments', endpoint='comments', category="Persons"))
     admin.add_view(MyModelView(Infos, db.session))
+    admin.add_view(MyModelView(Contact, db.session))
     admin.add_view(MyModelView(Link, db.session, category="Links"))
     admin.add_view(MyModelView(LinkCategory, db.session, category="Links"))
     admin.add_view(MyModelView(Room, db.session, category="Map"))

@@ -17,7 +17,7 @@ from flask_babel import gettext
 
 from config import LANGUAGES, PHOTOS_FOLDER, WEBSITE_URL
 from .app import db, app, babel
-from .models import Person, PersonComment, Team, Infos, LinkCategory, Link, Room, Floor
+from .models import Person, PersonComment, Team, Infos, Contact, LinkCategory, Link, Room, Floor
 
 
 @babel.localeselector
@@ -123,6 +123,17 @@ def get_news(id=None):
         'news.html',
         title='News',
         news=news,
+    )
+
+
+@app.route("/contacts")
+def get_contacts():
+    """Display all the available contacts"""
+    contacts = Contact.query.all()
+    return render_template(
+        'contacts.html',
+        title='Contacts',
+        contacts=contacts,
     )
 
 

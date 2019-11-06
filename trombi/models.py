@@ -295,4 +295,21 @@ class Floor(db.Model):
     filename = db.Column(db.String(80), unique=True)
     name = db.Column(db.Text(), unique=False, default=u'Floor')
 
-    rooms = relationship("Room", backref="floor") 
+    rooms = relationship("Room", backref="floor")
+
+
+class Contact(db.Model):
+    """Represents a contact."""
+
+    def __str__(self):
+        """Simple log method."""
+        return str(id)
+
+    def as_dict(self):
+        """Dumps the data as JSON"""
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
+    __tablename__ = 'contacts'
+    id = db.Column(db.Integer, primary_key=True)
+    description = db.Column(db.Text(), unique=False, default=u'Contact')
+    contact = db.Column(db.Text(), unique=False, default=u'Contact')

@@ -582,6 +582,15 @@ label {
     width: 250px;
 }
 
+/* CONTACTS */
+
+.contacts-table {
+  max-width: 1080px;
+  margin: auto;
+  width: auto;
+  text-align: center;
+}
+
 
 /* LINKS */
 
