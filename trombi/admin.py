@@ -83,11 +83,15 @@ class MyAdminIndexView(flask_admin.AdminIndexView):
 
             if person.manager is None:
                 current_errors.append('Missing manager')
+            if person.login is None:
+                current_errors.append('Missing login')
             if person.room is None:
                 current_errors.append('Missing room')
+            if person.comments:
+                current_errors.append('Pending comments')
 
             if len(current_errors) > 0:
-                errors.append({ 'login':person.login, 'errors': current_errors })
+                errors.append({ 'person':person, 'errors': current_errors })
 
         return errors
 
