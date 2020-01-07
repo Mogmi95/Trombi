@@ -6,10 +6,25 @@
 
     <div>
         {% if current_user.is_authenticated %}
-        <h1>{{ gettext('Success') }}</h1>
-        <p class="lead">
-            {{ gettext('You are now logged in.') }}
-        </p>
+        <h1>Database status</h1>
+        <br />
+        <table>
+            <tr>
+                <th>Login</th>
+                <th>Errors</th>
+            </tr>
+            {% for error in errors %}
+            <tr>
+                <td><a href="/admin/person/edit/?url=/admin/person&id={{ error['person'].id }}">{{ error['person'] }}</a></td>
+                <td>
+                    {% for error_description in error['errors'] %}
+                        {{ error_description }},
+                    {% endfor %}
+                </td>
+            {% endfor %}
+            </tr>
+        </table>
+        <br />
         {% else %}
         <form method="POST" action="">
             {{ form.hidden_tag() if form.hidden_tag }}

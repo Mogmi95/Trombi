@@ -71,7 +71,29 @@ class MyAdminIndexView(flask_admin.AdminIndexView):
         """The root of the admin panel."""
         if not login.current_user.is_authenticated:
             return redirect(url_for('.login_view'))
-        return super(MyAdminIndexView, self).index()
+        errors = self.get_errors()
+        return self.render('admin/index.html', errors=errors)
+
+    def get_errors(self):
+        persons = Person.query.all()
+        errors = []
+
+        for person in persons:
+            current_errors = []
+
+            if person.manager is None:
+                current_errors.append('Missing manager')
+            if person.login is None:
+                current_errors.append('Missing login')
+            if person.room is None:
+                current_errors.append('Missing room')
+            if person.comments:
+                current_errors.append('Pending comments')
+
+            if len(current_errors) > 0:
+                errors.append({ 'person':person, 'errors': current_errors })
+
+        return errors
 
     @expose('/login/', methods=('GET', 'POST'))
     def login_view(self):
