@@ -153,6 +153,15 @@ def get_maps_info():
     print(floordata)
     return '{"floors": ' + str(floordata).replace("u'", "'").replace("'", "\"").replace("True", "\"True\"").replace("False", "\"False\"") + '}'
 
+@app.route('/image/maps/<id>')
+def get_map_image(id):
+    """
+    Return the background image for a map
+    """
+    floor = Floor.query.filter_by(id=id).first()
+    filename = 'images/maps/' + floor.filename
+    return redirect(url_for('static', filename=filename))
+
 
 @app.route('/person/<login>/edit')
 def show_person_report(login=None):
