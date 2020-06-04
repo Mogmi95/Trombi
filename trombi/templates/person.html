@@ -192,7 +192,7 @@ function showPersonMap(floorId, personX, personY) {
   });
   // create the image
   // TODO Use a better way to access images, but as of now it does weird stuff with Jinja2 and JS
-  var imageUrl = '/static/images/maps/' + floorId + '.png'
+  var imageUrl = '/image/maps/' + floorId
   var imageBounds = [[0, 0], [250, 250]];
   L.imageOverlay(imageUrl, imageBounds).addTo(map);
   // add the marker to the map
