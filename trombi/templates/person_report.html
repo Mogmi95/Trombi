@@ -159,7 +159,7 @@ function refreshFloorsData(floorId, callback) {
       } else {
         callback(false);
       }
-    } 
+    }
   };
 
   xhttp.open("GET", "/api/maps", true);
@@ -182,7 +182,7 @@ function refreshRoomsRect() {
 }
 
 function refreshAllRooms(floorId) {
-    // Add a marker for each room (color the current if available)  
+    // Add a marker for each room (color the current if available)
   refreshFloorsData(floorId, function() {
     // Removing the exising rects
     for (var i = 0; i < roomRects.length; i++) {
@@ -201,11 +201,11 @@ function updateFloor(floorId) {
     // TODO should use url_for here instead of this method...
       // loadMapImage'/static/images/maps/' + floorId + '.svg');
     currentFloorId = floorId;
-    
-    loadMapImage('/static/images/maps/' + floorId + '.png');
+
+    loadMapImage('/image/maps/' + floorId);
     // Request map data from API
     // Load image of the floor
-    
+
     refreshAllRooms(floorId);
   }
 }
