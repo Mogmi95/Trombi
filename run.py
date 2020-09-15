@@ -45,4 +45,4 @@ if __name__ == "__main__":
             superadmin.password = generate_password_hash(config.ADMIN_PASSWORD)
             db.session.add(superadmin)
             db.session.commit()
-        app.run(port=config.PORT)
+        app.run(port=config.PORT, threaded=True)

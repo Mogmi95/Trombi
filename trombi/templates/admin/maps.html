@@ -1,0 +1,161 @@
+{% extends 'admin/index.html' %}
+
+{% block head %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css"
+integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+crossorigin=""/>
+ <!-- Make sure you put this AFTER Leaflet's CSS -->
+ <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js"
+   integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="
+   crossorigin="">
+</script>
+{% endblock %}
+
+{% block body %}
+
+<h1>Maps</h1>
+
+<h2>Floors</h2>
+
+<p>Select an existing floor</p>
+
+<div>
+    <select onchange="if (this.value) window.location.href=this.value">
+        <option selected>Choose a floor</option>
+        {% for floor in floors %}
+        <option value="/admin/maps?floor={{ floor.id }}">{{ floor }}</option>
+        {% endfor %}
+    </select>
+</div>
+
+
+<!-- Displaying the map only if needed -->
+{% if selected_floor is not none %}
+
+{% if selected_room is not none %}
+    <h2>{{ selected_floor }} > {{ selected_room }}</h2>
+{% else %}
+    <h2>{{ selected_floor }}</h2>
+{% endif %}
+
+<div id="mapid" style="height: 500px;"></div>
+
+<input type="submit" value="Save" onclick="updateFloor();"></input>
+
+<script>
+// create the map
+    var map = L.map('mapid', {
+        center: [0, 0],
+        zoom: 7
+    });
+    // create the image
+    var imageUrl = '/image/maps/{{ selected_floor.id }}'
+    //var imageUrl = 'http://localhost/static/images/maps/3.png'
+    var imageBounds = [[0, 0], [250, 250]];
+    var overlay = L.imageOverlay(imageUrl, imageBounds);
+    overlay.addTo(map);
+    // zoom the map to the polygon
+    map.fitBounds(imageBounds);
+    map.setZoom(2);
+
+    var test = JSON.parse('{{ superjson | safe }}');
+
+    var markerMap = new Map();
+
+    // We create markers from the JSON we just parsed
+    var i;
+    for (i = 0; i < test.length; i++) {
+        markerMap.set(test[i].id, {
+            marker: L.marker([test[i].x, test[i].y], { radius:20, title: test[i].name }),
+            name: test[i].name
+        });
+    }
+
+    console.log("Markers " + markerMap.size);
+
+    function createMarker(lat, lng, roomName) {
+        return L.marker([lat, lng], { radius:20, title: roomName })
+    }
+
+    function renderRooms() {
+        for (const [roomId, data] of markerMap) {
+            console.log("Creating marker for " + roomId);
+            markerMap.get(roomId).marker.addTo(map);
+        }
+    };
+
+    renderRooms();
+
+    function submitNewRoom(val) {
+        sp = val.split(";");
+        var roomId = sp[0];
+        var roomName = sp[1];
+        var lat = sp[2];
+        var lng = sp[3];
+        //alert("ID: " + roomId + " NAME: " + roomName);
+        markerMap.get(roomId).marker.removeFrom(map);
+        markerMap.set(roomId, {
+                marker: createMarker(lat, lng, roomName),
+                roomName: roomName
+            });
+        renderRooms();
+        popup.remove();
+    }
+
+    // TODO : use selected_room to focus on a specific room on the map
+    var popup = L.popup();
+    function onMapClick(e) {
+        httpContent = "\
+                <div>\
+                <h3>Select a room</h3>\
+                <select onchange=\"submitNewRoom(this.value)\">\
+                    <option selected>Choose a room</option>\
+                    {% for room in selected_floor.rooms %}\
+                    <option value=\"{{ room.id }};{{ room.name }};" + e.latlng.lat + ";" + e.latlng.lng + "\">{{ room }}</option>\
+                    {% endfor %}\
+                </select>\
+                </div>\
+        ";
+        popup
+            .setLatLng(e.latlng)
+            .setContent(httpContent)
+            .openOn(map);
+    };
+
+    map.on('click', onMapClick);
+
+    function mapToObject(o, m) {
+        for(let[k,v] of m) { o[k] = v }
+    }
+
+    function updateFloor() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                alert(this.responseText);
+            }
+        };
+
+        var roomdata = "[";
+        for (const [roomId, data] of markerMap) {
+            roomdata += JSON.stringify({
+                id: roomId,
+                x: data.marker.getLatLng().lat,
+                y: data.marker.getLatLng().lng
+            });
+            roomdata += ","
+        }
+        if (roomdata.length > 1) {
+            roomdata = roomdata.substring(0, roomdata.length - 1);
+        }
+        roomdata += "]"
+
+        xhttp.open("POST", "/admin/maps/test", true);
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.send("floorId={{ selected_floor.id }}&data=" + roomdata);
+    }
+
+</script>
+{% endif %}
+
+{% endblock %}

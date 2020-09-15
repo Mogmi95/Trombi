@@ -12,18 +12,18 @@ import random
 import os
 import json
 from flask import render_template, request, url_for, redirect, send_file, send_from_directory
-from sqlalchemy import or_
-from flask.ext.babel import gettext
+from sqlalchemy import or_, desc
+from flask_babel import gettext
 
 from config import LANGUAGES, PHOTOS_FOLDER, WEBSITE_URL
-from app import db, app, babel
-from models import Person, PersonComment, Team, Infos, Link
+from .app import db, app, babel
+from .models import Person, PersonComment, Team, Infos, Contact, LinkCategory, Link, Room, Floor
 
 
 @babel.localeselector
 def get_locale():
     """Get the locale to use for lang."""
-    locale = request.accept_languages.best_match(LANGUAGES.keys())
+    locale = request.accept_languages   .best_match(LANGUAGES.keys())
     # return locale
     # Temporary
     return 'en'
@@ -67,7 +67,7 @@ def show_all():
     persons_to_display = []
 
     # We get the text to display in the top header
-    header_text = Infos.query.first().text
+    header_text = Infos.query.order_by(desc(Infos.id)).first().text
 
     if (person_filter in ["newcomers"]):
         # Calculating newcomers
@@ -110,8 +110,92 @@ def show_person(login=None):
         )
 
 
+@app.route("/news", defaults={'id': None})
+@app.route('/news/<id>')
+def get_news(id=None):
+    """Display all the available news"""
+    news = []
+    if id is not None:
+        news = Infos.query.filter_by(id=id).order_by(desc(Infos.id))
+    else:
+        news = Infos.query.order_by(desc(Infos.id)).all()
+    return render_template(
+        'news.html',
+        title='News',
+        news=news,
+    )
+
+
+@app.route("/contacts")
+def get_contacts():
+    """Display all the available contacts"""
+    contacts = Contact.query.all()
+    return render_template(
+        'contacts.html',
+        title='Contacts',
+        contacts=contacts,
+    )
+
+
+@app.route('/api/maps')
+def get_maps_info():
+    """
+    Return a list of all the floors with their rooms
+    """
+    floors = Floor.query.all()
+
+    floordata = []
+    for floor in floors:
+        data = floor.as_dict()
+        data['rooms'] = [room.as_dict() for room in floor.rooms]
+        floordata.append(data)
+
+    print(floordata)
+    return '{"floors": ' + str(floordata).replace("u'", "'").replace("'", "\"").replace("True", "\"True\"").replace("False", "\"False\"") + '}'
+
+@app.route('/image/maps/<id>')
+def get_map_image(id):
+    """
+    Return the background image for a map
+    """
+    floor = Floor.query.filter_by(id=id).first()
+    filename = 'images/maps/' + floor.filename
+    return redirect(url_for('static', filename=filename))
+
+
+@app.route('/person/<login>/edit')
+def show_person_report(login=None):
+    """Report an error on a person's profile."""
+    #person_login = request.form.get('personId')
+    person = Person.query.filter_by(login=login).first()
+    floors = Floor.query.all()
+    print(person)
+    return render_template(
+        "person_report.html",
+        person=person,
+        floors=floors,
+    )
+
+@app.route('/person/<login>/edit/confirm', methods=['POST'])
+def person_edit(login=None):
+    """Submit an edit for a person."""
+    inputId = request.form.get('id')
+    inputComment = request.form.get('comment')
+    inputRoom = request.form.get('roomId')
+    person = Person.query.filter_by(id=inputId).first()
+    room = Room.query.filter_by(id=inputRoom).first()
+    # person.room = room
+    person_comment = PersonComment()
+    person_comment.message = inputComment.replace('<', '(').replace('>', ')')
+    person_comment.pending_room_id = room.id
+    person.comments.append(person_comment)
+    db.session.add(person_comment)
+    db.session.commit()
+    return "Added comment OK " + inputRoom
+
+
 @app.route('/person/comment', methods=['POST'])
-def person_comment(login=None):
+def person_comment():
     """Add a comment on a person."""
     comment = request.form.get('comment')
     login = request.form.get('login')
@@ -121,6 +205,64 @@ def person_comment(login=None):
     person.comments.append(person_comment)
     db.session.commit()
     return redirect(url_for('show_person', login=login, commented=True))
+
+
+@app.route("/map")
+def show_map():
+    """Base screen to access information about floors and rooms."""
+    return get_map_information()
+
+@app.route("/map/room/<room_id>")
+def show_map_room(room_id=None):
+    """Display a room on a map."""
+    return get_map_information(room_id=room_id)
+
+
+@app.route("/map/floor/<floor_id>")
+def show_map_floor(floor_id=None):
+    """Display a floor on a map."""
+    return get_map_information(floor_id=floor_id)
+
+def get_map_information(room_id=None, floor_id=None):
+    """Get information to display a map"""
+    rooms = Room.query.all()
+    if rooms is None:
+        rooms = []
+    floors = Floor.query.all()
+    if floors is None:
+        floors = []
+
+    title="Map"
+
+    selected_floor = None
+    selected_room = None
+
+    # Map of {room_id: room_html_tooltip}
+    tooltip_map = {}
+    for room in rooms:
+        tooltip_map[room.id] = render_template("map_tooltip.html", room=room).replace("\n", "").replace("u'", "'")
+
+    if room_id is not None:
+        # Displaying a room
+        selected_room = Room.query.filter_by(id=room_id).first()
+        selected_floor = selected_room.floor
+    elif floor_id is not None:
+        # Displaying a floor
+        selected_floor = Floor.query.filter_by(id=floor_id).first()
+        pass
+    else:
+        # Displaying nothing
+        pass
+
+    return render_template(
+        'maps.html',
+        rooms=rooms,
+        tooltip_map=json.dumps(tooltip_map),
+        floors=floors,
+        selected_room=selected_room,
+        selected_floor=selected_floor,
+        title=title,
+    )
 
 
 @app.route("/infos")
@@ -142,6 +284,46 @@ def show_person_vcard(login=None):
     return person.create_vcard()
 
 
+def perform_search(query):
+    """Return a set containing all the matches for the query"""
+    result = {}
+
+    # PERSONS
+
+    # Maybe re-do this part of the code in a more pytonic way
+    result['persons'] = []
+    persons = Person.query.filter(or_(
+        Person.login.like('%' + query + '%'),
+        Person.name.like('%' + query + '%'),
+        Person.surname.like('%' + query + '%')))
+    for person in persons.all():
+        result['persons'].append(person)
+
+    # ROOMS
+    result['rooms'] = []
+    rooms = Room.query.filter(or_(
+        Room.name.like('%' + query + '%')))
+    for room in rooms.all():
+        result['rooms'].append(room)
+
+    # TEAMS
+    result['teams'] = []
+    teams = Team.query.filter(or_(
+        Team.name.like('%' + query + '%')))
+    for team in teams.all():
+        result['teams'].append(team)
+
+    # LINKS
+    result['links'] = []
+    links = Link.query.filter(or_(
+        Link.title.like('%' + query + '%'),
+        Link.description.like('%' + query + '%')))
+    for link in links.all():
+        result['links'].append(link)
+
+    return result
+
+
 @app.route("/search/<query>")
 def show_search(query=None):
     """The search screen."""
@@ -151,28 +333,30 @@ def show_search(query=None):
         query=query
     )
 
-    # Maybe re-do this part of the code in a more pytonic way
-    hash_persons = {}
-    for token in query.split(' '):
-        persons = Person.query.filter(or_(
-            Person.login.like('%' + token + '%'),
-            Person.name.like('%' + token + '%'),
-            Person.job.like('%' + token + '%'),
-            Person.surname.like('%' + token + '%')))
-
-        for person in persons.all():
-            hash_persons[person.login] = person
-
+    search_result = perform_search(query)
     persons = []
-    for person_key in hash_persons.keys():
-        persons.append(hash_persons[person_key])
+    if 'persons' in search_result:
+        persons = search_result["persons"]
+    rooms = []
+    if 'rooms' in search_result:
+        rooms = search_result["rooms"]
+    teams = []
+    if 'teams' in search_result:
+        teams = search_result["teams"]
+    links = []
+    if 'links' in search_result:
+        links = search_result["links"]
 
-    if (len(persons) == 1):
-        return redirect(url_for('show_person', login=persons[0]))
+    #if (len(persons) == 1):
+    #    return redirect(url_for('show_person', login=persons[0]))
     return render_template(
-        'all.html',
+        'search.html',
+        search_result=search_result,
         is_in_search_mode=True,
         persons=persons,
+        rooms=rooms,
+        teams=teams,
+        links=links,
         message=message.format(len(persons)),
         title=title,
         list_mode=get_list_mode(request),
@@ -180,6 +364,38 @@ def show_search(query=None):
         header_text=None
         )
 
+@app.route("/api/search")
+def api_search():
+
+    # Searching for persons
+    persons = []
+    if ('q' in request.args):
+        query = request.args['q']
+        print(query)
+        search_result = perform_search(query)
+        persons = []
+        if 'persons' in search_result:
+            persons = search_result["persons"]
+
+    person_results = []
+    curr = 0
+    for person in persons:
+        tmp = {}
+        curr += 1
+        tmp['id'] = curr
+        tmp['text'] = person.surname.capitalize() + " " + person.name.capitalize() + " - " + person.job.capitalize()
+        person_results.append(tmp)
+
+    # Putting all the results inside a single JSON
+    result = '\
+    {\
+        "results": ['\
+        + '{"text": "People", "children":' + json.dumps(person_results) + '}'\
+        '\
+    ]}\
+    '.replace("u\'", "\'").strip()
+    print(result)
+    return result
 
 @app.route('/search/', methods=['POST'])
 def search():
@@ -199,7 +415,8 @@ def show_calendar():
     # Persons events
     birthday_events = '['
     arrival_events = '['
-    for year in [2018, 2019]:
+    current_year = datetime.datetime.now().year
+    for year in [current_year - 1, current_year, current_year + 1]:
         for person in persons:
             if (person.birthday != ''):
                 birth_date = person.birthday
@@ -371,11 +588,14 @@ def show_game():
 @app.route("/links")
 def show_links(login=None):
     """Display all links."""
+    categories = LinkCategory.query.order_by(LinkCategory.order).all()
     links = Link.query.order_by(Link.order).all()
-    if (len(links) == 0) :
+    if (len(links) == 0):
         links = None
     return render_template(
             'links.html',
+            title="Links",
+            categories=categories,
             links=links,
         )
 

@@ -13,11 +13,15 @@ a {
 
 .page-content {
   padding: 16px;
-  min-height: 850px;
+  min-height:100%;
 }
 
 .imgLogo {
   height: 24px;
+}
+
+.select2-container {
+  width: 100%;
 }
 
 /* TODO: Hover and Focus state.
@@ -98,10 +102,26 @@ a {
 }
 
 .allPersonsCardHeader {
+  border-radius: 4px;
   position: relative;
   background: #fcfcfc;
   margin-top: 16px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+
+.allPersonsCardHeaderTitle p {
+  margin: 0;
+  padding: 0;
+}
+.allPersonsCardHeaderTitle {
+  color: #efefef;
+  background-color: #e74c3c;
+  font-family: 'Roboto';
+  font-size: 18px;
+  font-weight: 600;
+  border-top-right-radius: 4px;
+  border-top-left-radius: 4px;
+  padding: 8px;
 }
 
 .allPersonsCardHeaderContent {
@@ -111,6 +131,11 @@ a {
 .allPersonsCardHeaderContent p {
   margin: 0;
   padding: 0;
+}
+
+.allPersonsCardHeaderFooter {
+  text-align: right;
+  padding: 8px;
 }
 
 .allPersonsHeader {
@@ -218,6 +243,14 @@ a {
   height: 100px;
 }
 
+
+/* Maps */
+#mapid { height: 650px; }
+
+/* Maps */
+#personmap { height: 300px; }
+
+
 /* Infos */
 .infosCard {
   position: relative;
@@ -238,7 +271,7 @@ a {
 .personCard {
   position: relative;
   width: 33%;
-  min-width: 450px;
+  min-width: 650px;
   background: #fcfcfc;
   margin-left: auto;
   margin-right: auto;
@@ -263,6 +296,15 @@ a {
     padding-top: 16px
 }
 
+#personCardWarningHeader {
+  background-color: #ffae42;
+  padding: 8px;
+  margin-bottom: 0px;
+}
+
+#personCardWarningHeader i {
+  margin-right: 8px;
+}
 .personCardHeaderName {
   display: block;
   color: #212121;
@@ -362,6 +404,12 @@ a {
     font-family: 'Roboto';
     font-size: 100px;
     font-weight: 400;
+}
+
+/* Person report */
+
+#input_comment {
+  width: 100%;
 }
 
 /* Calendar */
@@ -534,8 +582,22 @@ label {
     width: 250px;
 }
 
+/* CONTACTS */
+
+.contacts-table {
+  max-width: 1080px;
+  margin: auto;
+  width: auto;
+  text-align: center;
+}
+
 
 /* LINKS */
+
+#linkContainer {
+  max-width: 900px;
+  margin: auto;
+}
 
 .linkCard {
   position: relative;

@@ -38,9 +38,7 @@
         <!-- Search -->
         <div class="mdh-expandable-search mdl-cell--hide-phone">
           <i class="material-icons">search</i>
-          <form method="post" action="{{ url_for('search') }}">
-            <input type="text" placeholder="Search" size="1" name="search">
-          </form>
+            <input id="searchBar" type="text" placeholder="Search (login, room, team...)" size="1" name="search" oninput="updateSearch(this.value);">
         </div>
         <!-- Displayed on mobile -->
         <div class="mdl-layout-spacer mdl-cell--hide-tablet mdl-cell--hide-desktop"></div>
@@ -54,9 +52,11 @@
         <nav class="mdl-navigation mdl-layout--large-screen-only">
           <a class="mdl-navigation__link" href="/all">{{ gettext('People') }}</a>
           <a class="mdl-navigation__link" href="/team">{{ gettext('Teams') }}</a>
+          <a class="mdl-navigation__link" href="/map">{{ gettext('Maps') }}</a>
           <a class="mdl-navigation__link" href="/calendar">{{ gettext('Events') }}</a>
           <a class="mdl-navigation__link" href="/links">{{ gettext('Links') }}</a>
           <a class="mdl-navigation__link" href="/game">{{ gettext('Game') }}</a>
+          <a class="mdl-navigation__link" href="/contacts">{{ gettext('Contacts') }}</a>
         </nav>
 
       </div>
@@ -66,14 +66,19 @@
       <nav class="mdl-navigation">
         <a class="mdl-navigation__link" href="/all">{{ gettext('People') }}</a>
         <a class="mdl-navigation__link" href="/team">{{ gettext('Teams') }}</a>
+        <a class="mdl-navigation__link" href="/map">{{ gettext('Maps') }}</a>
         <a class="mdl-navigation__link" href="/calendar">{{ gettext('Events') }}</a>
         <a class="mdl-navigation__link" href="/links">{{ gettext('Links') }}</a>
         <a class="mdl-navigation__link" href="/game">{{ gettext('Game') }}</a>
+        <a class="mdl-navigation__link" href="/contacts">{{ gettext('Contacts') }}</a>
       </nav>
     </div>
     <main class="mdl-layout__content">
       <div class="page-content">
-        {% block body %} {% endblock %}
+        <div id="otherContent">
+          {% block body %} {% endblock %}
+        </div>
+        <div id="searchResults"></div>
       </div>
       <footer class="mdl-mini-footer">
         <div class="mdl-mini-footer__left-section">
@@ -85,6 +90,61 @@
       </footer>
     </main>
   </div>
+
+
+<script>
+
+// Intercept the Ctrl+F to push the usage of the search bar
+window.addEventListener("keydown",function (e) {
+    if (e.keyCode === 114 || (e.ctrlKey && e.keyCode === 70)) {
+        e.preventDefault();
+        document.getElementById("searchBar").focus();
+    }
+})
+
+
+function updateSearch(query) {
+  results = document.getElementById("searchResults");
+  other = document.getElementById("otherContent");
+  if (query.length > 1) {
+    performSearch(query, function(data) {
+      otherContent.style.display = "none";
+      results.style.display = "block";
+      results.innerHTML = data;
+
+    })
+  } else {
+    otherContent.style.display = "block";
+    results.style.display = "none";
+  }
+}
+
+function performSearch(query, callback) {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      callback(this.responseText);
+    }
+  };
+
+  xhttp.open("GET", "/search/" + query, true);
+  xhttp.send();
+}
+
+// Intercept the Ctrl+F to push the usage of the search bar
+window.addEventListener("keydown",function (e) {
+    if (e.keyCode === 13) {
+        e.preventDefault();
+        // Searching for the first result
+        var results = document.getElementsByClassName("search-result")
+        if (results.length > 0) {
+          window.location.replace(results[0].href);
+        }
+    }
+})
+
+</script>
+
 
 </body>
 

@@ -4,9 +4,9 @@ import time
 from sqlalchemy import Column, Integer, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
-from flask.ext.babel import gettext
+from flask_babel import gettext
 
-from app import db
+from .app import db
 
 
 class TrombiAdmin(db.Model):
@@ -69,7 +69,7 @@ class Team(db.Model):
 
     def as_dict(self):
         """Dumps the data as JSON"""
-        return {c.name: unicode((getattr(self, c.name))) for c in self.__table__.columns}
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
     def get_root_persons(self):
         """
@@ -95,6 +95,7 @@ class PersonComment(db.Model):
     __tablename__ = 'personcomment'
     id = db.Column(db.Integer, primary_key=True)
     message = db.Column(db.String(512), unique=False)
+    pending_room_id = db.Column(db.Integer, unique=False)
 
     person_id = Column(Integer, ForeignKey('person.id'))
 
@@ -104,7 +105,7 @@ class Person(db.Model):
 
     def as_dict(self):
         """Dumps the data as JSON"""
-        return {c.name: unicode((getattr(self, c.name))) for c in self.__table__.columns}
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
     __tablename__ = 'person'
     # service;login;nom;prenom;naissance;poste;mail;skype;fixe;portable;manager
@@ -129,6 +130,8 @@ class Person(db.Model):
 
     team_id = Column(Integer, ForeignKey('team.id'))
 
+    room_id = Column(Integer, ForeignKey('room.id'))
+
     comments = relationship("PersonComment", backref="person")
 
     def __repr__(self):
@@ -138,19 +141,17 @@ class Person(db.Model):
     def get_pretty_arrival_date(self):
         """Get a printable version of the arrival date."""
         now = datetime.datetime.now()
-        arrival = self.arrival
+        diff = now - self.arrival
         custom_date = self.arrival.strftime(u'%Y/%m/%d')
 
-        years = now.year - arrival.year
-        months = (now.month - arrival.month) % 12
-        days = (now.day - arrival.day) % 31
+        years = diff.days // 365
+        months = (diff.days % 365) // 30
 
         return gettext(
-            u'%(date)s (%(y)s years, %(m)s months, %(d)s days)',
+            u'%(date)s (%(y)s years, %(m)s months)',
             date=custom_date,
             y=years,
             m=months,
-            d=days,
         )
 
     def get_arrival_date_timestamp(self):
@@ -205,12 +206,32 @@ class Infos(db.Model):
 
     def as_dict(self):
         """Dumps the data as JSON"""
-        return {c.name: unicode((getattr(self, c.name))) for c in self.__table__.columns}
-
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
     __tablename__ = 'infos'
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.Text(), unique=False, default=u'Hello World!')
+
+
+class LinkCategory(db.Model):
+    """Represents a category of links."""
+
+    def __str__(self):
+        """Simple log method."""
+        return str(self.title)
+
+    def as_dict(self):
+        """Dumps the data as JSON"""
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
+    __tablename__ = "link_category"
+    id = db.Column(db.Integer, primary_key=True)
+    order = db.Column(db.Integer, unique=False)
+    image = db.Column(db.Text(), unique=False)
+    title = db.Column(db.Text(), unique=False, default=u'Title')
+    description = db.Column(db.Text(), unique=False, default=u'Description')
+
+    links = relationship("Link", backref="category")
 
 
 class Link(db.Model):
@@ -218,11 +239,11 @@ class Link(db.Model):
 
     def __str__(self):
         """Simple log method."""
-        return str(id)
+        return str(self.title)
 
     def as_dict(self):
         """Dumps the data as JSON"""
-        return {c.name: unicode((getattr(self, c.name))) for c in self.__table__.columns}
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
     __tablename__ = 'links'
     id = db.Column(db.Integer, primary_key=True)
@@ -231,3 +252,64 @@ class Link(db.Model):
     image = db.Column(db.Text(), unique=False)
     title = db.Column(db.Text(), unique=False, default=u'Title')
     description = db.Column(db.Text(), unique=False, default=u'Description')
+    category_id = Column(Integer, ForeignKey('link_category.id'))
+
+
+class Room(db.Model):
+    """Represents a Room containing Persons."""
+
+    def __str__(self):
+        """Simple log method."""
+        return str(self.name)
+
+    def as_dict(self):
+        """Dumps the data as JSON"""
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
+    __tablename__ = 'room'
+    id = db.Column(db.Integer, primary_key=True)
+    identifier = db.Column(db.Text(), unique=False, default=u'ID')
+    name = db.Column(db.Text(), unique=False, default=u'Room')
+    is_for_meetings = db.Column(db.Boolean(), unique=False, default=False)
+    coordinate_x = db.Column(db.Float, unique=False, default=0)
+    coordinate_y = db.Column(db.Float, unique=False, default=0)
+
+    floor_id = Column(Integer, ForeignKey('floor.id'))
+
+    persons = relationship("Person", backref="room")
+
+
+class Floor(db.Model):
+    """Represents a Floor containing Rooms."""
+
+    def __str__(self):
+        """Simple log method."""
+        return str(self.name)
+
+    def as_dict(self):
+        """Dumps the data as JSON"""
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
+    __tablename__ = 'floor'
+    id = db.Column(db.Integer, primary_key=True)
+    filename = db.Column(db.String(80), unique=True)
+    name = db.Column(db.Text(), unique=False, default=u'Floor')
+
+    rooms = relationship("Room", backref="floor")
+
+
+class Contact(db.Model):
+    """Represents a contact."""
+
+    def __str__(self):
+        """Simple log method."""
+        return str(id)
+
+    def as_dict(self):
+        """Dumps the data as JSON"""
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
+    __tablename__ = 'contacts'
+    id = db.Column(db.Integer, primary_key=True)
+    description = db.Column(db.Text(), unique=False, default=u'Contact')
+    contact = db.Column(db.Text(), unique=False, default=u'Contact')

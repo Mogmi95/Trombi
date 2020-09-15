@@ -1,0 +1,184 @@
+{% extends "index.html" %}
+
+{% block head %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css"
+integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+crossorigin=""/>
+ <!-- Make sure you put this AFTER Leaflet's CSS -->
+ <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js"
+   integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="
+   crossorigin="">
+</script>
+{% endblock %}
+
+{% block body %}
+
+<div>
+    <select onchange="if (this.value) window.location.href=this.value">
+        <option selected>Choose a floor</option>
+        {% for floor in floors %}
+        <option value="/map/floor/{{ floor.id }}">{{ floor }}</option>
+        {% endfor %}
+    </select>
+</div>
+
+
+<!-- Displaying the map only if needed -->
+{% if selected_floor is not none %}
+
+{% if selected_room is not none %}
+    <h2>{{ selected_floor }} > {{ selected_room }}</h2>
+{% else %}
+    <h2>{{ selected_floor }}</h2>
+{% endif %}
+
+<div id="mapid"></div>
+
+<script>
+
+// The map overlay
+var mapOverlay = null;
+// JSON containing floors data
+floorsData = [];
+// Storing the rooms rectangles
+var roomRects = [];
+// ID of the current floor
+var currentFloorId = {{ selected_floor.id }};
+
+{% if selected_room is not none %}
+var roomToHighlight = {{ selected_room.id }};
+{% else %}
+var roomToHighlight = -1;
+{% endif %}
+
+tooltips = {{ tooltip_map|safe }};
+
+var map;
+
+$(window).on('load', function() {
+  // TODO Find a better way to center the map
+  var center = [50, 50];
+  // create the map
+   map = L.map('mapid', {
+      center: center,
+      zoom: 3
+  });
+  updateFloor(currentFloorId);
+});
+
+function createRoomRectangle(room) {
+  if (roomToHighlight > 1 && room.id == roomToHighlight) {
+    var greenIcon = new L.Icon({
+      iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+      shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      shadowSize: [41, 41]
+    });
+    var rect = L.marker([room.coordinate_x, room.coordinate_y], {icon: greenIcon});
+    // Centering the map
+    map.flyTo([room.coordinate_x, room.coordinate_y]);
+    // We reset it
+    roomToHighlight = -1;
+  } else {
+    var rect = L.marker([room.coordinate_x, room.coordinate_y]);
+  }
+
+  rect.bindTooltip(tooltips[room.id]);
+  rect.addTo(map);
+  rect.on("mouseover", function(event) {
+    rect.openTooltip();
+  });
+  rect.on("click", function(event) {
+    currentRoomId = room.id;
+    refreshAllRooms(currentFloorId);
+  });
+  return rect;
+}
+
+function placeMarkerForCurrentPersonRoom() {
+  if (currentPersonRoomId > 0) {
+    // We place a cursor for the current position of the person if we are on the correct floor
+    var marker = L.marker([currentPersonX, currentPersonY]);
+    // add the marker to the map
+    marker.addTo(map);
+  }
+}
+
+function loadMapImage(imageUrl) {
+  if (mapOverlay != null) {
+    map.removeLayer(mapOverlay);
+  }
+  var imageBounds = [[0, 0], [250, 250]];
+  mapOverlay = L.imageOverlay(imageUrl, imageBounds);
+  mapOverlay.addTo(map);
+}
+
+function refreshFloorsData(floorId, callback) {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4) {
+      if (this.status == 200) {
+        floorsData = JSON.parse(this.responseText);
+        callback(true);
+      } else {
+        callback(false);
+      }
+    }
+  };
+
+  xhttp.open("GET", "/api/maps", true);
+  //xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhttp.send();
+}
+
+function refreshRoomsRect() {
+  var floors = floorsData.floors;
+  for (var i = 0; i < floors.length; i++) {
+    var floorId = floors[i].id;
+    var rooms = floors[i].rooms;
+    if (floorId == currentFloorId) {
+      for (var j = 0; j < rooms.length; j++) {
+        var rect = createRoomRectangle(rooms[j]);
+        roomRects.push(rect);
+      };
+    }
+  };
+}
+
+function refreshAllRooms(floorId) {
+    // Add a marker for each room (color the current if available)
+  refreshFloorsData(floorId, function() {
+    // Removing the exising rects
+    for (var i = 0; i < roomRects.length; i++) {
+      roomRects[i].remove();
+    }
+    roomRects = [];
+    refreshRoomsRect();
+  });
+}
+
+function updateFloor(floorId) {
+  if (floorId < 0) {
+    //alert("No floor for this person yet");
+  } else {
+    // alert("Updating the floor " + floorId);
+    // TODO should use url_for here instead of this method...
+      // loadMapImage'/static/images/maps/' + floorId + '.svg');
+    currentFloorId = floorId;
+
+    loadMapImage('/image/maps/' + floorId);
+    // Request map data from API
+    // Load image of the floor
+
+    refreshAllRooms(floorId);
+  }
+}
+
+
+</script>
+
+{% endif %}
+
+{% endblock %}

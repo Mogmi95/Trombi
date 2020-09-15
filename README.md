@@ -22,16 +22,20 @@ This project is a light tool to help people recognise their colleagues when your
 
 # Installation
 
-This project is using Flask and Python 2.7.
+This project is using Python 2 and Flask. It is still compatible with Python 2.7, but python2 is going to be deprecated 2020, January 1st.
+
+## Init
 
 1. Clone the repository
-2. Create a virtualenv (optional, but recommended)
-3. Install pip dependencies ($ pip install -r requirements.txt)
-4. Copy "config-example.py" as "config.py" and edit it with your configuration
-4. Run $ python main.py
-5. Open 127.0.0.1:5000 in your navigator
-6. Access 127.0.0.1:5000/admin in your navigator to access the admin page (use the credentials from your `config.py` file.
-7. Create persons manually or upload a CSV file in the Database section. The CSV format is given in `data/example-persons.csv`
+2. Create a virtualenv `$ python3 -m venv venv`
+3. Enter the virtualenv `$ source ./venv/bin/activate`
+4. Install pip dependencies `(venv)$ pip install -r requirements.txt`
+5. Copy "config-example.py" as "config.py" and edit it with your configuration
+6. Configurate your project `(venv)$ export FLASK_APP=run.py`
+7. Run `flask run`
+8. Open 127.0.0.1:5000 in your navigator
+9. Access 127.0.0.1:5000/admin in your navigator to access the admin page (use the credentials from your `config.py` file.
+10. Enjoy!
 
 I'm still actively working on this project, don't hesitate to comment or ask for some useful features :).
 
@@ -196,6 +200,8 @@ Information about the links.
 ```
 
 # Translations
+
+The translation section is still available, but it has not been heavily updated, since english is fine for most projects. I hope to propose a new translation later in the future.
 
 ~~~~
 # This line is only to create a new lang

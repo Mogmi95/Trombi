@@ -1,0 +1,33 @@
+{% extends "index.html" %}
+{% block body %}
+
+{% if contacts is none %}
+
+<p>No news to display</p>
+
+{% else %}
+
+<div class="mdl-card contacts-table">
+<div class="contacts-table">
+  <table class="mdl-data-table mdl-js-data-table">
+    <thead>
+      <tr>
+        <th class="mdl-data-table__cell--non-numeric">Problem</th>
+        <th class="mdl-data-table__cell--non-numeric">Contact</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for contact in contacts %}
+      <tr>
+        <td class="mdl-data-table__cell--non-numeric">{{ contact.description }}</td>
+        <td class="mdl-data-table__cell--non-numeric"><a>{{ contact.contact }}</a></td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+</div>
+
+{% endif %}
+
+{% endblock %}
